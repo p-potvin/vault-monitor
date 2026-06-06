@@ -1,6 +1,6 @@
 # V.A.U.L.T Monitor
 
-V.A.U.L.T Monitor is the Vault Authenticated Unified Ledger Telemetry Monitor.
+V.A.U.L.T Monitor is the Vault Authenticated Unified Ledger Telemetry Monitor: a front-facing dashboard for VaultWares internal ledger and logging systems.
 
 This repo owns UI, routing, view state, and display components only. Normalized data comes from `vaultwares-pipelines`:
 
