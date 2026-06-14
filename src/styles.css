@@ -1,4 +1,91 @@
+/* VaultWares Monitor - Revamped Styles */
+/* Using VaultWares Revisited Design System Tokens */
+
+/* ============================================
+   1. IMPORTS & THEME FOUNDATION
+   ============================================ */
+
 @import "../vaultwares-themes/vaultwares-revisited/revisited.css";
+@import "../vaultwares-themes/assets/tokens/css-variables.css";
+
+/* ============================================
+   2. CSS CUSTOM PROPERTIES - THEME TOKENS
+   ============================================ */
+
+:root {
+  /* Typography - from vaultwares-themes */
+  --font-sans: "Inter", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  
+  /* Warm Mode Tokens */
+  --vault-warm-bg: #F5F1E8;
+  --vault-warm-raised: #FCFAF5;
+  --vault-warm-muted: #ECE5D8;
+  --vault-warm-border-subtle: rgba(22, 19, 32, 0.08);
+  
+  /* Console Mode Tokens */
+  --vault-console-bg: #161320;
+  --vault-console-surface: #1F1A2B;
+  --vault-console-raised: #2A2340;
+  --vault-console-elevated: #31274A;
+  --vault-console-active: #614d8a;
+  --vault-console-text: #a394cc;
+  --vault-console-text-secondary: rgba(237, 230, 255, 0.72);
+  --vault-console-border-subtle: rgba(255, 255, 255, 0.06);
+  
+  /* Brand Accents */
+  --vault-console-gold: #D6A441;
+  --vault-console-violet: #B07CFF;
+  
+  /* Signal Colors */
+  --vault-signal-online: #6BE675;
+  --vault-signal-relay: #55D6FF;
+  --vault-signal-sync: #B07CFF;
+  --vault-signal-warning: #F0B94B;
+  --vault-signal-alert: #FF6B7A;
+  
+  /* Spacing Scale (from vaultwares-themes) */
+  --vault-spacing-0: 0;
+  --vault-spacing-1: 4px;
+  --vault-spacing-2: 8px;
+  --vault-spacing-3: 12px;
+  --vault-spacing-4: 16px;
+  --vault-spacing-6: 24px;
+  --vault-spacing-8: 32px;
+  --vault-spacing-10: 40px;
+  --vault-spacing-12: 48px;
+  --vault-spacing-16: 64px;
+  
+  /* Border Radius */
+  --vault-radius-sm: 4px;
+  --vault-radius-md: 8px;
+  --vault-radius-lg: 12px;
+  --vault-radius-xl: 16px;
+  --vault-radius-panel: 20px;
+  --vault-radius-hero: 30px;
+  --vault-radius-pill: 999px;
+  
+  /* Motion */
+  --vault-motion-fast: 120ms;
+  --vault-motion-base: 180ms;
+  --vault-motion-slow: 240ms;
+  --vault-motion-entry-ease: ease-out;
+  --vault-motion-state-ease: ease-in-out;
+}
+
+/* ============================================
+   3. SHELL THEMES
+   ============================================ */
+
+/* The warm theme and console theme coexist:
+   - Warm theme: sidebar/rail elements (light, paper-like)
+   - Console theme: main content area (dark, terminal-like) */
+
+/* No theme switching - both themes are used simultaneously */
+
+/* ============================================
+   4. RESET & BASE STYLES
+   ============================================ */
 
 * {
   box-sizing: border-box;
@@ -10,25 +97,32 @@ html {
   color: #161320;
   font-family: var(--font-sans);
   letter-spacing: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
   min-width: 320px;
   min-height: 100vh;
   margin: 0;
+  line-height: 1.5;
 }
 
 button,
 input {
   font: inherit;
+  letter-spacing: 0;
 }
 
 button {
-  letter-spacing: 0;
+  cursor: pointer;
+  border: none;
+  background: none;
 }
 
 a {
   color: inherit;
+  text-decoration: none;
 }
 
 svg {
@@ -37,31 +131,91 @@ svg {
   flex: 0 0 auto;
 }
 
+/* ============================================
+   5. UTILITY CLASSES
+   ============================================ */
+
+.vw-led {
+  animation: ledPulse 8s ease-in-out infinite;
+}
+
+@keyframes ledPulse {
+  0% {
+    opacity: 0.4;
+    transform: scale(0.95);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0.4;
+    transform: scale(0.95);
+  }
+}
+
+/* Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--shell-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--shell-raised);
+  border-radius: var(--vault-radius-pill);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--shell-accent);
+}
+
+/* Focus Styles */
+:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--shell-accent) 56%, transparent);
+  outline-offset: 2px;
+}
+
+/* ============================================
+   6. LAYOUT - APP SHELL
+   ============================================ */
+
 .app-shell {
   display: grid;
   grid-template-columns: 292px minmax(0, 1fr);
   min-height: 100vh;
 }
 
+/* ============================================
+   7. SIDEBAR / RAIL (Warm Mode - always warm)
+   ============================================ */
+
 .warm-rail {
   position: sticky;
   top: 0;
   display: grid;
   grid-template-rows: auto auto 1fr auto auto;
-  gap: 18px;
+  gap: var(--vault-spacing-2);
   height: 100vh;
-  padding: 24px 18px;
+  padding: var(--vault-spacing-3) var(--vault-spacing-2);
   border-right: 1px solid var(--vault-warm-border-subtle);
-  background:
-    linear-gradient(180deg, color-mix(in srgb, var(--vault-warm-raised) 94%, transparent), var(--vault-warm-bg)),
-    var(--vault-warm-raised);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--vault-warm-raised) 94%, transparent),
+    var(--vault-warm-bg)
+  );
+  color: #161320;
 }
 
+/* Brand Block */
 .brand-block {
   display: grid;
   grid-template-columns: 48px minmax(0, 1fr);
   align-items: center;
-  gap: 12px;
+  gap: var(--vault-spacing-2);
   min-width: 0;
 }
 
@@ -71,14 +225,15 @@ svg {
   height: 48px;
   place-items: center;
   border: 1px solid color-mix(in srgb, var(--vault-console-gold) 66%, transparent);
-  border-radius: 16px;
+  border-radius: var(--vault-radius-lg);
   color: var(--vault-console-gold);
-  background:
-    linear-gradient(145deg, var(--vault-console-surface), var(--vault-console-bg));
+  background: linear-gradient(145deg, var(--vault-console-surface), var(--vault-console-bg));
   box-shadow: 0 16px 30px rgba(22, 19, 32, 0.2);
-  font-family: var(--font-mono);
-  font-size: 22px;
-  font-weight: 800;
+}
+
+.brand-mark svg {
+  width: 28px;
+  height: 28px;
 }
 
 .brand-block strong,
@@ -89,28 +244,29 @@ svg {
 .brand-block strong {
   color: #161320;
   font-size: 15px;
+  font-weight: 500;
 }
 
-.brand-block span,
-.rail-label,
-.rail-status p,
-.rail-status time,
-.rail-error {
+.brand-block span {
   color: rgba(22, 19, 32, 0.62);
+  font-size: 13px;
 }
 
+/* Rail Label */
 .rail-label {
-  margin-top: 8px;
+  margin-top: var(--vault-spacing-1);
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  color: rgba(22, 19, 32, 0.62);
 }
 
+/* Navigation List */
 .nav-list {
   display: grid;
   align-content: start;
-  gap: 8px;
+  gap: var(--vault-spacing-1);
   min-width: 0;
 }
 
@@ -119,16 +275,16 @@ svg {
   display: grid;
   grid-template-columns: 20px minmax(0, 1fr);
   align-items: center;
-  gap: 10px;
+  gap: var(--vault-spacing-2);
   min-height: 42px;
   min-width: 0;
-  padding: 0 12px;
+  padding: 0 var(--vault-spacing-2);
   border: 1px solid transparent;
-  border-radius: 18px;
+  border-radius: var(--vault-radius-xl);
   color: rgba(22, 19, 32, 0.72);
   background: transparent;
-  cursor: pointer;
   text-align: left;
+  transition: all var(--vault-motion-base) var(--vault-motion-state-ease);
 }
 
 .nav-list button span:last-child {
@@ -156,18 +312,19 @@ svg {
   bottom: 10px;
   left: 0;
   width: 3px;
-  border-radius: 999px;
+  border-radius: var(--vault-radius-pill);
   background: var(--vault-console-gold);
   content: "";
 }
 
+/* Locale Toggle */
 .locale-toggle {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 4px;
-  padding: 4px;
+  gap: var(--vault-spacing-1);
+  padding: var(--vault-spacing-1);
   border: 1px solid var(--vault-warm-border-subtle);
-  border-radius: 18px;
+  border-radius: var(--vault-radius-xl);
   background: var(--vault-warm-muted);
 }
 
@@ -180,6 +337,7 @@ svg {
   cursor: pointer;
   font-size: 12px;
   font-weight: 800;
+  transition: all var(--vault-motion-fast) var(--vault-motion-state-ease);
 }
 
 .locale-toggle button.active {
@@ -188,10 +346,11 @@ svg {
   box-shadow: 0 8px 22px rgba(22, 19, 32, 0.12);
 }
 
+/* Rail Status */
 .rail-status {
   display: grid;
-  gap: 8px;
-  padding: 14px;
+  gap: var(--vault-spacing-2);
+  padding: var(--vault-spacing-2);
   border: 1px solid var(--vault-warm-border-subtle);
   border-radius: 22px;
   background: var(--vault-warm-raised);
@@ -203,12 +362,13 @@ svg {
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  color: rgba(22, 19, 32, 0.62);
 }
 
 .rail-status-line {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--vault-spacing-2);
   min-width: 0;
 }
 
@@ -218,27 +378,39 @@ svg {
   font-size: 13px;
 }
 
+.rail-status time {
+  color: rgba(22, 19, 32, 0.62);
+  font-size: 12px;
+}
+
 .rail-error {
   overflow-wrap: anywhere;
   font-size: 12px;
+  color: var(--vault-signal-alert);
 }
+
+/* ============================================
+   8. MAIN STAGE (Console Mode)
+   ============================================ */
 
 .monitor-stage {
   min-width: 0;
   min-height: 100vh;
-  padding: 22px;
+  padding: var(--vault-spacing-3);
+  /* Monitor stage uses console theme - dark terminal-like background */
 }
 
+/* Top Bar */
 .topbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: var(--vault-spacing-2);
   min-height: 58px;
-  margin-bottom: 18px;
-  padding: 12px 16px;
+  margin-bottom: var(--vault-spacing-2);
+  padding: var(--vault-spacing-2) var(--vault-spacing-3);
   border: 1px solid var(--vault-console-border-subtle);
-  border-radius: 24px;
+  border-radius: var(--vault-radius-hero);
   background: color-mix(in srgb, var(--vault-console-surface) 86%, transparent);
 }
 
@@ -258,6 +430,7 @@ svg {
 .topbar > div:first-child strong {
   color: #fff;
   font-size: 16px;
+  font-weight: 500;
 }
 
 .topbar-cluster {
@@ -265,21 +438,22 @@ svg {
   flex-wrap: wrap;
   align-items: center;
   justify-content: flex-end;
-  gap: 8px;
+  gap: var(--vault-spacing-1);
 }
 
 .api-chip {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: 6px;
   min-height: 32px;
   max-width: 260px;
-  padding: 0 10px;
+  padding: 0 var(--vault-spacing-2);
   border: 1px solid var(--vault-console-border-subtle);
-  border-radius: 16px;
+  border-radius: var(--vault-radius-lg);
   color: var(--vault-console-text-secondary);
   background: rgba(255, 255, 255, 0.035);
   font-size: 12px;
+  font-weight: 500;
 }
 
 .api-chip svg {
@@ -288,9 +462,13 @@ svg {
   color: var(--vault-console-violet);
 }
 
+/* ============================================
+   9. VIEW STACK & PANELS
+   ============================================ */
+
 .view-stack {
   display: grid;
-  gap: 18px;
+  gap: var(--vault-spacing-2);
 }
 
 .hero-panel,
@@ -303,25 +481,26 @@ svg {
 
 .hero-panel {
   display: grid;
-  gap: 20px;
-  padding: 24px;
-  border-radius: 30px;
+  gap: var(--vault-spacing-3);
+  padding: var(--vault-spacing-4);
+  border-radius: var(--vault-radius-hero);
 }
 
 .compact-hero {
-  gap: 16px;
+  gap: var(--vault-spacing-2);
 }
 
 .panel {
-  padding: 18px;
-  border-radius: 28px;
+  padding: var(--vault-spacing-3);
+  border-radius: var(--vault-radius-panel);
 }
 
+/* Section Header */
 .section-header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 18px;
+  gap: var(--vault-spacing-3);
 }
 
 .section-header > div:first-child {
@@ -338,10 +517,11 @@ p {
 
 .section-header h1 {
   max-width: 860px;
-  margin-bottom: 8px;
+  margin-bottom: var(--vault-spacing-1);
   color: #fff;
   font-size: 34px;
   line-height: 1.08;
+  font-weight: 500;
 }
 
 .section-header p:not(.kicker) {
@@ -352,7 +532,7 @@ p {
 }
 
 .kicker {
-  margin-bottom: 8px;
+  margin-bottom: var(--vault-spacing-1);
   color: var(--vault-console-gold);
   font-size: 11px;
   font-weight: 800;
@@ -364,11 +544,36 @@ p {
   flex: 0 0 auto;
 }
 
+/* Panel Heading */
+.panel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vault-spacing-2);
+  min-height: 30px;
+  margin-bottom: var(--vault-spacing-2);
+}
+
+.panel-heading h2 {
+  margin-bottom: 0;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.panel-heading > svg {
+  color: var(--vault-console-violet);
+}
+
+/* ============================================
+   10. STATS & METRICS
+   ============================================ */
+
 .hero-metrics,
 .log-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px;
+  gap: var(--vault-spacing-2);
 }
 
 .log-grid {
@@ -377,19 +582,19 @@ p {
 
 .stat {
   display: grid;
-  gap: 8px;
+  gap: var(--vault-spacing-1);
   min-height: 104px;
   align-content: center;
-  padding: 14px;
+  padding: var(--vault-spacing-2);
   border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 20px;
+  border-radius: var(--vault-radius-xl);
   background: color-mix(in srgb, var(--vault-console-surface) 84%, transparent);
 }
 
 .stat-label {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--vault-spacing-1);
   min-width: 0;
   color: var(--vault-console-text-secondary);
   font-size: 12px;
@@ -412,31 +617,21 @@ p {
   color: var(--vault-console-text-secondary);
 }
 
-.stat-online strong {
-  color: var(--vault-signal-online);
-}
+.stat-online strong { color: var(--vault-signal-online); }
+.stat-alert strong { color: var(--vault-signal-alert); }
+.stat-warning strong { color: var(--vault-signal-warning); }
+.stat-relay strong { color: var(--vault-signal-relay); }
+.stat-sync strong { color: var(--vault-signal-sync); }
 
-.stat-alert strong {
-  color: var(--vault-signal-alert);
-}
-
-.stat-warning strong {
-  color: var(--vault-signal-warning);
-}
-
-.stat-relay strong {
-  color: var(--vault-signal-relay);
-}
-
-.stat-sync strong {
-  color: var(--vault-signal-sync);
-}
+/* ============================================
+   11. POSTURE STRIP
+   ============================================ */
 
 .posture-strip {
   display: flex;
   min-height: 10px;
   overflow: hidden;
-  border-radius: 999px;
+  border-radius: var(--vault-radius-pill);
   background: rgba(255, 255, 255, 0.08);
 }
 
@@ -444,50 +639,26 @@ p {
   min-width: 2px;
 }
 
-.posture-online {
-  background: var(--vault-signal-online);
-}
+.posture-online { background: var(--vault-signal-online); }
+.posture-alert { background: var(--vault-signal-alert); }
+.posture-warning { background: var(--vault-signal-warning); }
 
-.posture-alert {
-  background: var(--vault-signal-alert);
-}
-
-.posture-warning {
-  background: var(--vault-signal-warning);
-}
+/* ============================================
+   12. OVERVIEW GRID
+   ============================================ */
 
 .overview-grid {
   display: grid;
   grid-template-columns: minmax(280px, 0.95fr) minmax(320px, 1.05fr) minmax(320px, 1.1fr);
-  gap: 18px;
+  gap: var(--vault-spacing-2);
 }
 
-.span-tall {
-  grid-row: span 2;
-}
+.span-tall { grid-row: span 2; }
+.recent-panel { grid-column: span 2; }
 
-.recent-panel {
-  grid-column: span 2;
-}
-
-.panel-heading {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  min-height: 30px;
-  margin-bottom: 14px;
-}
-
-.panel-heading h2 {
-  margin-bottom: 0;
-  color: #fff;
-  font-size: 16px;
-}
-
-.panel-heading > svg {
-  color: var(--vault-console-violet);
-}
+/* ============================================
+   13. SOURCE LIST & EVENTS
+   ============================================ */
 
 .source-list,
 .event-list,
@@ -496,20 +667,18 @@ p {
 .freshness-grid,
 .usage-block {
   display: grid;
-  gap: 10px;
+  gap: var(--vault-spacing-1);
 }
 
 .source-row {
   display: grid;
   grid-template-columns: 18px minmax(96px, 140px) minmax(0, 1fr) auto;
   align-items: center;
-  gap: 10px;
+  gap: var(--vault-spacing-2);
   min-height: 42px;
 }
 
-.source-row strong {
-  color: #fff;
-}
+.source-row strong { color: #fff; }
 
 .source-row code {
   overflow: hidden;
@@ -525,24 +694,18 @@ p {
   min-height: 42px;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  padding-bottom: 10px;
+  gap: var(--vault-spacing-2);
+  padding-bottom: var(--vault-spacing-1);
   border-bottom: 1px solid var(--vault-console-border-subtle);
 }
 
-.freshness-item span {
-  color: #fff;
-}
-
-.freshness-item time {
-  color: var(--vault-console-text-secondary);
-  text-align: right;
-}
+.freshness-item span { color: #fff; }
+.freshness-item time { color: var(--vault-console-text-secondary); text-align: right; }
 
 .event-line {
   display: grid;
   grid-template-columns: 18px minmax(0, 1fr);
-  gap: 10px;
+  gap: var(--vault-spacing-2);
   align-items: start;
   padding: 11px 0;
   border-bottom: 1px solid var(--vault-console-border-subtle);
@@ -553,35 +716,30 @@ p {
 .agent-event strong,
 .agent-event span,
 .result-item strong,
-.result-item span {
-  display: block;
-}
+.result-item span { display: block; }
 
 .event-line strong,
 .agent-event strong,
-.result-item strong {
-  color: #fff;
-}
+.result-item strong { color: #fff; }
 
 .event-line span,
 .agent-event p,
 .result-item p,
 .event-meta,
-.note-copy {
-  color: var(--vault-console-text-secondary);
-}
+.note-copy { color: var(--vault-console-text-secondary); }
 
-.note-copy {
-  margin: 0;
-  line-height: 1.55;
-}
+.note-copy { margin: 0; line-height: 1.55; }
+
+/* ============================================
+   14. DAY SERIES CHART
+   ============================================ */
 
 .day-series {
   display: grid;
   grid-template-columns: repeat(10, minmax(20px, 1fr));
   align-items: end;
   min-height: 178px;
-  gap: 8px;
+  gap: var(--vault-spacing-1);
 }
 
 .day-bar {
@@ -598,8 +756,7 @@ p {
   align-self: end;
   min-height: 10px;
   border-radius: 999px 999px 4px 4px;
-  background:
-    linear-gradient(180deg, var(--vault-console-gold), color-mix(in srgb, var(--vault-console-violet) 70%, var(--vault-console-gold)));
+  background: linear-gradient(180deg, var(--vault-console-gold), color-mix(in srgb, var(--vault-console-violet) 70%, var(--vault-console-gold)));
 }
 
 .day-bar span,
@@ -609,10 +766,11 @@ p {
   white-space: nowrap;
 }
 
-.day-bar strong {
-  color: #fff;
-  font-family: var(--font-mono);
-}
+.day-bar strong { color: #fff; font-family: var(--font-mono); }
+
+/* ============================================
+   15. BADGES
+   ============================================ */
 
 .badge {
   display: inline-flex;
@@ -622,7 +780,7 @@ p {
   gap: 7px;
   padding: 0 9px;
   border: 1px solid color-mix(in srgb, currentColor 26%, transparent);
-  border-radius: 999px;
+  border-radius: var(--vault-radius-pill);
   color: var(--vault-signal-sync);
   background: color-mix(in srgb, currentColor 9%, transparent);
   font-size: 11px;
@@ -631,21 +789,14 @@ p {
   text-transform: uppercase;
 }
 
-.badge-online {
-  color: var(--vault-signal-online);
-}
+.badge-online { color: var(--vault-signal-online); }
+.badge-relay { color: var(--vault-signal-relay); }
+.badge-warning { color: var(--vault-signal-warning); }
+.badge-alert { color: var(--vault-signal-alert); }
 
-.badge-relay {
-  color: var(--vault-signal-relay);
-}
-
-.badge-warning {
-  color: var(--vault-signal-warning);
-}
-
-.badge-alert {
-  color: var(--vault-signal-alert);
-}
+/* ============================================
+   16. LED INDICATORS
+   ============================================ */
 
 .led {
   display: inline-grid;
@@ -660,91 +811,62 @@ p {
   height: 9px;
   border-radius: 50%;
   background: currentColor;
-  box-shadow: 0 0 14px currentColor;
+  box-shadow: 0 0 8px currentColor;
+  opacity: 0.7;
 }
 
-.led-online {
-  color: var(--vault-signal-online);
-}
+.led-online { color: var(--vault-signal-online); }
+.led-relay { color: var(--vault-signal-relay); }
+.led-sync { color: var(--vault-signal-sync); }
+.led-warning { color: var(--vault-signal-warning); }
+.led-alert { color: var(--vault-signal-alert); }
 
-.led-relay {
-  color: var(--vault-signal-relay);
-}
-
-.led-sync {
-  color: var(--vault-signal-sync);
-}
-
-.led-warning {
-  color: var(--vault-signal-warning);
-}
-
-.led-alert {
-  color: var(--vault-signal-alert);
-}
+/* ============================================
+   17. SERVICE MATRIX
+   ============================================ */
 
 .service-matrix {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(236px, 1fr));
-  gap: 10px;
+  gap: var(--vault-spacing-1);
 }
 
 .service-tile {
   display: grid;
-  gap: 12px;
+  gap: var(--vault-spacing-2);
   min-width: 0;
   min-height: 150px;
-  padding: 14px;
+  padding: var(--vault-spacing-2);
   border: 1px solid var(--vault-console-border-subtle);
   border-left: 3px solid var(--vault-signal-sync);
-  border-radius: 18px;
+  border-radius: var(--vault-radius-lg);
   background: color-mix(in srgb, var(--vault-console-surface) 82%, transparent);
 }
 
-.service-online {
-  border-left-color: var(--vault-signal-online);
-}
-
-.service-warning {
-  border-left-color: var(--vault-signal-warning);
-}
-
-.service-alert {
-  border-left-color: var(--vault-signal-alert);
-}
-
-.service-relay {
-  border-left-color: var(--vault-signal-relay);
-}
+.service-online { border-left-color: var(--vault-signal-online); }
+.service-warning { border-left-color: var(--vault-signal-warning); }
+.service-alert { border-left-color: var(--vault-signal-alert); }
+.service-relay { border-left-color: var(--vault-signal-relay); }
 
 .service-head {
   display: grid;
   grid-template-columns: 18px minmax(0, 1fr);
-  gap: 8px;
+  gap: var(--vault-spacing-1);
   align-items: start;
 }
 
-.service-head strong {
-  overflow-wrap: anywhere;
-  color: #fff;
-}
+.service-head strong { overflow-wrap: anywhere; color: #fff; }
 
-dl {
-  display: grid;
-  gap: 8px;
-  margin: 0;
-}
+dl { display: grid; gap: var(--vault-spacing-1); margin: 0; }
 
 dl div {
   display: flex;
   justify-content: space-between;
-  gap: 12px;
+  gap: var(--vault-spacing-2);
   min-width: 0;
 }
 
-dt {
-  color: var(--vault-console-text-secondary);
-}
+dt { color: var(--vault-console-text-secondary); }
 
 dd {
   overflow: hidden;
@@ -756,62 +878,53 @@ dd {
   white-space: nowrap;
 }
 
+/* ============================================
+   18. AGENTS LAYOUT
+   ============================================ */
+
 .agents-layout {
   display: grid;
   grid-template-columns: repeat(3, minmax(220px, 1fr));
-  gap: 18px;
+  gap: var(--vault-spacing-2);
 }
 
-.agent-feed-panel {
-  grid-column: 1 / -1;
-}
+.agent-feed-panel { grid-column: 1 / -1; }
 
 .agent-event,
 .result-item {
   min-width: 0;
-  padding: 14px;
+  padding: var(--vault-spacing-2);
   border: 1px solid var(--vault-console-border-subtle);
-  border-radius: 18px;
+  border-radius: var(--vault-radius-lg);
   background: color-mix(in srgb, var(--vault-console-surface) 82%, transparent);
 }
 
 .agent-event p,
-.result-item p {
-  margin-bottom: 12px;
-  line-height: 1.5;
-}
+.result-item p { margin-bottom: var(--vault-spacing-2); line-height: 1.5; }
 
 .event-head,
 .event-meta {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 10px;
+  gap: var(--vault-spacing-1);
 }
 
-.event-head {
-  margin-bottom: 10px;
-}
+.event-head { margin-bottom: var(--vault-spacing-1); }
+.event-head strong { overflow-wrap: anywhere; }
 
-.event-head strong {
-  overflow-wrap: anywhere;
-}
+.event-meta { flex-wrap: wrap; font-size: 12px; }
+.event-meta code { color: var(--vault-console-gold); font-family: var(--font-mono); }
 
-.event-meta {
-  flex-wrap: wrap;
-  font-size: 12px;
-}
-
-.event-meta code {
-  color: var(--vault-console-gold);
-  font-family: var(--font-mono);
-}
+/* ============================================
+   19. USAGE BARS
+   ============================================ */
 
 .usage-row {
   display: grid;
   grid-template-columns: minmax(90px, 1fr) minmax(92px, 150px) minmax(32px, auto);
   align-items: center;
-  gap: 10px;
+  gap: var(--vault-spacing-2);
   min-height: 34px;
 }
 
@@ -825,7 +938,7 @@ dd {
 .usage-track {
   height: 9px;
   overflow: hidden;
-  border-radius: 999px;
+  border-radius: var(--vault-radius-pill);
   background: rgba(255, 255, 255, 0.08);
 }
 
@@ -842,17 +955,17 @@ dd {
   text-align: right;
 }
 
+/* ============================================
+   20. TABLES
+   ============================================ */
+
 .table-shell {
   overflow-x: auto;
   border: 1px solid var(--vault-console-border-subtle);
-  border-radius: 18px;
+  border-radius: var(--vault-radius-lg);
 }
 
-table {
-  width: 100%;
-  min-width: 780px;
-  border-collapse: collapse;
-}
+table { width: 100%; min-width: 780px; border-collapse: collapse; }
 
 th,
 td {
@@ -869,9 +982,7 @@ th {
   text-transform: uppercase;
 }
 
-td {
-  color: #fff;
-}
+td { color: #fff; }
 
 td span {
   display: block;
@@ -879,13 +990,17 @@ td span {
   font-size: 12px;
 }
 
+/* ============================================
+   21. JSON BLOCK
+   ============================================ */
+
 .json-block {
   max-height: 360px;
   overflow: auto;
   margin: 0;
-  padding: 14px;
+  padding: var(--vault-spacing-2);
   border: 1px solid var(--vault-console-border-subtle);
-  border-radius: 18px;
+  border-radius: var(--vault-radius-lg);
   background: var(--vault-console-bg);
   color: #efe7ff;
   font-family: var(--font-mono);
@@ -893,10 +1008,14 @@ td span {
   line-height: 1.55;
 }
 
+/* ============================================
+   22. COMMANDS & BUTTONS
+   ============================================ */
+
 .command-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: var(--vault-spacing-1);
 }
 
 .command-button {
@@ -904,21 +1023,19 @@ td span {
   min-height: 40px;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 0 14px;
+  gap: var(--vault-spacing-2);
+  padding: 0 var(--vault-spacing-3);
   border: 1px solid color-mix(in srgb, var(--vault-console-gold) 56%, transparent);
-  border-radius: 18px;
+  border-radius: var(--vault-radius-xl);
   color: var(--vault-console-bg);
   background: var(--vault-console-gold);
   font-weight: 800;
   text-decoration: none;
   cursor: pointer;
+  transition: all var(--vault-motion-fast) var(--vault-motion-state-ease);
 }
 
-.command-button svg {
-  width: 16px;
-  height: 16px;
-}
+.command-button svg { width: 16px; height: 16px; }
 
 .command-button:hover,
 .command-button:focus-visible {
@@ -932,16 +1049,20 @@ td span {
   background: transparent;
 }
 
+/* ============================================
+   23. SEARCH FORM
+   ============================================ */
+
 .search-form {
   display: grid;
   grid-template-columns: minmax(210px, 1.6fr) repeat(3, minmax(120px, 0.85fr)) auto;
-  gap: 10px;
+  gap: var(--vault-spacing-2);
   align-items: end;
 }
 
 .search-form label {
   display: grid;
-  gap: 6px;
+  gap: var(--vault-spacing-1);
   min-width: 0;
 }
 
@@ -957,8 +1078,8 @@ td span {
   width: 100%;
   min-height: 40px;
   border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 18px;
-  padding: 0 12px;
+  border-radius: var(--vault-radius-xl);
+  padding: 0 var(--vault-spacing-3);
   color: #fff8e6;
   background: color-mix(in srgb, var(--vault-console-surface) 86%, transparent);
 }
@@ -969,22 +1090,21 @@ td span {
   outline-offset: 1px;
 }
 
-.search-form input::placeholder {
-  color: rgba(237, 230, 255, 0.48);
-}
+.search-form input::placeholder { color: rgba(237, 230, 255, 0.48); }
+.error-line { color: var(--vault-signal-alert); }
 
-.error-line {
-  color: var(--vault-signal-alert);
-}
+/* ============================================
+   24. EMPTY STATES
+   ============================================ */
 
 .empty-state {
   display: grid;
   min-height: 88px;
   place-items: center;
-  gap: 8px;
-  padding: 16px;
+  gap: var(--vault-spacing-2);
+  padding: var(--vault-spacing-3);
   border: 1px dashed rgba(255, 255, 255, 0.14);
-  border-radius: 18px;
+  border-radius: var(--vault-radius-lg);
   color: var(--vault-console-text-secondary);
   text-align: center;
 }
@@ -995,133 +1115,78 @@ td span {
   color: var(--vault-console-violet);
 }
 
-@media (max-width: 1220px) {
-  .overview-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+.empty-icon svg { width: 24px; height: 24px; }
 
-  .span-tall,
-  .recent-panel {
-    grid-column: auto;
-    grid-row: auto;
-  }
+/* ============================================
+   25. AGENT LIST COMPACT
+   ============================================ */
+
+.agent-list { display: grid; gap: var(--vault-spacing-1); }
+.agent-list-compact .agent-event { min-height: 64px; }
+
+/* ============================================
+   26. RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 1220px) {
+  .overview-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .span-tall, .recent-panel { grid-column: auto; grid-row: auto; }
 }
 
 @media (max-width: 980px) {
-  .app-shell {
-    grid-template-columns: 1fr;
-  }
-
+  .app-shell { grid-template-columns: 1fr; }
   .warm-rail {
     position: static;
     grid-template-rows: auto auto auto auto;
     height: auto;
-    padding: 14px;
+    padding: var(--vault-spacing-2);
   }
-
-  .rail-label {
-    display: none;
-  }
-
+  .rail-label { display: none; }
   .nav-list {
     grid-auto-flow: column;
     grid-auto-columns: minmax(112px, 1fr);
     overflow-x: auto;
-    padding-bottom: 4px;
+    padding-bottom: var(--vault-spacing-1);
   }
-
-  .rail-status {
-    grid-row: auto;
-  }
-
-  .monitor-stage {
-    min-height: auto;
-    padding: 14px;
-  }
-
-  .topbar,
-  .section-header,
-  .event-head {
+  .rail-status { grid-row: auto; }
+  .monitor-stage { min-height: auto; padding: var(--vault-spacing-2); }
+  .topbar, .section-header, .event-head {
     align-items: stretch;
     flex-direction: column;
   }
-
-  .topbar-cluster {
-    justify-content: flex-start;
-  }
-
-  .hero-metrics,
-  .log-grid,
-  .overview-grid,
-  .agents-layout {
+  .topbar-cluster { justify-content: flex-start; }
+  .hero-metrics, .log-grid, .overview-grid, .agents-layout {
     grid-template-columns: 1fr;
   }
-
-  .search-form {
-    grid-template-columns: 1fr;
-  }
-
-  .section-header h1 {
-    font-size: 30px;
-  }
+  .search-form { grid-template-columns: 1fr; }
+  .section-header h1 { font-size: 30px; }
 }
 
 @media (max-width: 560px) {
-  .brand-block {
-    grid-template-columns: 42px minmax(0, 1fr);
-  }
-
-  .brand-mark {
-    width: 42px;
-    height: 42px;
-    border-radius: 14px;
-  }
-
-  .nav-list {
-    grid-auto-columns: minmax(96px, 1fr);
-  }
-
+  .brand-block { grid-template-columns: 42px minmax(0, 1fr); }
+  .brand-mark { width: 42px; height: 42px; border-radius: var(--vault-radius-lg); }
+  .nav-list { grid-auto-columns: minmax(96px, 1fr); }
   .nav-list button {
     grid-template-columns: 18px minmax(0, 1fr);
-    padding: 0 10px;
+    padding: 0 var(--vault-spacing-2);
     font-size: 13px;
   }
-
-  .topbar,
-  .hero-panel,
-  .panel {
-    border-radius: 22px;
-  }
-
-  .section-header h1 {
-    font-size: 26px;
-  }
-
-  .source-row {
-    grid-template-columns: 18px minmax(0, 1fr);
-  }
-
-  .source-row code,
-  .source-row .badge {
-    grid-column: 2;
-  }
-
-  .event-meta,
-  dl div,
-  .freshness-item {
+  .topbar, .hero-panel, .panel { border-radius: var(--vault-radius-panel); }
+  .section-header h1 { font-size: 26px; }
+  .source-row { grid-template-columns: 18px minmax(0, 1fr); }
+  .source-row code, .source-row .badge { grid-column: 2; }
+  .event-meta, dl div, .freshness-item {
     align-items: flex-start;
     flex-direction: column;
   }
-
-  dd {
-    max-width: 100%;
-    text-align: left;
-  }
-
-  .day-series {
-    grid-template-columns: repeat(5, minmax(20px, 1fr));
-  }
+  dd { max-width: 100%; text-align: left; }
+  .day-series { grid-template-columns: repeat(5, minmax(20px, 1fr)); }
+  .search-form label span { font-size: 10px; }
 }
+
+/* ============================================
+   27. REDUCED MOTION
+   ============================================ */
 
 @media (prefers-reduced-motion: reduce) {
   *,

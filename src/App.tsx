@@ -913,6 +913,22 @@ export default function App() {
     setPath(to);
   }
 
+  // VaultWares Logo component using the official logo from vaultwares-themes
+  function VaultWaresLogo(props: React.SVGProps<SVGSVGElement>) {
+    return (
+      <svg
+        {...props}
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 120 120"
+      >
+        <title>VaultWares</title>
+        <path d="M20 15 L38 15 L60 82 L82 15 L100 15 L67 108 L53 108 Z" fill="currentColor"/>
+        <ellipse cx="60" cy="58" rx="12" ry="11" fill="none" stroke="currentColor" strokeWidth="2.5" opacity="0.8"/>
+        <circle cx="60" cy="58" r="4" fill="currentColor"/>
+      </svg>
+    );
+  }
+
   let view = <Overview overview={overview} locale={locale} />;
   if (path === "/health") view = <HealthView overview={overview} locale={locale} />;
   if (path === "/agents") view = <AgentsView overview={overview} locale={locale} />;
@@ -923,7 +939,7 @@ export default function App() {
     <div className="app-shell vw-warm-shell">
       <aside className="warm-rail">
         <div className="brand-block">
-          <div className="brand-mark" aria-hidden="true">V</div>
+          <div className="brand-mark" aria-hidden="true"><VaultWaresLogo /></div>
           <div>
             <strong>{t.chrome.product}</strong>
             <span>{t.chrome.monitor}</span>

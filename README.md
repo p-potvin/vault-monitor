@@ -19,7 +19,7 @@ npm install
 npm run dev
 ```
 
-The Vite dev server proxies `/monitor/*` to `http://127.0.0.1:9001` by default. Override that with `VITE_MONITOR_API_TARGET`.
+The Vite dev server proxies `/monitor/*` to `http://100.67.25.118:9001` by default. Override that with `VITE_MONITOR_API_TARGET`.
 
 ## Data Boundary
 
