@@ -1,4 +1,4 @@
-import type { KiwiStatus, OverviewResponse, SearchResponse } from "./types";
+import type { KiwiStatus, OverviewResponse, SearchResponse, QAResponse } from "./types";
 
 const base = (import.meta.env.VITE_MONITOR_API_BASE ?? "").replace(/\/$/, "");
 
@@ -25,4 +25,11 @@ export async function checkKiwi(signal?: AbortSignal): Promise<KiwiStatus> {
 export function searchEvents(params: URLSearchParams, signal?: AbortSignal): Promise<SearchResponse> {
   const query = params.toString();
   return getJson<SearchResponse>(`/monitor/events/search${query ? `?${query}` : ""}`, signal);
+}
+
+export async function getQALogs(signal?: AbortSignal): Promise<QAResponse> {
+  const url = import.meta.env.VITE_ZIPPER_URL ?? "http://localhost:5171";
+  const response = await fetch(`${url}/qa-logs`, { signal });
+  if (!response.ok) throw new Error("Failed to fetch QA logs");
+  return response.json();
 }

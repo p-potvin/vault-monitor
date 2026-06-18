@@ -113,3 +113,18 @@ export interface SearchResponse {
   count: number;
   items: SearchResult[];
 }
+
+export interface QALogEntry {
+  node: string;
+  site: string;
+  script: string;
+  exit_code: number;
+  stdout: string;
+  stderr: string;
+  timestamp: number;
+}
+
+export interface QAResponse {
+  status: string;
+  logs: QALogEntry[];
+}
