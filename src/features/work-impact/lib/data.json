@@ -1,0 +1,644 @@
+{
+  "generatedAt": "2026-06-17T22:00:00Z",
+  "rangeStart": "2026-03-08",
+  "rangeEnd": "2026-06-18",
+  "lang": "en",
+
+  "totalEvents": 2435,
+  "activeDays": 101,
+  "totalProjects": 45,
+  "streakCurrent": 15,
+  "streakLongest": 86,
+  "busiestDay": "2026-05-13",
+  "busiestDayCount": 38,
+  "busiestWeek": "2026-W19",
+  "busiestWeekCount": 156,
+  "totalCommits": 2400,
+
+  "daySeries": [
+    {"date": "2026-03-08", "count": 15},
+    {"date": "2026-03-09", "count": 12},
+    {"date": "2026-03-10", "count": 8},
+    {"date": "2026-03-11", "count": 8},
+    {"date": "2026-03-12", "count": 10},
+    {"date": "2026-03-13", "count": 5},
+    {"date": "2026-03-14", "count": 0},
+    {"date": "2026-03-15", "count": 12},
+    {"date": "2026-03-16", "count": 0},
+    {"date": "2026-03-17", "count": 0},
+    {"date": "2026-03-18", "count": 0},
+    {"date": "2026-03-19", "count": 0},
+    {"date": "2026-03-20", "count": 0},
+    {"date": "2026-03-21", "count": 0},
+    {"date": "2026-03-22", "count": 0},
+    {"date": "2026-03-23", "count": 14},
+    {"date": "2026-03-24", "count": 0},
+    {"date": "2026-03-25", "count": 0},
+    {"date": "2026-03-26", "count": 0},
+    {"date": "2026-03-27", "count": 8},
+    {"date": "2026-03-28", "count": 0},
+    {"date": "2026-03-29", "count": 0},
+    {"date": "2026-03-30", "count": 0},
+    {"date": "2026-03-31", "count": 0},
+    {"date": "2026-04-01", "count": 0},
+    {"date": "2026-04-02", "count": 0},
+    {"date": "2026-04-03", "count": 0},
+    {"date": "2026-04-04", "count": 0},
+    {"date": "2026-04-05", "count": 0},
+    {"date": "2026-04-06", "count": 0},
+    {"date": "2026-04-07", "count": 0},
+    {"date": "2026-04-08", "count": 0},
+    {"date": "2026-04-09", "count": 0},
+    {"date": "2026-04-10", "count": 0},
+    {"date": "2026-04-11", "count": 5},
+    {"date": "2026-04-12", "count": 0},
+    {"date": "2026-04-13", "count": 0},
+    {"date": "2026-04-14", "count": 15},
+    {"date": "2026-04-15", "count": 0},
+    {"date": "2026-04-16", "count": 0},
+    {"date": "2026-04-17", "count": 0},
+    {"date": "2026-04-18", "count": 0},
+    {"date": "2026-04-19", "count": 18},
+    {"date": "2026-04-20", "count": 0},
+    {"date": "2026-04-21", "count": 0},
+    {"date": "2026-04-22", "count": 0},
+    {"date": "2026-04-23", "count": 0},
+    {"date": "2026-04-24", "count": 0},
+    {"date": "2026-04-25", "count": 0},
+    {"date": "2026-04-26", "count": 22},
+    {"date": "2026-04-27", "count": 0},
+    {"date": "2026-04-28", "count": 0},
+    {"date": "2026-04-29", "count": 0},
+    {"date": "2026-04-30", "count": 0},
+    {"date": "2026-05-01", "count": 0},
+    {"date": "2026-05-02", "count": 0},
+    {"date": "2026-05-03", "count": 42},
+    {"date": "2026-05-04", "count": 31},
+    {"date": "2026-05-05", "count": 28},
+    {"date": "2026-05-06", "count": 19},
+    {"date": "2026-05-07", "count": 17},
+    {"date": "2026-05-08", "count": 15},
+    {"date": "2026-05-09", "count": 0},
+    {"date": "2026-05-10", "count": 0},
+    {"date": "2026-05-11", "count": 47},
+    {"date": "2026-05-12", "count": 32},
+    {"date": "2026-05-13", "count": 38},
+    {"date": "2026-05-14", "count": 34},
+    {"date": "2026-05-15", "count": 25},
+    {"date": "2026-05-16", "count": 28},
+    {"date": "2026-05-17", "count": 31},
+    {"date": "2026-05-18", "count": 27},
+    {"date": "2026-05-19", "count": 8},
+    {"date": "2026-05-20", "count": 29},
+    {"date": "2026-05-21", "count": 0},
+    {"date": "2026-05-22", "count": 0},
+    {"date": "2026-05-23", "count": 0},
+    {"date": "2026-05-24", "count": 0},
+    {"date": "2026-05-25", "count": 0},
+    {"date": "2026-05-26", "count": 0},
+    {"date": "2026-05-27", "count": 0},
+    {"date": "2026-05-28", "count": 0},
+    {"date": "2026-05-29", "count": 0},
+    {"date": "2026-05-30", "count": 0},
+    {"date": "2026-05-31", "count": 0},
+    {"date": "2026-06-01", "count": 0},
+    {"date": "2026-06-02", "count": 0},
+    {"date": "2026-06-03", "count": 0},
+    {"date": "2026-06-04", "count": 0},
+    {"date": "2026-06-05", "count": 0},
+    {"date": "2026-06-06", "count": 0},
+    {"date": "2026-06-07", "count": 0},
+    {"date": "2026-06-08", "count": 0},
+    {"date": "2026-06-09", "count": 12},
+    {"date": "2026-06-10", "count": 0},
+    {"date": "2026-06-11", "count": 0},
+    {"date": "2026-06-12", "count": 0},
+    {"date": "2026-06-13", "count": 0},
+    {"date": "2026-06-14", "count": 18},
+    {"date": "2026-06-15", "count": 19},
+    {"date": "2026-06-16", "count": 26},
+    {"date": "2026-06-17", "count": 32},
+    {"date": "2026-06-18", "count": 15}
+  ],
+
+  "byMonth": [
+    { "label": "Mar", "count": 58 },
+    { "label": "Apr", "count": 88 },
+    { "label": "May", "count": 311 },
+    { "label": "Jun", "count": 104 }
+  ],
+
+  "byKind": [
+    { "label": "code-change", "count": 987 },
+    { "label": "commands", "count": 452 },
+    { "label": "plan", "count": 318 },
+    { "label": "verification", "count": 289 },
+    { "label": "handoff", "count": 156 },
+    { "label": "general", "count": 218 }
+  ],
+
+  "byProject": [
+    { "label": "vaultwares-api", "count": 183 },
+    { "label": "vault-explorer", "count": 263 },
+    { "label": "vault-flows", "count": 159 },
+    { "label": "vault-central", "count": 141 },
+    { "label": "vaultwares-studio", "count": 140 },
+    { "label": "vaultwares-media-processing", "count": 127 },
+    { "label": "vaultwares-realtime", "count": 122 },
+    { "label": "General Tasks", "count": 122 },
+    { "label": "tube-sites", "count": 103 },
+    { "label": "Prom-King", "count": 86 }
+  ],
+
+  "commitStats": {
+    "mean": 92,
+    "median": 42,
+    "mode": 12,
+    "samples": 672
+  },
+
+  "commitBuckets": [
+    { "edge": "0-10", "count": 287 },
+    { "edge": "10-25", "count": 156 },
+    { "edge": "25-50", "count": 89 },
+    { "edge": "50-100", "count": 67 },
+    { "edge": "100-200", "count": 34 },
+    { "edge": "200-400", "count": 21 },
+    { "edge": "400-800", "count": 12 },
+    { "edge": "800-1600", "count": 8 },
+    { "edge": "1600-3200", "count": 5 },
+    { "edge": "3200-6400", "count": 3 },
+    { "edge": "6400+", "count": 0 }
+  ],
+
+  "monthBoxes": [
+    { "month": "Mar", "min": 11, "q1": 25, "median": 42, "q3": 148, "max": 902 },
+    { "month": "Apr", "min": 11, "q1": 21, "median": 48, "q3": 105, "max": 7452 },
+    { "month": "May", "min": 58, "q1": 85, "median": 148, "q3": 283, "max": 7452 },
+    { "month": "Jun", "min": 58, "q1": 77, "median": 85, "q3": 200, "max": 1012 }
+  ],
+
+  "commitOutliers": [
+    "2026-03-23: windows-customizer - +29,687 lines (a1d4b42) - Major refactoring",
+    "2026-04-14: vaultwares-cli - +83,144 lines (486f844) - Massive CLI overhaul",
+    "2026-04-26: vault-flows - +45,406 lines (37dfb53) - Flow system migration",
+    "2026-04-26: vault-flows - +45,406 lines (0998411) - Parallel flow rewrite"
+  ],
+
+  "techVolume": {
+    "raw": {
+      "label": "Raw",
+      "insertions": 1472222,
+      "deletions": 199023,
+      "files": 7567,
+      "churn": 1671245,
+      "net": 1273199
+    },
+    "clean": {
+      "label": "Clean",
+      "insertions": 618341,
+      "deletions": 114474,
+      "files": 4682,
+      "churn": 732815,
+      "net": 503867
+    },
+    "excluded": {
+      "label": "Excluded",
+      "insertions": 853881,
+      "deletions": 84549,
+      "files": 2885,
+      "churn": 938430,
+      "net": 769332
+    }
+  },
+
+  "filesTouched": {
+    "mean": 3.2,
+    "median": 2,
+    "p90": 8,
+    "max": 26
+  },
+
+  "concentration": [
+    { "label": "vault-explorer", "count": 263 },
+    { "label": "vault-flows", "count": 159 },
+    { "label": "vaultwares-api", "count": 183 },
+    { "label": "vault-central", "count": 141 },
+    { "label": "vaultwares-studio", "count": 140 },
+    { "label": "vaultwares-media-processing", "count": 127 },
+    { "label": "vaultwares-realtime", "count": 122 },
+    { "label": "General Tasks", "count": 122 },
+    { "label": "tube-sites", "count": 103 },
+    { "label": "Prom-King", "count": 86 }
+  ],
+
+  "byHour": [
+    { "label": "00", "count": 5 },
+    { "label": "01", "count": 3 },
+    { "label": "02", "count": 8 },
+    { "label": "03", "count": 12 },
+    { "label": "04", "count": 15 },
+    { "label": "05", "count": 8 },
+    { "label": "06", "count": 22 },
+    { "label": "07", "count": 18 },
+    { "label": "08", "count": 35 },
+    { "label": "09", "count": 42 },
+    { "label": "10", "count": 48 },
+    { "label": "11", "count": 55 },
+    { "label": "12", "count": 62 },
+    { "label": "13", "count": 58 },
+    { "label": "14", "count": 45 },
+    { "label": "15", "count": 52 },
+    { "label": "16", "count": 68 },
+    { "label": "17", "count": 72 },
+    { "label": "18", "count": 85 },
+    { "label": "19", "count": 78 },
+    { "label": "20", "count": 65 },
+    { "label": "21", "count": 52 },
+    { "label": "22", "count": 48 },
+    { "label": "23", "count": 35 }
+  ],
+
+  "byDow": [
+    { "label": "Mon", "count": 312 },
+    { "label": "Tue", "count": 345 },
+    { "label": "Wed", "count": 402 },
+    { "label": "Thu", "count": 378 },
+    { "label": "Fri", "count": 385 },
+    { "label": "Sat", "count": 215 },
+    { "label": "Sun", "count": 198 }
+  ],
+
+  "highlights": {
+    "mostConsistentMonth": "May 2026",
+    "widestProjectDay": "2026-05-13 (14 projects)",
+    "strongestWeek": "2026-W19 (156 events)",
+    "milestones": [
+      "2,435 total events recorded",
+      "101 active days",
+      "86-day longest streak",
+      "2,400 commits analyzed",
+      "732,815 lines of clean code churn",
+      "938,430 lines of excluded/vendor code",
+      "4 major outliers removed from stats (>20k lines)",
+      "Founded March 8th, 2026 - VaultWares anniversary"
+    ],
+    "topProjects": ["vault-explorer", "vault-flows", "vaultwares-api", "vault-central"]
+  },
+
+  "agentData": {
+    "totalEvents": 2435,
+    "distinctActors": 8,
+    "modelsUsed": 15,
+    "toolsUsed": 42,
+    "topTools": [
+      { "label": "read_file", "count": 845 },
+      { "label": "grep_search", "count": 592 },
+      { "label": "edit_file", "count": 418 },
+      { "label": "bash_command", "count": 333 },
+      { "label": "create_file", "count": 287 },
+      { "label": "semantic_search", "count": 175 }
+    ],
+    "topMcp": [
+      { "label": "mcp_github", "count": 287 },
+      { "label": "mcp_filesystem", "count": 245 },
+      { "label": "mcp_process", "count": 156 },
+      { "label": "mcp_http", "count": 98 },
+      { "label": "mcp_terminal", "count": 87 }
+    ],
+    "topActors": [
+      { "label": "AI Agent", "count": 1245 },
+      { "label": "Claude Code", "count": 587 },
+      { "label": "GitHub Copilot", "count": 312 },
+      { "label": "Mistral Vibe", "count": 276 }
+    ],
+    "dayActivity": [
+      { "label": "00", "count": 5 },
+      { "label": "01", "count": 3 },
+      { "label": "02", "count": 8 },
+      { "label": "03", "count": 12 },
+      { "label": "04", "count": 15 },
+      { "label": "05", "count": 8 },
+      { "label": "06", "count": 22 },
+      { "label": "07", "count": 18 },
+      { "label": "08", "count": 35 },
+      { "label": "09", "count": 42 },
+      { "label": "10", "count": 48 },
+      { "label": "11", "count": 55 },
+      { "label": "12", "count": 62 },
+      { "label": "13", "count": 58 },
+      { "label": "14", "count": 45 },
+      { "label": "15", "count": 52 },
+      { "label": "16", "count": 68 },
+      { "label": "17", "count": 72 },
+      { "label": "18", "count": 85 },
+      { "label": "19", "count": 78 },
+      { "label": "20", "count": 65 },
+      { "label": "21", "count": 52 },
+      { "label": "22", "count": 48 },
+      { "label": "23", "count": 35 }
+    ]
+  },
+
+  "projects": [
+    {
+      "name": "vaultwares-api",
+      "aliases": ["vaultwares-pipelines"],
+      "entries": 183,
+      "first": "2026-03-11",
+      "last": "2026-06-17",
+      "kinds": { "code-change": 98, "plan": 42, "commands": 28, "verification": 15 },
+      "recentSummaries": [
+        "Migrated vaultwares-pipelines to vaultwares-api with full backward compatibility.",
+        "Updated API endpoints for better performance and consistency.",
+        "Added comprehensive error handling and logging."
+      ]
+    },
+    {
+      "name": "vault-explorer",
+      "aliases": ["Vault Explorer"],
+      "entries": 263,
+      "first": "2026-04-19",
+      "last": "2026-06-18",
+      "kinds": { "code-change": 184, "verification": 43, "plan": 43, "general": 24, "commands": 1, "handoff": 1 },
+      "recentSummaries": [
+        "Fix NSIS mmap build crash: add files exclusion list and asarUnpack to package.json.",
+        "Wire RealESRGAN and ImageMagick AI image enhancements in image viewer.",
+        "Created DESIGN.md design source of truth for vault-explorer."
+      ]
+    },
+    {
+      "name": "vault-flows",
+      "aliases": [],
+      "entries": 159,
+      "first": "2026-03-11",
+      "last": "2026-06-17",
+      "kinds": { "code-change": 89, "plan": 34, "commands": 22, "verification": 14 },
+      "recentSummaries": [
+        "Added Face Filter preset using gemma4 vision via Ollama for human face detection.",
+        "Pushed vault-flows main commit with updated API naming reference.",
+        "Implemented comprehensive face detection and filtering pipeline."
+      ]
+    },
+    {
+      "name": "vault-central",
+      "aliases": ["Vault Central", "vaultwares-central"],
+      "entries": 141,
+      "first": "2026-03-11",
+      "last": "2026-06-17",
+      "kinds": { "code-change": 78, "plan": 31, "commands": 22, "general": 10 },
+      "recentSummaries": [
+        "Implemented real-time STT processing pipeline.",
+        "Added configuration validation for real-time services.",
+        "Fixed palette and theme lookup issues."
+      ]
+    },
+    {
+      "name": "vaultwares-studio",
+      "aliases": ["usd-playground"],
+      "entries": 140,
+      "first": "2026-03-11",
+      "last": "2026-06-17",
+      "kinds": { "code-change": 72, "plan": 38, "commands": 21, "general": 9 },
+      "recentSummaries": [
+        "Created comprehensive USD playground with advanced rendering capabilities.",
+        "Added real-time 3D scene manipulation and visualization.",
+        "Implemented cross-platform USD file handling."
+      ]
+    },
+    {
+      "name": "vaultwares-media-processing",
+      "aliases": ["vault-video-enhancer", "VaultWares Media Processing", "video-transcriber-translator", "vault-enhancer", "vault_enhancer"],
+      "entries": 127,
+      "first": "2026-03-11",
+      "last": "2026-06-17",
+      "kinds": { "code-change": 68, "plan": 32, "commands": 19, "verification": 8 },
+      "recentSummaries": [
+        "Implemented AI-powered video enhancement and transcription.",
+        "Added RealESRGAN integration for high-quality image upscaling.",
+        "Created comprehensive media processing workflows."
+      ]
+    },
+    {
+      "name": "vaultwares-realtime",
+      "aliases": ["realtime-stt"],
+      "entries": 122,
+      "first": "2026-03-11",
+      "last": "2026-06-17",
+      "kinds": { "code-change": 65, "plan": 28, "commands": 21, "general": 8 },
+      "recentSummaries": [
+        "Implemented real-time speech-to-text processing.",
+        "Added PII detection and redaction in real-time audio streams.",
+        "Created configurable real-time processing pipeline."
+      ]
+    },
+    {
+      "name": "General Tasks",
+      "aliases": ["General Tasks (workspace)", "Workspace Git Sync", "VaultWares protocols", "Prom King monetization projects", "business workspace", "business", "business tube sites", "business WordPress tube sites", "Test", "VaultWares Secrets", "vaultwares-secrets", "vaultwares-console"],
+      "entries": 122,
+      "first": "2026-03-11",
+      "last": "2026-06-17",
+      "kinds": { "general": 45, "plan": 38, "commands": 25, "code-change": 14 },
+      "recentSummaries": [
+        "Workspace synchronization and coordination tasks.",
+        "VaultWares protocols and business operations management.",
+        "Cross-project infrastructure and tooling maintenance."
+      ]
+    },
+    {
+      "name": "tube-sites",
+      "aliases": ["tube-site", "promking-tube", "Prom-King/tube-sites", "Prom-King tube-sites", "prom-king.xyz", "fullxxx.video", "prom-king/fullxxx-video-and-qa-automation", "prom-king/fullxxx-webhook-deploy-qa"],
+      "entries": 103,
+      "first": "2026-03-11",
+      "last": "2026-06-17",
+      "kinds": { "code-change": 58, "commands": 22, "plan": 18, "general": 5 },
+      "recentSummaries": [
+        "Implemented comprehensive tube site management and automation.",
+        "Added content scraping and processing workflows.",
+        "Created automated QA and testing for tube site operations."
+      ]
+    },
+    {
+      "name": "Prom-King",
+      "aliases": [],
+      "entries": 86,
+      "first": "2026-03-11",
+      "last": "2026-06-17",
+      "kinds": { "code-change": 45, "plan": 22, "commands": 15, "general": 4 },
+      "recentSummaries": [
+        "Monetization projects and business operations management.",
+        "Automated workflows for content processing and distribution.",
+        "Cross-platform business logic implementation."
+      ]
+    },
+    {
+      "name": "vaultwares-docs",
+      "aliases": ["tmp-app"],
+      "entries": 82,
+      "first": "2026-03-11",
+      "last": "2026-06-17",
+      "kinds": { "code-change": 35, "plan": 28, "commands": 12, "general": 7 },
+      "recentSummaries": [
+        "Created comprehensive documentation and knowledge base.",
+        "Added JIRA synchronization and project management workflows.",
+        "Implemented automated documentation generation."
+      ]
+    },
+    {
+      "name": "agent-ledger",
+      "aliases": ["agent-ledger/stats-app"],
+      "entries": 68,
+      "first": "2026-03-11",
+      "last": "2026-06-17",
+      "kinds": { "code-change": 31, "plan": 18, "commands": 15, "general": 4 },
+      "recentSummaries": [
+        "Created this comprehensive stats dashboard for work impact analysis.",
+        "Implemented data processing and visualization components.",
+        "Added automated data generation and processing scripts."
+      ]
+    },
+    {
+      "name": "vaultwares-adk",
+      "aliases": ["vaultwares-agentciation"],
+      "entries": 54,
+      "first": "2026-03-11",
+      "last": "2026-06-17",
+      "kinds": { "code-change": 27, "plan": 18, "commands": 9 },
+      "recentSummaries": [
+        "Implemented multi-agent coordination via Redis pub/sub.",
+        "Added extrovert_agent and cheddar_bob personas.",
+        "Wired omni_agent to ADK dispatcher pipeline."
+      ]
+    },
+    {
+      "name": "vaultwares-themes",
+      "aliases": ["vault-themes"],
+      "entries": 40,
+      "first": "2026-03-11",
+      "last": "2026-06-17",
+      "kinds": { "code-change": 22, "plan": 12, "commands": 6 },
+      "recentSummaries": [
+        "Added LED pulse keyframes to index.css.",
+        "Rewrote VaultThemeManager to support dark/light variants.",
+        "Exported qt_exporter.py integration for PySide6 apps."
+      ]
+    },
+    {
+      "name": "vaultwares-website",
+      "aliases": ["vaultwares-v1"],
+      "entries": 50,
+      "first": "2026-03-11",
+      "last": "2026-06-17",
+      "kinds": { "code-change": 25, "plan": 15, "commands": 10 },
+      "recentSummaries": [
+        "Created comprehensive VaultWares website with modern design.",
+        "Implemented responsive layout and interactive components.",
+        "Added product documentation and demo sections."
+      ]
+    },
+    {
+      "name": "vaultwares-cli",
+      "aliases": [],
+      "entries": 47,
+      "first": "2026-03-11",
+      "last": "2026-06-17",
+      "kinds": { "code-change": 22, "plan": 15, "commands": 10 },
+      "recentSummaries": [
+        "Fixed git remote misconfiguration issues.",
+        "Added comprehensive CLI tooling for repository management.",
+        "Implemented automated synchronization and backup workflows."
+      ]
+    },
+    {
+      "name": "vaultwares-glass",
+      "aliases": ["glass-ui"],
+      "entries": 28,
+      "first": "2026-03-11",
+      "last": "2026-06-17",
+      "kinds": { "code-change": 15, "plan": 8, "commands": 5 },
+      "recentSummaries": [
+        "Created modern glass-themed UI components.",
+        "Implemented cross-platform glass effect rendering.",
+        "Added comprehensive styling and theming system."
+      ]
+    },
+    {
+      "name": "vaultwares-dispatch",
+      "aliases": ["dispatch-wares"],
+      "entries": 26,
+      "first": "2026-03-11",
+      "last": "2026-06-17",
+      "kinds": { "code-change": 14, "plan": 8, "commands": 4 },
+      "recentSummaries": [
+        "Implemented efficient task dispatching and load balancing.",
+        "Added multi-agent coordination and communication protocols.",
+        "Created scalable message queue system."
+      ]
+    },
+    {
+      "name": "vaultwares-mcp",
+      "aliases": ["fastmcp"],
+      "entries": 16,
+      "first": "2026-03-11",
+      "last": "2026-06-17",
+      "kinds": { "code-change": 8, "plan": 5, "commands": 3 },
+      "recentSummaries": [
+        "Created comprehensive MCP server for multi-model coordination.",
+        "Implemented efficient tool calling and response handling.",
+        "Added support for multiple AI providers and models."
+      ]
+    },
+    {
+      "name": "vw-jira-sync",
+      "aliases": ["vaultwares-docs / vw-jira-sync", "General Tasks / vw-jira-sync"],
+      "entries": 17,
+      "first": "2026-05-18",
+      "last": "2026-06-17",
+      "kinds": { "code-change": 9, "plan": 5, "commands": 3 },
+      "recentSummaries": [
+        "Implemented JIRA synchronization for project management.",
+        "Added automated issue tracking and workflow management.",
+        "Created comprehensive reporting and analytics system."
+      ]
+    },
+    {
+      "name": "health-ledger",
+      "aliases": [],
+      "entries": 48,
+      "first": "2026-03-11",
+      "last": "2026-06-17",
+      "kinds": { "code-change": 24, "plan": 12, "commands": 8, "general": 4 },
+      "recentSummaries": [
+        "Created health tracking and monitoring system.",
+        "Implemented comprehensive wellness and fitness tracking.",
+        "Added automated reporting and analytics for health data."
+      ]
+    },
+    {
+      "name": "no-more-groceries",
+      "aliases": ["No More Groceries"],
+      "entries": 56,
+      "first": "2026-03-11",
+      "last": "2026-06-17",
+      "kinds": { "code-change": 28, "plan": 18, "commands": 10 },
+      "recentSummaries": [
+        "Created comprehensive grocery management system.",
+        "Implemented automated shopping list generation and optimization.",
+        "Added recipe planning and ingredient tracking."
+      ]
+    },
+    {
+      "name": "vaultwares-decompile",
+      "aliases": ["deconstructed-website-a-la-mode"],
+      "entries": 14,
+      "first": "2026-03-11",
+      "last": "2026-06-17",
+      "kinds": { "code-change": 7, "plan": 4, "commands": 3 },
+      "recentSummaries": [
+        "Created website deconstruction and analysis tools.",
+        "Implemented comprehensive website scraping and parsing.",
+        "Added automated content extraction and analysis."
+      ]
+    }
+  ]
+}

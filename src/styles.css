@@ -1,12 +1,40 @@
+@import "tailwindcss";
+
+@theme {
+  --color-vault-bg: #161320;
+  --color-vault-surface: #1F1A2B;
+  --color-vault-raised: #2A2340;
+  --color-vault-elevated: #31274A;
+  --color-vault-border: rgba(255,255,255,0.06);
+  --color-vault-fg: #EDE6FF;
+  --color-vault-slate: rgba(237,230,255,0.72);
+  --color-vault-muted: rgba(237,230,255,0.45);
+  --color-vault-chip: rgba(214,164,65,0.14);
+  --color-vault-gold: #D6A441;
+  --color-vault-gold-dim: rgba(214,164,65,0.32);
+  --color-vault-gold-muted: rgba(214,164,65,0.14);
+  --color-vault-gold-glow: rgba(214,164,65,0.08);
+  --color-vault-violet: #B07CFF;
+  --color-vault-cyan: #55D6FF;
+  --color-vault-cyan-hard: #21B8CC;
+  --color-vault-green: #6BE675;
+  --color-vault-green-hard: #4ECC21;
+  --color-vault-burgundy: #FF6B7A;
+  --color-vault-good0: rgba(176,124,255,0.08);
+  --color-vault-good1: rgba(214,164,65,0.22);
+  --color-vault-good2: rgba(214,164,65,0.48);
+  --color-vault-good3: rgba(214,164,65,0.75);
+  --color-vault-good4: #D6A441;
+  --font-sans: "Inter", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "Cascadia Code", ui-monospace, monospace;
+}
+
 /* VaultWares Monitor - Revamped Styles */
 /* Using VaultWares Revisited Design System Tokens */
 
 /* ============================================
    1. IMPORTS & THEME FOUNDATION
    ============================================ */
-
-@import "../vaultwares-themes/vaultwares-revisited/revisited.css";
-@import "../vaultwares-themes/assets/tokens/css-variables.css";
 
 /* ============================================
    2. CSS CUSTOM PROPERTIES - THEME TOKENS
@@ -43,6 +71,17 @@
   --vault-signal-sync: #B07CFF;
   --vault-signal-warning: #F0B94B;
   --vault-signal-alert: #FF6B7A;
+  --bg: var(--vault-console-bg);
+  --fg: #ede6ff;
+  --muted: var(--vault-console-text-secondary);
+  --border: var(--vault-console-border-subtle);
+  --card: var(--vault-console-surface);
+  --chip: rgba(214, 164, 65, 0.14);
+  --accent: var(--vault-console-gold);
+  --link: var(--vault-console-violet);
+  --v-surface2: var(--vault-console-raised);
+  --v-burgundy: var(--vault-signal-alert);
+  --v-gold-dim: rgba(214, 164, 65, 0.32);
   
   /* Spacing Scale (from vaultwares-themes) */
   --vault-spacing-0: 0;
@@ -270,7 +309,8 @@ svg {
   min-width: 0;
 }
 
-.nav-list button {
+.nav-list button,
+.nav-list a {
   position: relative;
   display: grid;
   grid-template-columns: 20px minmax(0, 1fr);
@@ -287,26 +327,31 @@ svg {
   transition: all var(--vault-motion-base) var(--vault-motion-state-ease);
 }
 
-.nav-list button span:last-child {
+.nav-list button span:last-child,
+.nav-list a span:last-child {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .nav-list button:hover,
-.nav-list button:focus-visible {
+.nav-list button:focus-visible,
+.nav-list a:hover,
+.nav-list a:focus-visible {
   border-color: var(--vault-warm-border-subtle);
   background: var(--vault-warm-muted);
   outline: none;
 }
 
-.nav-list button.active {
+.nav-list button.active,
+.nav-list a.active {
   border-color: color-mix(in srgb, var(--vault-console-gold) 42%, transparent);
   color: #161320;
   background: color-mix(in srgb, var(--vault-console-gold) 16%, var(--vault-warm-raised));
 }
 
-.nav-list button.active::before {
+.nav-list button.active::before,
+.nav-list a.active::before {
   position: absolute;
   top: 10px;
   bottom: 10px;
@@ -397,7 +442,10 @@ svg {
   min-width: 0;
   min-height: 100vh;
   padding: var(--vault-spacing-3);
-  /* Monitor stage uses console theme - dark terminal-like background */
+  color: var(--fg);
+  background:
+    radial-gradient(circle at 15% 0%, rgba(176, 124, 255, 0.14), transparent 32rem),
+    linear-gradient(180deg, var(--vault-console-surface), var(--vault-console-bg));
 }
 
 /* Top Bar */
@@ -611,6 +659,76 @@ p {
   color: #fff8e6;
   font-size: 26px;
   line-height: 1.05;
+}
+
+.page-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--vault-spacing-3);
+  padding-bottom: var(--vault-spacing-3);
+  border-bottom: 1px solid var(--border);
+}
+.page-heading h1 { margin: 0 0 6px; color: var(--fg); font-size: 28px; }
+.page-heading p { margin: 0; color: var(--muted); }
+.page-state { padding: 64px 24px; color: var(--muted); text-align: center; }
+.status-led { width: 9px; height: 9px; border-radius: 50%; animation: ledPulse 8s ease-in-out infinite; }
+.status-led.healthy { background: var(--vault-signal-online); box-shadow: 0 0 8px var(--vault-signal-online); }
+.status-led.stale { background: var(--vault-signal-warning); box-shadow: 0 0 8px var(--vault-signal-warning); }
+.status-led.offline { background: var(--vault-signal-alert); box-shadow: 0 0 8px var(--vault-signal-alert); }
+.service-summary { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; }
+.summary-stat { display: grid; gap: 4px; padding: 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--card); }
+.summary-stat span { color: var(--muted); font-size: 11px; font-weight: 700; text-transform: uppercase; }
+.summary-stat strong { color: var(--fg); font-size: 24px; }
+.filter-bar { display: grid; grid-template-columns: repeat(4, minmax(140px, 1fr)); gap: 8px; }
+.filter-field { display: grid; gap: 5px; }
+.filter-field span { color: var(--muted); font-size: 11px; font-weight: 700; text-transform: uppercase; }
+.filter-field select,
+.search-form select {
+  min-height: 40px;
+  padding: 0 12px;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 8px;
+  color: var(--fg);
+  background: var(--card);
+}
+.status-label { display: inline-flex; padding: 4px 8px; border-radius: 999px; font-size: 11px; font-weight: 800; text-transform: uppercase; }
+.status-healthy { color: var(--vault-signal-online); }
+.status-degraded, .status-stale { color: var(--vault-signal-warning); }
+.status-offline { color: var(--vault-signal-alert); }
+.status-unmonitored { color: var(--muted); }
+.search-form-expanded { grid-template-columns: repeat(4, minmax(150px, 1fr)); padding: 16px; border: 1px solid var(--border); border-radius: 8px; background: var(--card); }
+.search-form-expanded label:first-child { grid-column: span 2; }
+.result-item summary { cursor: pointer; list-style: none; }
+.result-item summary span { margin-top: 4px; color: var(--muted); font-size: 12px; }
+.result-item[open] .json-block { margin-top: 12px; }
+
+.stat-values {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--vault-spacing-2);
+}
+
+.stat-secondary {
+  display: grid;
+  justify-items: end;
+  gap: 2px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.stat-secondary span {
+  color: var(--vault-console-text-secondary);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.stat-secondary b {
+  color: color-mix(in srgb, #fff8e6 76%, var(--vault-console-text-secondary));
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.1;
 }
 
 .stat small {

@@ -1,5 +1,15 @@
 export type SignalStatus = "ok" | "online" | "unchecked" | "missing" | "offline" | "failed" | "stale" | string;
 
+const knownKinds = new Set(["code-change", "plan", "verification", "commands", "handoff", "general"]);
+
+export function parseKinds(kind?: string): string[] {
+  return kind ? kind.split(/[,+|]/).map((part) => part.trim()).filter(Boolean) : ["general"];
+}
+
+export function isKnownKind(kind: string) {
+  return knownKinds.has(kind);
+}
+
 export interface HealthTotals {
   total: number;
   ok: number;
@@ -81,6 +91,50 @@ export interface KiwiStatus {
   message?: string;
 }
 
+export interface UploadFailure {
+  timestamp: string;
+  path: string;
+  reason: string;
+}
+
+export interface UploadRun {
+  timestamp: string;
+  ok: number;
+  fail: number;
+  skip: number;
+}
+
+export interface UploadOtherError {
+  timestamp: string | null;
+  message: string;
+}
+
+export interface UploadRow {
+  id: number;
+  local_path: string;
+  remote_path: string;
+  drive_link: string | null;
+  size_bytes: number;
+  media_type: string;
+  uploaded_at: string;
+  unmonitored: number;
+  linkvertise_link: string | null;
+  linkvertise_id: string | null;
+}
+
+export interface UploadsSummary {
+  source: string;
+  status: SignalStatus;
+  generated_at: string;
+  paths: { db: string; log: string };
+  totals_24h: { ok: number; fail: number; skip: number; runs: number };
+  totals_overall: { ok: number; fail: number; skip: number; runs: number };
+  recent_failures: UploadFailure[];
+  recent_runs: UploadRun[];
+  other_errors: UploadOtherError[];
+  recent_uploads: UploadRow[];
+}
+
 export interface OverviewResponse {
   name: string;
   internal_name: string;
@@ -92,6 +146,7 @@ export interface OverviewResponse {
   logging: {
     kiwi: KiwiStatus;
   };
+  uploads?: UploadsSummary;
 }
 
 export interface SearchResult {
@@ -106,12 +161,114 @@ export interface SearchResult {
   ok?: boolean;
   failure_class?: string;
   model?: string;
+  tool?: string;
+  mcp_server?: string;
+  run_id?: string;
+  diagnostics?: Record<string, unknown>;
 }
 
 export interface SearchResponse {
   query: string;
   count: number;
   items: SearchResult[];
+}
+
+export type ServiceProduct = "vaultwares" | "prom-king" | "shared";
+export type ServiceType =
+  | "site"
+  | "app"
+  | "api"
+  | "database"
+  | "container"
+  | "service"
+  | "timer"
+  | "scheduled-task"
+  | "runner"
+  | "joker";
+export type ServiceStatus =
+  | "healthy"
+  | "degraded"
+  | "offline"
+  | "stale"
+  | "unmonitored";
+
+export interface MonitoredService {
+  id: string;
+  name: string;
+  product: ServiceProduct;
+  type: ServiceType;
+  host: string;
+  runtime?: string;
+  status: ServiceStatus;
+  checkedAt?: string;
+  lastSuccessAt?: string;
+  lastFailureAt?: string;
+  latencyMs?: number;
+  dependencies: string[];
+}
+
+export interface ServicesResponse {
+  source: "health-ledger";
+  generatedAt: string;
+  count: number;
+  items: MonitoredService[];
+}
+
+export interface ServiceFilters {
+  product: ServiceProduct | "all";
+  type: ServiceType | "all";
+  host: string | "all";
+  status: ServiceStatus | "all";
+}
+
+export interface ServiceSummary {
+  total: number;
+  healthy: number;
+  degraded: number;
+  offline: number;
+  stale: number;
+  unmonitored: number;
+}
+
+export interface ChangeEvent {
+  createdAt?: string;
+  createdAtLocal?: string;
+  project?: string;
+  kind?: string;
+  summary?: string;
+  actor?: string;
+  agentHeader?: string;
+  commands?: string[];
+  files?: string[];
+  planPath?: string;
+  git?: { repo?: string; branch?: string; head?: string };
+  telemetry?: { flags?: Record<string, unknown>; metrics?: Record<string, unknown> };
+}
+
+export interface InputTrackerData {
+  source?: string;
+  status?: string;
+  generated_at?: string;
+  latest_received_at?: string | null;
+  window_hours?: number;
+  totals?: Record<string, number>;
+  derived?: { wpm?: number; cpm?: number; correction_ratio?: number; click_to_travel_ratio?: number };
+  kpis?: {
+    focus?: Record<string, number | string | null>;
+    typing?: Record<string, number | string | null>;
+    pointer?: Record<string, number | string | null>;
+    rhythm?: Record<string, number | string | null>;
+    reliability?: Record<string, number | string | null>;
+  };
+  key_latency_buckets?: { name: string; count: number }[];
+  click_hotspots?: { name: string; count: number }[];
+  focus_categories?: { name: string; count: number }[];
+  focus_windows?: { name: string; category?: string; count: number }[];
+  events?: Array<{
+    event_id?: string; event_type?: string; timestamp?: string;
+    metrics?: Record<string, unknown>; dimensions?: Record<string, unknown>;
+  }>;
+  message?: string;
 }
 
 export interface QALogEntry {
