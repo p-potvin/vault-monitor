@@ -132,3 +132,11 @@ export function fmtDate(iso: string): string {
   const d = new Date(iso + 'T00:00:00')
   return d.toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric' })
 }
+
+/** Prettify raw strings like 'claude-opus-4-7' to 'Claude Opus 4 7' */
+export function humanizeString(str: unknown): string {
+  if (typeof str !== 'string' || !str) return String(str || '');
+  return str
+    .replace(/[-_]/g, ' ')
+    .replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase());
+}

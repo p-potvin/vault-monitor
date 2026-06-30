@@ -14,7 +14,9 @@ function levelClass(count: number): string {
   if (count <= 3)  return 'bg-vault-good1'
   if (count <= 8)  return 'bg-vault-good2'
   if (count <= 15) return 'bg-vault-good3'
-  return 'bg-vault-good4'
+  if (count <= 30) return 'bg-vault-good4'
+  if (count <= 90) return 'bg-vault-good5'
+  return 'bg-vault-good6'
 }
 
 function buildWeekGrid(daySeries: DayEntry[]): DayEntry[][] {
@@ -84,7 +86,7 @@ export default function HeatmapGrid({ daySeries, t }: HeatmapGridProps) {
       {/* Legend */}
       <div className="flex items-center gap-2 mt-2 text-[11px] text-vault-muted">
         <span>{t.less}</span>
-        {['bg-vault-good0','bg-vault-good1','bg-vault-good2','bg-vault-good3','bg-vault-good4'].map((c, i) => (
+        {['bg-vault-good0','bg-vault-good1','bg-vault-good2','bg-vault-good3','bg-vault-good4','bg-vault-good5','bg-vault-good6'].map((c, i) => (
           <div key={i} className={`w-[11px] h-[11px] rounded-[2px] ${c}`} />
         ))}
         <span>{t.more}</span>

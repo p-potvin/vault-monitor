@@ -126,7 +126,7 @@ const en: I18nStrings = {
   projectsNote:          'Top 20 shown.',
 
   commitSizeTitle:       'Commit Size Distribution',
-  commitSizeHint:        'Lines changed per commit (insertions + deletions).',
+  commitSizeHint:        'Lines changed per commit. Only evaluates commits associated with VaultWares ledger events, not the full GitHub history.',
   commitStatMean:        'Mean',
   commitStatMedian:      'Median',
   commitStatMode:        'Mode',
@@ -185,7 +185,7 @@ const en: I18nStrings = {
 
   agentEventsLabel: 'Events',
   distinctActors:   'Actors',
-  modelsUsed:       'Models',
+  modelsUsed:       'MCP tools',
   toolsUsed:        'Tools used',
 
   streakMax: (n: number) => `Max: ${n} days`,

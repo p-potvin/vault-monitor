@@ -8,6 +8,7 @@ interface BarListProps {
   items: { label: string; count: number }[]
   max?: number
   color?: BarColor
+  logScale?: boolean
 }
 
 const FILL_CLASSES: Record<BarColor, string> = {
@@ -18,7 +19,7 @@ const FILL_CLASSES: Record<BarColor, string> = {
   burgundy: 'bg-vault-burgundy',
 }
 
-export default function BarList({ items, max, color = 'gold' }: BarListProps) {
+export default function BarList({ items, max, color = 'gold', logScale = false }: BarListProps) {
   const peak = max ?? Math.max(...items.map(i => i.count), 1)
   const fill = FILL_CLASSES[color]
 
@@ -27,7 +28,14 @@ export default function BarList({ items, max, color = 'gold' }: BarListProps) {
   return (
     <div className="flex flex-col gap-[5px] w-full">
       {items.map(({ label, count }) => {
-        const pct = Math.round((count / peak) * 100)
+        let pct = 0
+        if (peak > 0) {
+          if (logScale) {
+            pct = Math.round((Math.log(count + 1) / Math.log(peak + 1)) * 100)
+          } else {
+            pct = Math.round((count / peak) * 100)
+          }
+        }
         return (
           <div key={label} className="flex items-center gap-2 min-w-0 text-[13px]">
             <span

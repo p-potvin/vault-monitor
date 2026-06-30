@@ -14,12 +14,16 @@ import Highlights from "../features/work-impact/components/Highlights";
 import ActivityPatterns from "../features/work-impact/components/ActivityPatterns";
 import type { ReactNode } from "react";
 
+import { InfoTooltip } from "../components/InfoTooltip";
+
 function Section({ title, hint, children }: { title: string; hint?: string; children: ReactNode }) {
   return (
     <section className="bg-vault-surface border border-vault-border rounded-[10px] p-5 flex flex-col gap-4">
       <div className="flex flex-col gap-1">
-        <h2 className="text-[13px] font-bold uppercase tracking-[0.06em] text-vault-fg">{title}</h2>
-        {hint && <p className="text-[12px] text-vault-muted">{hint}</p>}
+        <h2 className="text-[13px] font-bold uppercase tracking-[0.06em] text-vault-fg flex items-center gap-2">
+          {title}
+          {hint && <InfoTooltip text={hint} />}
+        </h2>
       </div>
       {children}
     </section>
@@ -49,16 +53,16 @@ export function WorkImpactPage() {
       <Section title={t.calendarTitle} hint={t.calendarHint}><HeatmapGrid daySeries={d.daySeries} t={t} /></Section>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Section title={t.monthlyTitle}><BarList items={d.byMonth} color="cyan" /></Section>
-        <Section title={t.kindsTitle}><BarList items={d.byKind} color="violet" /></Section>
+        <Section title={t.kindsTitle}><BarList items={d.byKind} color="violet" logScale /></Section>
         <Section title={t.projectsTitle}><BarList items={d.byProject.slice(0, 8)} color="gold" /></Section>
       </div>
       <Section title={t.commitSizeTitle} hint={t.commitSizeHint}><CommitStats commitStats={d.commitStats} commitBuckets={d.commitBuckets} monthBoxes={d.monthBoxes} commitOutliers={d.commitOutliers} t={t} /></Section>
       <Section title={t.techTitle} hint={t.techHint}><TechVolumeTable techVolume={d.techVolume} t={t} /></Section>
-      <Section title={t.filesTouchedTitle}><FilesTouched filesTouched={d.filesTouched} t={t} /></Section>
+      <Section title={t.filesTouchedTitle} hint="Total number of files modified across all logged commits."><FilesTouched filesTouched={d.filesTouched} t={t} /></Section>
       <Section title={t.concentrationTitle} hint={t.concentrationHint}><ConcentrationBars concentration={d.concentration} t={t} /></Section>
       <Section title={t.activityTitle} hint={t.activityHint}><ActivityPatterns byHour={d.byHour} byDow={d.byDow} t={t} /></Section>
       {d.projects?.length ? <Section title={t.evidenceTitle} hint={t.evidenceHint}><div className="flex flex-col gap-[3px]">{d.projects.map((project) => <ProjectCard key={project.name} project={project} t={t} />)}</div></Section> : null}
-      <Section title={t.agentTitle} hint={t.agentHint}><AgentSection agent={d.agentData} t={t} /></Section>
+      <Section title={t.agentTitle} hint="Agent activity is specifically filtered to exclude direct human activity (e.g. your GitHub profile)."><AgentSection agent={d.agentData} t={t} /></Section>
       {d.highlights ? <Section title={t.highlightsTitle} hint={t.highlightsHint}><Highlights highlights={d.highlights} t={t} /></Section> : null}
     </main>
   );

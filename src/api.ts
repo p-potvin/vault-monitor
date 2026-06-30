@@ -91,7 +91,7 @@ export function adaptWorkImpact(payload: Record<string, unknown>): WorkImpactDat
   const raw = (payload.data && typeof payload.data === "object" ? payload.data : payload) as Record<string, any>;
   if (Array.isArray(raw.daySeries)) return raw as WorkImpactData;
 
-  const snapshot = workImpactSnapshot as WorkImpactData;
+  const snapshot = workImpactSnapshot as unknown as WorkImpactData;
   const days = Array.isArray(raw.series?.days) ? raw.series.days : [];
   const projects = Array.isArray(raw.series?.projects) ? raw.series.projects : [];
   const kinds = Array.isArray(raw.series?.kinds) ? raw.series.kinds : [];
@@ -184,6 +184,7 @@ export function adaptWorkImpact(payload: Record<string, unknown>): WorkImpactDat
     rangeEnd: lastSeen,
     totalEvents: daySeries.length ? totalEvents : Number(raw.totals?.events ?? snapshot.totalEvents),
     activeDays: daySeries.length ? activeDays : Number(raw.totals?.activeDays ?? snapshot.activeDays),
+    totalCommits: Number(raw.totals?.uniqueCommitsRecomputed ?? raw.totals?.commits ?? snapshot.totalCommits ?? 0),
     totalProjects,
     streakCurrent: daySeries.length ? streakCurrent : snapshot.streakCurrent,
     streakLongest: daySeries.length ? streakLongest : snapshot.streakLongest,
