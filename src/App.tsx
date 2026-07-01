@@ -46,12 +46,17 @@ function Shell() {
       </div>
 
       <div className="rail-header">    
-      <div className="rail-label">Command deck</div>    
-        <div className="rail-status" title={apiOnline === false ? t.degraded : t.online}><p>{t.status}</p><div className="rail-status-line"><span className={`status-led ${apiOnline === true ? "healthy" : apiOnline === false ? "offline" : "stale"}`} /><strong>{apiOnline === false ? t.degraded : t.online}</strong></div></div>
-        <div className="locale-toggle" aria-label={t.language}><button className={lang === "en" ? "active" : ""} onClick={() => setLang("en")}>EN</button><button className={lang === "qc" ? "active" : ""} onClick={() => setLang("qc")}>QC</button></div>
+        <div className="rail-label">Command deck</div>    
+        <div className="rail-status" title={apiOnline === false ? t.degraded : t.online}>
+          <div className="rail-status-line">
+            <span className={`status-led ${apiOnline === true ? "healthy" : apiOnline === false ? "offline" : "stale"}`} />
+            <strong>{apiOnline === false ? t.degraded : t.online}</strong>
+          </div>
+        </div>
       </div>
       
       <nav className="nav-list" aria-label="Main navigation">{nav.map((item) => <NavLink key={item.to} to={item.to} className={({ isActive }) => isActive ? "active" : ""} title={t[item.label]}><span>{item.icon}</span><span>{t[item.label]}</span></NavLink>)}</nav>      
+      <div className="locale-toggle" aria-label={t.language}><button className={lang === "en" ? "active" : ""} onClick={() => setLang("en")}>EN</button><button className={lang === "qc" ? "active" : ""} onClick={() => setLang("qc")}>QC</button></div>
     </aside>
     <section className="monitor-stage">
       <Routes>

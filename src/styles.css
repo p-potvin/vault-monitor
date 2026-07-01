@@ -248,7 +248,8 @@ svg {
   display: grid;
   grid-template-rows: auto auto 1fr auto auto;
   gap: var(--vault-spacing-2);
-  height: 117vh;
+  height: 100vh;
+  max-height: 130vh;
   padding: 30px 12px;
   border-right: 1px solid var(--vault-warm-border-subtle);
   background: linear-gradient(180deg,
@@ -310,10 +311,11 @@ svg {
 
 /* Rail Header */
 .rail-header {
-  display: grid;
-  grid-template-columns: 5fr 2fr 1fr;
-  gap: var(--vault-spacing-4);
-  padding: var(--vault-spacing-0);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--vault-spacing-2);
+  padding: var(--vault-spacing-1);
   margin-top: var(--vault-spacing-1);
   font-size: 11px;
   font-weight: 800;
@@ -323,29 +325,18 @@ svg {
 }
 
 .rail-label {
-  padding: 0 var(--vault-spacing-2);
   white-space: nowrap;
 }
 
 /* Rail Status */
 .rail-status {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  place-items: center;
-  gap: var(--vault-spacing-0);
-  padding: var(--vault-spacing-1);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vault-spacing-2);
+  padding: 4px 10px;
   border: 1px solid var(--vault-warm-border-subtle);
   border-radius: 22px;
   background: var(--vault-warm-raised);
-}
-
-.rail-status p {
-  margin: 0;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: rgba(22, 19, 32, 0.62);
 }
 
 .rail-status-line {
@@ -358,12 +349,10 @@ svg {
 .rail-status-line strong {
   overflow-wrap: anywhere;
   color: #161320;
-  font-size: 13px;
-}
-
-.rail-status time {
-  color: rgba(22, 19, 32, 0.62);
-  font-size: 12px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .rail-error {
@@ -376,16 +365,18 @@ svg {
 .locale-toggle {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--vault-spacing-4);
-  padding: var(--vault-spacing-2);
+  gap: 4px;
+  padding: 4px;
   border: 1px solid var(--vault-warm-border-subtle);
-  border-radius: var(--vault-radius-xl);
+  border-radius: 20px;
   background: var(--vault-warm-muted);
+  margin-top: auto;
 }
 
 .locale-toggle button {
   border: 0;
-  border-radius: 14px;
+  border-radius: 16px;
+  padding: 6px 0;
   color: rgba(22, 19, 32, 0.65);
   background: transparent;
   cursor: pointer;
@@ -396,8 +387,8 @@ svg {
 
 .locale-toggle button.active {
   color: #161320;
-  background: var(--vault-warm-raised);
-  box-shadow: 0 8px 22px rgba(22, 19, 32, 0.12);
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(22, 19, 32, 0.08);
 }
 
 .app-shell.collapsed .rail-label {
@@ -451,18 +442,7 @@ svg {
   border-color: color-mix(in srgb, var(--vault-console-gold) 42%, transparent);
   color: #161320;
   background: color-mix(in srgb, var(--vault-console-gold) 16%, var(--vault-warm-raised));
-}
-
-.nav-list button.active::before,
-.nav-list a.active::before {
-  position: absolute;
-  top: 10px;
-  bottom: 10px;
-  left: 0;
-  width: 3px;
-  border-radius: var(--vault-radius-pill);
-  background: var(--vault-console-gold);
-  content: "";
+  border-radius: 24px;
 }
 
 /* ============================================
@@ -1682,7 +1662,7 @@ td span {
   align-items: center;
   justify-content: center;
   position: absolute;
-  right: -24px;
+  right: -25px;
   top: 50%;
   transform: translateY(-50%);
   width: 26px;
