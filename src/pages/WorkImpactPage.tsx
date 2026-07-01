@@ -1,18 +1,18 @@
-import { useLangState } from "../i18n";
-import { useWorkImpactData } from "../useData";
-import { getI18n } from "../features/work-impact/lib/i18n";
-import KpiCard from "../features/work-impact/components/KpiCard";
-import HeatmapGrid from "../features/work-impact/components/HeatmapGrid";
+import type { ReactNode } from "react";
+import ActivityPatterns from "../features/work-impact/components/ActivityPatterns";
+import AgentSection from "../features/work-impact/components/AgentSection";
 import BarList from "../features/work-impact/components/BarList";
 import CommitStats from "../features/work-impact/components/CommitStats";
-import TechVolumeTable from "../features/work-impact/components/TechVolumeTable";
-import FilesTouched from "../features/work-impact/components/FilesTouched";
 import ConcentrationBars from "../features/work-impact/components/ConcentrationBars";
-import ProjectCard from "../features/work-impact/components/ProjectCard";
-import AgentSection from "../features/work-impact/components/AgentSection";
+import FilesTouched from "../features/work-impact/components/FilesTouched";
+import HeatmapGrid from "../features/work-impact/components/HeatmapGrid";
 import Highlights from "../features/work-impact/components/Highlights";
-import ActivityPatterns from "../features/work-impact/components/ActivityPatterns";
-import type { ReactNode } from "react";
+import KpiCard from "../features/work-impact/components/KpiCard";
+import ProjectCard from "../features/work-impact/components/ProjectCard";
+import TechVolumeTable from "../features/work-impact/components/TechVolumeTable";
+import { getI18n } from "../features/work-impact/lib/i18n";
+import { useLangState } from "../i18n";
+import { useWorkImpactData } from "../useData";
 
 import { InfoTooltip } from "../components/InfoTooltip";
 

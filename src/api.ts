@@ -89,9 +89,23 @@ export function getInputTracker(signal?: AbortSignal) {
 
 export function adaptWorkImpact(payload: Record<string, unknown>): WorkImpactData {
   const raw = (payload.data && typeof payload.data === "object" ? payload.data : payload) as Record<string, any>;
-  if (Array.isArray(raw.daySeries)) return raw as WorkImpactData;
-
   const snapshot = workImpactSnapshot as unknown as WorkImpactData;
+  
+  if (Array.isArray(raw.daySeries)) {
+    return {
+      ...snapshot,
+      ...raw,
+      commitStats: raw.commitStats ?? snapshot.commitStats,
+      commitBuckets: raw.commitBuckets ?? snapshot.commitBuckets,
+      monthBoxes: raw.monthBoxes ?? snapshot.monthBoxes,
+      commitOutliers: raw.commitOutliers ?? snapshot.commitOutliers,
+      techVolume: raw.techVolume ?? snapshot.techVolume,
+      filesTouched: raw.filesTouched ?? snapshot.filesTouched,
+      concentration: raw.concentration ?? snapshot.concentration,
+      agentData: raw.agentData ?? snapshot.agentData,
+      highlights: raw.highlights ?? snapshot.highlights
+    } as WorkImpactData;
+  }
   const days = Array.isArray(raw.series?.days) ? raw.series.days : [];
   const projects = Array.isArray(raw.series?.projects) ? raw.series.projects : [];
   const kinds = Array.isArray(raw.series?.kinds) ? raw.series.kinds : [];
