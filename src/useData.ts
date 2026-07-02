@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { getChanges, getInputTracker, getWorkImpact } from "./api";
 import type { ChangeEvent, InputTrackerData } from "./types";
 import type { WorkImpactData } from "./features/work-impact/lib/types";
@@ -9,6 +9,9 @@ function useRequest<T>(request: (signal: AbortSignal) => Promise<T>) {
   const [error, setError] = useState("");
   useEffect(() => {
     const controller = new AbortController();
+    setLoading(true);
+    setError("");
+    setData(null);
     request(controller.signal)
       .then(setData)
       .catch((reason: Error) => {
@@ -29,6 +32,7 @@ export function useChangesData() {
   return { events: state.data ?? [], loading: state.loading, error: state.error };
 }
 
-export function useInputTrackerData() {
-  return useRequest<InputTrackerData>(getInputTracker);
+export function useInputTrackerData(hours = 168) {
+  const request = useCallback((signal: AbortSignal) => getInputTracker(signal, hours), [hours]);
+  return useRequest<InputTrackerData>(request);
 }

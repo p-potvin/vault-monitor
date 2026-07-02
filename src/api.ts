@@ -83,8 +83,9 @@ export async function getChanges(signal?: AbortSignal): Promise<ChangeEvent[]> {
   return Array.isArray(body) ? body : body.events ?? [];
 }
 
-export function getInputTracker(signal?: AbortSignal) {
-  return getJson<InputTrackerData>("/monitor/input-tracker?hours=168", signal);
+export function getInputTracker(signal?: AbortSignal, hours = 168) {
+  const query = Number.isFinite(hours) && hours > 0 ? `?hours=${Math.trunc(hours)}` : "";
+  return getJson<InputTrackerData>(`/monitor/input-tracker${query}`, signal);
 }
 
 export function adaptWorkImpact(payload: Record<string, unknown>): WorkImpactData {

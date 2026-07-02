@@ -241,15 +241,23 @@ svg {
    ============================================ */
 
 .warm-rail {
+  flex: 0 0 var(--sidebar-width, 292px);
   width: var(--sidebar-width, 292px);
   min-width: var(--sidebar-width, 292px);
-  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), min-width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition:
+    flex-basis var(--vault-motion-base) var(--vault-motion-state-ease),
+    width var(--vault-motion-base) var(--vault-motion-state-ease),
+    min-width var(--vault-motion-base) var(--vault-motion-state-ease);
   position: sticky;
+  top: 0;
+  align-self: flex-start;
   display: grid;
   grid-template-rows: auto auto 1fr auto auto;
   gap: var(--vault-spacing-2);
   height: 100vh;
-  max-height: 130vh;
+  max-height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
   padding: 30px 12px;
   border-right: 1px solid var(--vault-warm-border-subtle);
   background: linear-gradient(180deg,
@@ -307,6 +315,7 @@ svg {
   opacity: 0;
   width: 0;
   overflow: hidden;
+  transition: opacity var(--vault-motion-fast) var(--vault-motion-state-ease), width var(--vault-motion-fast) var(--vault-motion-state-ease);
 }
 
 /* Rail Header */
@@ -1685,7 +1694,9 @@ td span {
 
 .app-shell.collapsed .nav-list button span:last-child,
 .app-shell.collapsed .nav-list a span:last-child {
-  display: none !important;
+  width: 0 !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 
 .app-shell.collapsed .nav-list a,

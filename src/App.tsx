@@ -28,13 +28,16 @@ function Logo() {
 function Shell() {
   const [lang, setLang] = useLangState();
   const [apiOnline, setApiOnline] = useState<boolean | null>(null);
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(() => localStorage.getItem("vault-monitor-sidebar-collapsed") === "1");
   const t = copy[lang];
   useEffect(() => {
     const controller = new AbortController();
     getServices(controller.signal).then(() => setApiOnline(true)).catch((reason: Error) => reason.name !== "AbortError" && setApiOnline(false));
     return () => controller.abort();
   }, []);
+  useEffect(() => {
+    localStorage.setItem("vault-monitor-sidebar-collapsed", collapsed ? "1" : "0");
+  }, [collapsed]);
   return <div className={`app-shell ${collapsed ? "collapsed" : ""}`}>
     <aside className="warm-rail">
       <div className="brand-block">
