@@ -1,7 +1,7 @@
 import type { ChangeEvent, InputTrackerData, SearchResponse, ServicesResponse } from "./types";
 import type { WorkImpactData } from "./features/work-impact/lib/types";
 import workImpactSnapshot from "./features/work-impact/lib/data.json";
-import { normalizeProject, isOwnedProject } from "./features/work-impact/lib/aliases";
+import { normalizeProject, isOwnedProject, initAliases } from "./features/work-impact/lib/aliases";
 
 // ── Work Impact transform config ──────────────────────────────────────────────
 // VaultWares foundation date. Events before this are dropped from every series.
@@ -78,6 +78,54 @@ export function getServices(signal?: AbortSignal) {
   return getJson<ServicesResponse>("/monitor/services", signal);
 }
 
+// ── Deploy status (cross-project) ─────────────────────────────────────────
+// Endpoint contract documented at
+// vaultwares-docs/docs-content/operations/deploy-status-api.mdx.
+// Fed by /var/lib/vw-deploy/status/<project>.json which each deploy script
+// writes on completion. Same endpoint powers the Marketing tab in
+// shared-tube's admin — do NOT clone this into a second endpoint.
+export interface DeployTarget {
+  id: string;
+  site: string | null;
+  version: string | null;
+  sha: string | null;
+  systemd?: { unit: string; active: string; since: string } | null;
+}
+export interface DeployProject {
+  project: string;
+  repo_sha?: string | null;
+  shared_version?: string | null;
+  api_version?: string | null;
+  log_path?: string | null;
+  targets: DeployTarget[];
+  last_build: {
+    phase: "building" | "ok" | "failed" | "unknown";
+    sha?: string | null;
+    site?: string | null;
+    started_at?: string | null;
+    finished_at?: string | null;
+    duration_s?: number | null;
+    ok?: boolean | null;
+  };
+  log_tail?: string[];
+}
+export interface DeploysResponse {
+  as_of: string;
+  projects: Record<string, DeployProject>;
+}
+
+export function getDeploys(
+  opts: { project?: string; site?: string; logs?: boolean } = {},
+  signal?: AbortSignal,
+): Promise<DeploysResponse> {
+  const params = new URLSearchParams();
+  if (opts.project) params.set("project", opts.project);
+  if (opts.site) params.set("site", opts.site);
+  if (opts.logs) params.set("logs", "true");
+  const q = params.toString();
+  return getJson<DeploysResponse>(`/monitor/deploys${q ? `?${q}` : ""}`, signal);
+}
+
 export async function getChanges(signal?: AbortSignal): Promise<ChangeEvent[]> {
   const body = await getJson<{ events?: ChangeEvent[] } | ChangeEvent[]>("/monitor/changes", signal);
   return Array.isArray(body) ? body : body.events ?? [];
@@ -88,7 +136,8 @@ export function getInputTracker(signal?: AbortSignal, hours = 168) {
   return getJson<InputTrackerData>(`/monitor/input-tracker${query}`, signal);
 }
 
-export function adaptWorkImpact(payload: Record<string, unknown>): WorkImpactData {
+export async function adaptWorkImpact(payload: Record<string, unknown>, signal?: AbortSignal): Promise<WorkImpactData> {
+  await initAliases(base, signal);
   const raw = (payload.data && typeof payload.data === "object" ? payload.data : payload) as Record<string, any>;
   const snapshot = workImpactSnapshot as unknown as WorkImpactData;
   
@@ -124,8 +173,13 @@ export function adaptWorkImpact(payload: Record<string, unknown>): WorkImpactDat
   // Zero-fill missing days so the heatmap + streak math see real gaps instead
   // of the API's sparse omit-zero output.
   const lastSeen = daysAfterCutoff[daysAfterCutoff.length - 1]?.date ?? WORK_IMPACT_CUTOFF;
+  
+  // Use today's date for rangeEnd to ensure charts and heatmaps draw until today
+  const todayLocal = new Date().toLocaleDateString("en-CA");
+  const endRange = todayLocal > lastSeen ? todayLocal : lastSeen;
+
   const dayCounts = new Map<string, number>(daysAfterCutoff.map(d => [d.date, d.count]));
-  const daySeries: Array<{ date: string; count: number }> = eachDateBetween(WORK_IMPACT_CUTOFF, lastSeen).map(date => ({
+  const daySeries: Array<{ date: string; count: number }> = eachDateBetween(WORK_IMPACT_CUTOFF, endRange).map(date => ({
     date,
     count: dayCounts.get(date) ?? 0,
   }));
@@ -196,7 +250,7 @@ export function adaptWorkImpact(payload: Record<string, unknown>): WorkImpactDat
     ...snapshot,
     generatedAt: String(payload.generated_at ?? raw.generatedAt ?? snapshot.generatedAt),
     rangeStart: WORK_IMPACT_CUTOFF,
-    rangeEnd: lastSeen,
+    rangeEnd: endRange,
     totalEvents: daySeries.length ? totalEvents : Number(raw.totals?.events ?? snapshot.totalEvents),
     activeDays: daySeries.length ? activeDays : Number(raw.totals?.activeDays ?? snapshot.activeDays),
     totalCommits: Number(raw.totals?.uniqueCommitsRecomputed ?? raw.totals?.commits ?? snapshot.totalCommits ?? 0),
@@ -226,5 +280,5 @@ void NAMED_COMMIT_OUTLIERS;
 void AUTO_OUTLIER_THRESHOLD;
 
 export async function getWorkImpact(signal?: AbortSignal): Promise<WorkImpactData> {
-  return adaptWorkImpact(await getJson<Record<string, unknown>>("/monitor/work-impact", signal));
+  return await adaptWorkImpact(await getJson<Record<string, unknown>>("/monitor/work-impact", signal), signal);
 }

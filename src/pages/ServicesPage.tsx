@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { getServices } from "../api";
+import { DeploysPanel } from "../features/deploys/DeploysPanel";
 import { filterServices, summarizeServices } from "../features/services/model";
 import type { MonitoredService, ServiceFilters } from "../types";
 
@@ -51,5 +52,12 @@ export function ServicesPage() {
         <td>{service.dependencies.length ? service.dependencies.join(", ") : "-"}</td>
       </tr>)}</tbody>
     </table></section>
+    <header className="page-heading" style={{ marginTop: 24 }}>
+      <div>
+        <h2 style={{ margin: 0 }}>Deployments</h2>
+        <p>Per-project build state fed by <code>/monitor/deploys</code>. Same endpoint powers the Prom-King admin Marketing tab.</p>
+      </div>
+    </header>
+    <DeploysPanel />
   </main>;
 }
