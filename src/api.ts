@@ -261,7 +261,7 @@ export async function adaptWorkImpact(payload: Record<string, unknown>, signal?:
     rangeEnd: endRange,
     totalEvents: daySeries.length ? totalEvents : Number(raw.totals?.events ?? snapshot.totalEvents),
     activeDays: daySeries.length ? activeDays : Number(raw.totals?.activeDays ?? snapshot.activeDays),
-    totalCommits: Number(raw.totals?.uniqueCommitsRecomputed ?? raw.totals?.commits ?? snapshot.totalCommits ?? 0),
+    totalCommits: Array.isArray(raw.commitSamples) ? raw.commitSamples.length : Number(raw.totals?.uniqueCommitsRecomputed ?? raw.totals?.commits ?? snapshot.totalCommits ?? 0),
     totalProjects,
     streakCurrent: daySeries.length ? streakCurrent : snapshot.streakCurrent,
     streakLongest: daySeries.length ? streakLongest : snapshot.streakLongest,
