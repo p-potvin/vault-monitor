@@ -1525,10 +1525,6 @@ td span {
 }
 
 @media (max-width: 980px) {
-  .app-shell {
-    grid-template-columns: 1fr;
-  }
-
   .warm-rail {
     position: static;
     grid-template-rows: auto auto auto auto;
@@ -1541,10 +1537,7 @@ td span {
   }
 
   .nav-list {
-    grid-auto-flow: column;
-    grid-auto-columns: minmax(112px, 1fr);
     overflow-x: auto;
-    padding-bottom: var(--vault-spacing-1);
   }
 
   .rail-status {

@@ -2,7 +2,7 @@
   "config": {
     "startDate": "2026-03-11",
     "primaryCommitMetric": "cleanChurnLines",
-    "excludePathRegex": "(^|/|\\\\)(node_modules|\\.venv|venv|env|vendor|dist|build|target|obj|bin|__pycache__|\\.next|\\.nuxt|\\.turbo|\\.cache|coverage)(/|\\\\|$)|\\.(pyc|pyo|class|dll|exe|obj|cache|map)$"
+    "excludePathRegex": "(^|/|\\\\)(node_modules|\\.venv|venv|vendor|dist|build|target|obj|bin|__pycache__|\\.next|\\.nuxt|\\.turbo|\\.cache|coverage)(/|\\\\|$)|\\.(pyc|pyo|class|dll|exe|obj|cache|map)$"
   },
   "data": {
     "exclusions": {
@@ -13,7 +13,7 @@
       "pathRegex": "(^|/|\\\\)(node_modules|\\.venv|venv|env|vendor|dist|build|target|obj|bin|__pycache__|\\.next|\\.nuxt|\\.turbo|\\.cache|coverage)(/|\\\\|$)|\\.(pyc|pyo|class|dll|exe|obj|cache|map)$"
     },
     "range": {
-      "end": "2026-06-30",
+      "end": "2026-07-05",
       "start": "2026-03-11"
     },
     "series": {

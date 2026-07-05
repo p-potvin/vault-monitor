@@ -1,9 +1,32 @@
-import { describe, expect, it } from "vitest";
+import { vi, describe, expect, it, beforeAll, afterAll } from "vitest";
 import { adaptWorkImpact } from "../../api";
 
 describe("adaptWorkImpact", () => {
-  it("maps live ledger series while retaining enriched snapshot metrics", () => {
-    const result = adaptWorkImpact({
+  beforeAll(() => {
+    vi.stubGlobal("fetch", vi.fn(async () => {
+      return {
+        ok: true,
+        json: async () => [
+          { canonical: "vaultwares-api", isFork: false, aliases: ["vaultwares-pipelines"] },
+          { canonical: "vaultwares-media-processing", isFork: false, aliases: ["vault-video-enhancer"] },
+          { canonical: "vaultwares-realtime", isFork: false, aliases: ["realtime-stt"] },
+          { canonical: "OneTrainer", isFork: true, aliases: [] },
+          { canonical: "video-depth-anything", isFork: true, aliases: [] },
+          { canonical: "vault-explorer", isFork: false, aliases: [] },
+          { canonical: "vault-monitor", isFork: false, aliases: [] },
+          { canonical: "legacy-thing", isFork: false, aliases: [] },
+          { canonical: "vault-flows", isFork: false, aliases: [] }
+        ]
+      }
+    }));
+  });
+
+  afterAll(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("maps live ledger series while retaining enriched snapshot metrics", async () => {
+    const result = await adaptWorkImpact({
       generated_at: "2026-06-25T08:00:00Z",
       data: {
         totals: { events: 12, activeDays: 2, projects: 1 },
@@ -17,13 +40,13 @@ describe("adaptWorkImpact", () => {
     });
 
     expect(result.totalEvents).toBe(12);
-    expect(result.daySeries[result.daySeries.length - 1]).toEqual({ date: "2026-06-25", count: 7 });
+    expect(result.daySeries.find(d => d.date === "2026-06-25")).toEqual({ date: "2026-06-25", count: 7 });
     expect(result.byProject[0]).toEqual({ label: "vault-monitor", count: 12 });
     expect(result.commitStats).toBeDefined();
   });
 
-  it("normalizes aliased project names and drops forks", () => {
-    const result = adaptWorkImpact({
+  it("normalizes aliased project names and drops forks", async () => {
+    const result = await adaptWorkImpact({
       generated_at: "2026-06-25T08:00:00Z",
       data: {
         totals: { events: 100, activeDays: 1, projects: 5 },
@@ -49,8 +72,8 @@ describe("adaptWorkImpact", () => {
     expect(result.totalProjects).toBe(3);
   });
 
-  it("drops events before the VaultWares foundation cutoff (2026-03-11)", () => {
-    const result = adaptWorkImpact({
+  it("drops events before the VaultWares foundation cutoff (2026-03-11)", async () => {
+    const result = await adaptWorkImpact({
       generated_at: "2026-06-25T08:00:00Z",
       data: {
         totals: { events: 1000, activeDays: 99, projects: 10 },
@@ -71,8 +94,8 @@ describe("adaptWorkImpact", () => {
     expect(result.daySeries[0].date).toBe("2026-03-11");
   });
 
-  it("renders busiestWeek as a human date range, not an ISO week label", () => {
-    const result = adaptWorkImpact({
+  it("renders busiestWeek as a human date range, not an ISO week label", async () => {
+    const result = await adaptWorkImpact({
       generated_at: "2026-04-26T08:00:00Z",
       data: {
         totals: { events: 100, activeDays: 1, projects: 1 },
