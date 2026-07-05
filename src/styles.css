@@ -732,6 +732,7 @@ p {
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 8px;
+  min-width: 0;
 }
 
 .summary-stat {
@@ -744,6 +745,7 @@ p {
 }
 
 .summary-stat span {
+  overflow-wrap: anywhere;
   color: var(--muted);
   font-size: 11px;
   font-weight: 700;
@@ -764,6 +766,7 @@ p {
 .filter-field {
   display: grid;
   gap: 5px;
+  min-width: 0;
 }
 
 .filter-field span {
@@ -775,12 +778,304 @@ p {
 
 .filter-field select,
 .search-form select {
+  width: 100%;
+  min-width: 0;
   min-height: 40px;
   padding: 0 12px;
   border: 1px solid rgba(255, 255, 255, .12);
   border-radius: 8px;
   color: var(--fg);
   background: var(--card);
+}
+
+.services-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 360px);
+  gap: var(--vault-spacing-4);
+  align-items: end;
+  min-width: 0;
+  padding: var(--vault-spacing-6);
+  border: 1px solid var(--vault-console-border-subtle);
+  border-radius: var(--vault-radius-panel);
+  background: color-mix(in srgb, var(--vault-console-surface) 82%, transparent);
+}
+
+.services-hero span,
+.service-search span {
+  color: var(--vault-console-gold);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.services-hero h1 {
+  margin: 2px 0 6px;
+  color: var(--fg);
+  font-size: clamp(32px, 4vw, 48px);
+  line-height: 1;
+}
+
+.services-hero p,
+.deployments-focus p {
+  max-width: 720px;
+  min-width: 0;
+  margin: 0;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+
+.service-search {
+  display: grid;
+  gap: var(--vault-spacing-2);
+  min-width: 0;
+}
+
+.service-search input {
+  min-height: 44px;
+  width: 100%;
+  padding: 0 var(--vault-spacing-3);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--vault-radius-lg);
+  color: var(--fg);
+  background: var(--card);
+}
+
+.service-search input:focus,
+.filter-field select:focus {
+  border-color: var(--vault-console-violet);
+  outline: 2px solid color-mix(in srgb, var(--vault-console-violet) 26%, transparent);
+  outline-offset: 1px;
+}
+
+.service-controls {
+  display: grid;
+  gap: var(--vault-spacing-3);
+  min-width: 0;
+  padding: var(--vault-spacing-4);
+  border: 1px solid var(--vault-console-border-subtle);
+  border-radius: var(--vault-radius-lg);
+  background: color-mix(in srgb, var(--vault-console-surface) 72%, transparent);
+}
+
+.service-filter-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(130px, 1fr));
+  gap: var(--vault-spacing-2);
+  min-width: 0;
+}
+
+.service-sortbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--vault-spacing-2);
+}
+
+.service-sortbar button,
+.service-column > header button,
+.service-detail-button,
+.service-modal header button {
+  min-height: 34px;
+  padding: 0 var(--vault-spacing-3);
+  border: 1px solid var(--vault-console-border-subtle);
+  border-radius: var(--vault-radius-md);
+  color: var(--vault-console-text-secondary);
+  background: color-mix(in srgb, var(--vault-console-raised) 70%, transparent);
+  font-weight: 800;
+}
+
+.service-sortbar button.active,
+.service-sortbar button:hover,
+.service-column > header button:hover,
+.service-detail-button:hover,
+.service-modal header button:hover {
+  border-color: color-mix(in srgb, var(--vault-console-gold) 48%, transparent);
+  color: var(--vault-console-gold);
+}
+
+.deployments-focus {
+  display: grid;
+  gap: var(--vault-spacing-3);
+}
+
+.deployments-focus > header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.deployments-focus h2 {
+  margin: 0;
+  color: var(--fg);
+  font-size: 22px;
+}
+
+.service-board {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--vault-spacing-3);
+  align-items: start;
+}
+
+.service-column {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--vault-console-border-subtle);
+  border-radius: var(--vault-radius-lg);
+  background: color-mix(in srgb, var(--vault-console-surface) 76%, transparent);
+}
+
+.service-column > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vault-spacing-2);
+  padding: var(--vault-spacing-3);
+  border-bottom: 1px solid var(--vault-console-border-subtle);
+}
+
+.service-column > header strong {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--fg);
+  font-size: 15px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.service-column > header span {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.service-card-list {
+  display: grid;
+  gap: var(--vault-spacing-2);
+  padding: var(--vault-spacing-2);
+}
+
+.service-card {
+  display: grid;
+  gap: var(--vault-spacing-3);
+  padding: var(--vault-spacing-3);
+  border: 1px solid var(--vault-console-border-subtle);
+  border-radius: var(--vault-radius-md);
+  background: color-mix(in srgb, var(--vault-console-raised) 52%, transparent);
+}
+
+.service-card-head {
+  display: grid;
+  grid-template-columns: 12px minmax(0, 1fr) auto;
+  gap: var(--vault-spacing-2);
+  align-items: start;
+}
+
+.service-card-head h3 {
+  margin: 0;
+  overflow-wrap: anywhere;
+  color: var(--fg);
+  font-size: 15px;
+  line-height: 1.25;
+}
+
+.service-card-head p {
+  margin: 2px 0 0;
+  overflow-wrap: anywhere;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.service-card-facts,
+.service-detail-grid {
+  display: grid;
+  gap: var(--vault-spacing-2);
+}
+
+.service-card-facts div,
+.service-detail-grid div {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--vault-spacing-2);
+}
+
+.service-card-facts dt,
+.service-detail-grid dt,
+.service-dependencies strong {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.service-card-facts dd,
+.service-detail-grid dd {
+  margin: 0;
+  color: var(--fg);
+  font-size: 12px;
+  text-align: right;
+}
+
+.service-detail-button {
+  justify-self: start;
+}
+
+.service-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  padding: var(--vault-spacing-4);
+  background: color-mix(in srgb, var(--vault-console-bg) 78%, transparent);
+}
+
+.service-modal {
+  width: min(620px, 100%);
+  max-height: min(720px, calc(100vh - 48px));
+  overflow: auto;
+  padding: var(--vault-spacing-4);
+  border: 1px solid var(--vault-console-border-subtle);
+  border-radius: var(--vault-radius-panel);
+  background: var(--vault-console-surface);
+  box-shadow: 0 24px 80px color-mix(in srgb, var(--vault-console-bg) 72%, transparent);
+}
+
+.service-modal header {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: var(--vault-spacing-3);
+  margin-bottom: var(--vault-spacing-4);
+}
+
+.service-modal h2 {
+  margin: var(--vault-spacing-2) 0 2px;
+  color: var(--fg);
+  font-size: 26px;
+}
+
+.service-modal p {
+  margin: 0;
+  color: var(--muted);
+  font-family: var(--font-mono);
+}
+
+.service-detail-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.service-dependencies {
+  margin-top: var(--vault-spacing-4);
+  padding-top: var(--vault-spacing-3);
+  border-top: 1px solid var(--vault-console-border-subtle);
+}
+
+.service-dependencies p {
+  margin-top: var(--vault-spacing-1);
+  overflow-wrap: anywhere;
+  color: var(--fg);
 }
 
 .status-label {
@@ -1517,6 +1812,10 @@ td span {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .service-board {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .span-tall,
   .recent-panel {
     grid-column: auto;
@@ -1569,6 +1868,15 @@ td span {
 
   .search-form {
     grid-template-columns: 1fr;
+  }
+
+  .services-hero,
+  .service-board {
+    grid-template-columns: 1fr;
+  }
+
+  .service-filter-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .section-header h1 {
@@ -1634,6 +1942,36 @@ td span {
 
   .search-form label span {
     font-size: 10px;
+  }
+
+  .services-hero {
+    padding: var(--vault-spacing-4);
+  }
+
+  .services-hero h1 {
+    font-size: 26px;
+  }
+
+  .service-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .summary-stat {
+    min-width: 0;
+  }
+
+  .service-filter-grid,
+  .service-detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .service-card-head {
+    grid-template-columns: 12px minmax(0, 1fr);
+  }
+
+  .service-card-head .status-label {
+    grid-column: 2;
+    justify-self: start;
   }
 }
 

@@ -25,7 +25,7 @@ describe("adaptWorkImpact", () => {
     vi.unstubAllGlobals();
   });
 
-  it("maps live ledger series while retaining enriched snapshot metrics", async () => {
+  it("maps live ledger series while tolerating optional snapshot metrics", async () => {
     const result = await adaptWorkImpact({
       generated_at: "2026-06-25T08:00:00Z",
       data: {
@@ -42,7 +42,7 @@ describe("adaptWorkImpact", () => {
     expect(result.totalEvents).toBe(12);
     expect(result.daySeries.find(d => d.date === "2026-06-25")).toEqual({ date: "2026-06-25", count: 7 });
     expect(result.byProject[0]).toEqual({ label: "vault-monitor", count: 12 });
-    expect(result.commitStats).toBeDefined();
+    expect(result.byKind[0]).toEqual({ label: "code-change", count: 12 });
   });
 
   it("normalizes aliased project names and drops forks", async () => {
