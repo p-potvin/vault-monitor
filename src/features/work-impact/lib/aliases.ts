@@ -11,6 +11,15 @@
 const aliasToCanonical = new Map<string, string>()
 const forkSet = new Set<string>()
 const aliasesRecord: Record<string, string[]> = {}
+export interface ProjectMetadata {
+  isPrivate: boolean;
+  owner: string | null;
+  isDeleted: boolean;
+  isFork: boolean;
+  repoId: string | null;
+}
+
+const metadataRecord: Record<string, ProjectMetadata> = {}
 let isInitialized = false
 let initPromise: Promise<void> | null = null
 
@@ -31,6 +40,7 @@ export async function initAliases(apiUrl: string, signal?: AbortSignal): Promise
         canonical: string
         repoId: string | null
         isPrivate: boolean
+        owner: string | null
         aliases: string[]
         isDeleted: boolean
         isFork: boolean
@@ -42,10 +52,20 @@ export async function initAliases(apiUrl: string, signal?: AbortSignal): Promise
       for (const key of Object.keys(aliasesRecord)) {
         delete aliasesRecord[key]
       }
+      for (const key of Object.keys(metadataRecord)) {
+        delete metadataRecord[key]
+      }
 
       for (const p of data) {
         if (p.isFork) {
           forkSet.add(p.canonical.toLowerCase())
+        }
+        metadataRecord[p.canonical.toLowerCase()] = {
+          isPrivate: p.isPrivate,
+          owner: p.owner,
+          isDeleted: p.isDeleted,
+          isFork: p.isFork,
+          repoId: p.repoId
         }
         aliasesRecord[p.canonical] = p.aliases || []
         aliasToCanonical.set(p.canonical.toLowerCase(), p.canonical)
@@ -78,4 +98,8 @@ export function isOwnedProject(name: string): boolean {
 /** Legacy compat: aliases for a given canonical, or [] if unknown. */
 export function getAliases(name: string): string[] {
   return aliasesRecord[name.toLowerCase()] ?? []
+}
+
+export function getProjectMetadata(name: string): ProjectMetadata | null {
+  return metadataRecord[name.toLowerCase()] ?? null
 }

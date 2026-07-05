@@ -4,6 +4,7 @@ import KindChip from './KindChip'
 import { fmtInt } from '../lib/utils'
 import type { ProjectSummary } from '../lib/types'
 import type { I18nStrings } from '../lib/i18n'
+import { getProjectMetadata } from '../lib/aliases'
 
 interface ProjectCardProps {
   project: ProjectSummary
@@ -12,12 +13,21 @@ interface ProjectCardProps {
 
 export default function ProjectCard({ project, t }: ProjectCardProps) {
   const { name, entries, first, last, recentSummaries, kinds } = project
+  const meta = getProjectMetadata(name)
 
   return (
     <details className="group bg-vault-surface border border-vault-border rounded-[10px] overflow-hidden">
       <summary className="flex items-center justify-between gap-3 px-4 py-3 cursor-pointer select-none hover:bg-vault-raised transition-colors list-none">
         <div className="flex items-center gap-3 min-w-0">
           <span className="text-[13px] font-bold text-vault-fg truncate">{name}</span>
+          {meta?.owner && (
+            <span className="px-1.5 py-0.5 rounded-[4px] bg-vault-raised text-[10px] text-vault-slate border border-vault-border shrink-0">
+              {meta.owner}
+            </span>
+          )}
+          {meta?.isPrivate && (
+            <span className="text-[11px] text-vault-slate shrink-0" title="Private Repository">🔒</span>
+          )}
         </div>
         <div className="flex items-center gap-4 shrink-0">
           <span className="text-[12px] text-vault-muted tabular-nums">{fmtInt(entries)} {t.units.events}</span>
