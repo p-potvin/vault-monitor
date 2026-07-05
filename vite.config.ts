@@ -17,6 +17,16 @@ export default defineConfig({
           appVersion: pkg.version,
         },
       },
+      minify: {
+        collapseWhitespace: true,
+        keepClosingSlash: true,
+        removeComments: false,
+        removeRedundantAttributes: true,
+        removeScriptTypeAttributes: true,
+        removeStyleLinkTypeAttributes: true,
+        useShortDoctype: true,
+        minifyCSS: true,
+      },
     })
   ],
   publicDir: "public",
