@@ -56,7 +56,7 @@ function eachDateBetween(fromStr: string, toStr: string): string[] {
   return out;
 }
 
-const base = (import.meta.env.VITE_MONITOR_API_BASE ?? "").replace(/\/$/, "");
+const base = (import.meta.env.VITE_MONITOR_API_BASE ?? "https://api.vaultwares.ca").replace(/\/$/, "");
 
 async function getJson<T>(path: string, signal?: AbortSignal): Promise<T> {
   const response = await fetch(`${base}${path}`, {
