@@ -2,6 +2,14 @@ import type { ChangeEvent, InputTrackerData, SearchResponse, ServicesResponse } 
 import type { WorkImpactData } from "./features/work-impact/lib/types";
 import workImpactSnapshot from "./features/work-impact/lib/data.json";
 import { normalizeProject, isOwnedProject, initAliases } from "./features/work-impact/lib/aliases";
+import {
+  computeCommitStats,
+  computeCommitBuckets,
+  computeMonthBoxes,
+  computeCommitOutliers,
+  computeFilesTouchedStats,
+  computeTechVolume
+} from "./features/work-impact/lib/commitAggregators";
 
 // ── Work Impact transform config ──────────────────────────────────────────────
 // VaultWares foundation date. Events before this are dropped from every series.
@@ -271,6 +279,22 @@ export async function adaptWorkImpact(payload: Record<string, unknown>, signal?:
     byProject,
     byHour: Array.isArray(raw.hourSeries) ? raw.hourSeries.map((item: Record<string, any>) => ({ label: String(item.hour).padStart(2, "0"), count: Number(item.count ?? 0) })) : snapshot.byHour,
     byDow: Array.isArray(raw.dowSeries) ? raw.dowSeries.map((item: Record<string, any>) => ({ label: String(item.label), count: Number(item.count ?? 0) })) : snapshot.byDow,
+    // Dynamically aggregated data from commitSamples
+    ...(Array.isArray(raw.commitSamples) && raw.commitSamples.length > 0 ? {
+      commitStats: computeCommitStats(raw.commitSamples),
+      commitBuckets: computeCommitBuckets(raw.commitSamples),
+      monthBoxes: computeMonthBoxes(raw.commitSamples),
+      commitOutliers: computeCommitOutliers(raw.commitSamples),
+      filesTouched: computeFilesTouchedStats(raw.commitSamples),
+      techVolume: computeTechVolume(raw.commitSamples),
+    } : {
+      commitStats: snapshot.commitStats,
+      commitBuckets: snapshot.commitBuckets,
+      monthBoxes: snapshot.monthBoxes,
+      commitOutliers: snapshot.commitOutliers,
+      filesTouched: snapshot.filesTouched,
+      techVolume: snapshot.techVolume,
+    })
   };
 }
 
