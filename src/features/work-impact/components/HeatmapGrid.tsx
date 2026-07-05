@@ -11,11 +11,11 @@ interface HeatmapGridProps {
 
 function levelClass(count: number): string {
     if (count === 0) return "bg-vault-good0";
-    if (count <= 8) return "bg-vault-good1";
-    if (count <= 15) return "bg-vault-good2";
-    if (count <= 30) return "bg-vault-good3";
-    if (count <= 60) return "bg-vault-good4";
-    if (count <= 90) return "bg-vault-good5";
+    if (count <= 5) return "bg-vault-good1";
+    if (count <= 10) return "bg-vault-good2";
+    if (count <= 25) return "bg-vault-good3";
+    if (count <= 40) return "bg-vault-good4";
+    if (count <= 80) return "bg-vault-good5";
     return "bg-vault-good6";
 }
 
