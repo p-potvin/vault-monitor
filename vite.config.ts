@@ -5,7 +5,7 @@ import { defineConfig } from "vite";
 import { createHtmlPlugin } from 'vite-plugin-html';
 import pkg from './package.json' assert { type: 'json' };
 
-const monitorApiTarget = process.env.VITE_MONITOR_API_TARGET ?? "http://100.67.25.118:9001";
+const monitorApiTarget = process.env.VITE_MONITOR_API_TARGET ?? "https://api.vaultwares.ca";
 
 export default defineConfig({
   plugins: [
