@@ -276,6 +276,7 @@ export function PersonalStatsPage() {
           </p>
         </div>
         <div className="flex items-center gap-3 flex-wrap justify-end">
+          <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--muted)]">{input.timeWindow}</span>
           <div className="rounded-full border border-[var(--border)] bg-[var(--card)] p-1 flex items-center gap-1" aria-label={input.timeWindow}>
             {INPUT_RANGES.map((range) => (
               <button

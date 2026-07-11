@@ -256,8 +256,11 @@ svg {
   gap: var(--vault-spacing-2);
   height: 100vh;
   max-height: 100vh;
-  overflow-x: hidden;
-  overflow-y: auto;
+  /* overflow must stay visible so the floating collapse-toggle (which sits at
+     right:-25px, past the rail edge) isn't clipped. The nav list scrolls on its
+     own instead. z-index lifts the rail (and its overhang) above content cards. */
+  overflow: visible;
+  z-index: 40;
   padding: 30px 12px;
   border-right: 1px solid var(--vault-warm-border-subtle);
   background: linear-gradient(180deg,
@@ -411,6 +414,10 @@ svg {
   align-content: start;
   gap: var(--vault-spacing-1);
   min-width: 0;
+  /* Scroll here instead of on .warm-rail, so the rail can overflow: visible for
+     the floating collapse-toggle. min-height:0 lets this grid row shrink. */
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .nav-list button,
@@ -2012,7 +2019,9 @@ td span {
   background: var(--vault-warm-raised);
   color: rgba(22, 19, 32, 0.62);
   cursor: pointer;
-  z-index: 10;
+  /* The button floats past the rail's right edge (right: -25px) into the
+     content column, so it must sit above the sticky page content. */
+  z-index: 60;
   box-shadow: 0 4px 12px rgba(22, 19, 32, 0.1);
   transition: all 0.2s ease;
 }
@@ -2036,7 +2045,11 @@ td span {
   min-width: 48px !important;
   padding: 0 !important;
   display: flex !important;
+  align-items: center !important;
   justify-content: center !important;
+  /* Kill the base grid gap; otherwise the zero-width label still contributes a
+     gap and pushes the icon left of centre in the collapsed rail. */
+  gap: 0 !important;
   margin: 0 auto !important;
 }
 
