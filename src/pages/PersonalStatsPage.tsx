@@ -1,6 +1,6 @@
 import { Card } from '../components/Card';
 import { Led } from '../components/Led';
-import { useState, type ReactNode } from 'react';
+import { useMemo, useState, type ReactNode } from 'react';
 import { useInputTrackerData } from '../useData';
 import { I18N, useLangState, type Lang } from '../i18n';
 import { IconActivity, IconBarChart, IconClock, IconDatabase, IconInfo, IconPieChart, IconZap } from '../icons';
@@ -188,6 +188,109 @@ function KpiStat({ label, value, tooltip }: { label: string; value: string; tool
   return <MiniStat label={label} value={value} tooltip={tooltip} />;
 }
 
+type PathPoint = { x: number; y: number; tMs?: number };
+type MousePath = { id: string; trigger: string; endedReason: string; durationMs: number; distancePx: number; points: PathPoint[] };
+
+const signalColors = ['var(--vault-signal-online)', 'var(--vault-signal-relay)', 'var(--vault-signal-sync)', 'var(--vault-signal-warning)', 'var(--vault-signal-alert)'];
+
+function extractMousePaths(events: NonNullable<ReturnType<typeof useInputTrackerData>['data']>['events']): MousePath[] {
+  if (!events) return [];
+  return events.flatMap((event, index) => {
+    if (event.event_type !== 'natural_path') return [];
+    const metrics = event.metrics || {};
+    const raw = metrics.mouse_path;
+    const points: PathPoint[] = Array.isArray(raw)
+      ? (raw as Record<string, unknown>[]).map((point) => {
+          const x = num(point.x);
+          const y = num(point.y);
+          if (typeof x !== 'number' || typeof y !== 'number') return null;
+          const tMs = num(point.t_ms);
+          return { x, y, ...(typeof tMs === 'number' ? { tMs } : {}) } as PathPoint;
+        }).filter((p): p is PathPoint => p !== null)
+      : [];
+    if (points.length < 2) return [];
+    return [{
+      id: String(metrics.path_id || event.event_id || `path-${index}`),
+      trigger: String(metrics.trigger || 'activity'),
+      endedReason: String((raw as { ended_reason?: string } | undefined)?.ended_reason || 'completed'),
+      durationMs: num(metrics.duration_ms) || 0,
+      distancePx: num(metrics.mouse_distance_px) || num((raw as { stats?: { distance_px?: number } } | undefined)?.stats?.distance_px) || 0,
+      points,
+    }];
+  });
+}
+
+function pathDetails(path: MousePath) {
+  const first = path.points[0];
+  const last = path.points[path.points.length - 1];
+  const dx = last.x - first.x;
+  const dy = last.y - first.y;
+  const direction = Math.abs(dx) > Math.abs(dy) ? (dx >= 0 ? 'rightward' : 'leftward') : (dy >= 0 ? 'downward' : 'upward');
+  return { direction, headline: `${direction} ${path.trigger} path` };
+}
+
+function MousePathCanvas({ paths, selectedId, hoveredId, onSelect, onHover }: { paths: MousePath[]; selectedId?: string; hoveredId?: string; onSelect: (id: string) => void; onHover: (id?: string) => void }) {
+  const points = paths.flatMap((path) => path.points);
+  const minX = Math.min(...points.map((point) => point.x), 0);
+  const maxX = Math.max(...points.map((point) => point.x), 1);
+  const minY = Math.min(...points.map((point) => point.y), 0);
+  const maxY = Math.max(...points.map((point) => point.y), 1);
+  const rangeX = Math.max(1, maxX - minX);
+  const rangeY = Math.max(1, maxY - minY);
+  const toCanvas = (point: PathPoint) => ({ x: 34 + ((point.x - minX) / rangeX) * 932, y: 28 + ((point.y - minY) / rangeY) * 424 });
+  const active = paths.find((path) => path.id === (hoveredId || selectedId));
+
+  if (paths.length === 0) return <div className="mouse-path-empty">No natural path samples in this window.</div>;
+
+  return (
+    <div className="mouse-path-stage">
+      <svg className="mouse-path-canvas" viewBox="0 0 1000 480" role="img" aria-label="Layered natural mouse paths">
+        <defs>
+          <filter id="mouse-path-glow"><feGaussianBlur stdDeviation="4" result="blur" /><feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
+          <linearGradient id="mouse-path-grid" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stopColor="var(--vault-signal-sync)" stopOpacity=".16" /><stop offset="1" stopColor="var(--vault-signal-relay)" stopOpacity=".02" /></linearGradient>
+        </defs>
+        <rect x="0" y="0" width="1000" height="480" rx="18" fill="url(#mouse-path-grid)" />
+        <path d="M34 400H966 M34 300H966 M34 200H966 M34 100H966 M200 28V452 M400 28V452 M600 28V452 M800 28V452" stroke="var(--vault-console-border-subtle)" strokeDasharray="3 12" />
+        {paths.map((path, index) => {
+          const d = path.points.map((point, pointIndex) => { const mapped = toCanvas(point); return `${pointIndex === 0 ? 'M' : 'L'}${mapped.x.toFixed(1)} ${mapped.y.toFixed(1)}`; }).join(' ');
+          const activePath = path.id === (hoveredId || selectedId);
+          return <path key={path.id} d={d} fill="none" stroke={signalColors[index % signalColors.length]} strokeWidth={activePath ? 4 : 1.7} strokeLinecap="round" strokeLinejoin="round" opacity={activePath ? 1 : 0.27} filter={activePath ? 'url(#mouse-path-glow)' : undefined} className={path.id === selectedId ? 'mouse-path-preview' : undefined} tabIndex={0} role="button" aria-label={`Preview ${pathDetails(path).headline}`} onMouseEnter={() => onHover(path.id)} onMouseLeave={() => onHover(undefined)} onFocus={() => onHover(path.id)} onBlur={() => onHover(undefined)} onClick={() => onSelect(path.id)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); onSelect(path.id); } }} />;
+        })}
+      </svg>
+      {active ? <div className="mouse-path-tooltip"><strong>{pathDetails(active).headline}</strong><span>{active.points.length} points · {fmt1(active.distancePx)} px · {fmt1(active.durationMs / 1000)}s</span><small>{active.endedReason} · click to preview inside the canvas</small></div> : null}
+    </div>
+  );
+}
+
+function MousePathWidget({ paths, input }: { paths: MousePath[]; input: typeof I18N.en.input }) {
+  const [selectedId, setSelectedId] = useState<string>();
+  const [hoveredId, setHoveredId] = useState<string>();
+  const totalPoints = paths.reduce((sum, path) => sum + path.points.length, 0);
+  const selected = paths.find((path) => path.id === selectedId);
+  return <Card className="col-span-12">
+    <WidgetTitle icon={<IconActivity width={13} height={13} />} title="Natural path field" tooltip="Sampled natural mouse paths from the selected input-tracker window. Hover a trace for details; click to preview it inside this canvas." />
+    <div className="mouse-path-header"><div><strong>{paths.length ? `${fmtInt(paths.length)} paths in the field` : 'No path field yet'}</strong><span>{fmtInt(totalPoints)} sampled points · layered density view</span></div>{selected ? <div className="mouse-path-selection"><b>Previewing</b><span>{pathDetails(selected).headline}</span></div> : <div className="mouse-path-selection"><b>{input.activeWindowLabel}</b><span>Hover a trace to inspect it</span></div>}</div>
+    <MousePathCanvas paths={paths} selectedId={selectedId} hoveredId={hoveredId} onSelect={setSelectedId} onHover={setHoveredId} />
+  </Card>;
+}
+
+function HotspotMonitor({ rows, input }: { rows?: { name: string; count: number }[]; input: typeof I18N.en.input }) {
+  const [hovered, setHovered] = useState<string>();
+  const values = new Map((rows || []).map((row) => [row.name, row.count || 0]));
+  const max = Math.max(1, ...(rows || []).map((row) => row.count || 0));
+  const total = (rows || []).reduce((sum, row) => sum + (row.count || 0), 0);
+  const cells = Array.from({ length: 9 }, (_, row) => Array.from({ length: 12 }, (_, col) => `${col}:${row}`));
+  const active = hovered ? { name: hovered, count: values.get(hovered) || 0 } : undefined;
+  return <div className="hotspot-monitor-wrap">
+    <div className="hotspot-monitor" role="img" aria-label="Click hotspot screen map">
+      <div className="hotspot-monitor-top"><span /> <i /> <i /> <i /></div>
+      <div className="hotspot-screen">{cells.flat().map((name) => { const count = values.get(name) || 0; const intensity = count / max; return <span key={name} className="hotspot-cell" style={{ '--hotspot-intensity': intensity } as React.CSSProperties} onMouseEnter={() => setHovered(name)} onMouseLeave={() => setHovered(undefined)} title={`${humanHotspot(name, input)}: ${fmtInt(count)} ${input.clicksUnit}`} />; })}</div>
+      <div className="hotspot-taskbar"><span /><span /><span /><b /></div>
+    </div>
+    <div className="hotspot-tooltip">{active ? <><strong>{humanHotspot(active.name, input)}</strong><span>{fmtInt(active.count)} clicks · {total ? fmtPct(active.count / total) : '0%'} of sampled clicks</span><small>{input.hotspotRaw} {active.name}</small></> : <><strong>Hover the screen</strong><span>Inspect click concentration by screen zone</span><small>{fmtInt(total)} total sampled clicks</small></>}</div>
+  </div>;
+}
+
 function PauseBreakdown({ totals, input }: { totals: Record<string, number>; input: typeof I18N.en.input }) {
   const pause = countFrom(totals, ['pause_blocks', 'pauses_5m_20m', 'pause_count']);
   const healthy = countFrom(totals, ['healthy_pause_blocks', 'pauses_20m_60m', 'healthy_pause_count']);
@@ -222,6 +325,7 @@ export function PersonalStatsPage() {
   const [rangeId, setRangeId] = useState<InputRangeId>('week');
   const activeRange = INPUT_RANGES.find((range) => range.id === rangeId) || INPUT_RANGES[1];
   const { data, loading, error } = useInputTrackerData(activeRange.hours);
+  const mousePaths = useMemo(() => extractMousePaths(data?.events), [data?.events]);
   const [lang] = useLangState();
   const dict = I18N[lang];
   const input = dict.input;
@@ -336,6 +440,10 @@ export function PersonalStatsPage() {
       </section>
 
       <section className="grid grid-cols-12 gap-3 mt-5">
+        <MousePathWidget paths={mousePaths} input={input} />
+      </section>
+
+      <section className="grid grid-cols-12 gap-3 mt-5">
         <Card className="col-span-4 max-lg:col-span-6 max-md:col-span-12">
           <WidgetTitle icon={<IconZap width={13} height={13} />} title={input.latency} tooltip={input.tooltips.latency} />
           <BarRows
@@ -361,13 +469,7 @@ export function PersonalStatsPage() {
             <strong className="block text-[var(--fg)]">{input.hotspotLegendTitle}</strong>
             {input.hotspotLegend}
           </div>
-          <BarRows
-            rows={data?.click_hotspots}
-            empty={input.noClickSamples}
-            formatName={(name) => humanHotspot(name, input)}
-            formatValue={(row) => `${fmtInt(row.count)} ${input.clicksUnit}`}
-            valueHeader={input.hotspotValueHeader}
-          />
+          <HotspotMonitor rows={data?.click_hotspots} input={input} />
         </Card>
         <Card className="col-span-6 max-md:col-span-12">
           <WidgetTitle icon={<IconPieChart width={13} height={13} />} title={input.focusWindows} tooltip={input.tooltips.focusWindows} />

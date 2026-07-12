@@ -2083,3 +2083,245 @@ td span {
   flex-grow: 1;
   min-width: 0;
 }
+
+/* ============================================
+   14. MOUSE PATH & HOTSPOT VISUALIZATIONS
+   ============================================ */
+
+.mouse-path-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vault-spacing-3);
+  margin-bottom: var(--vault-spacing-2);
+}
+
+.mouse-path-header > div {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.mouse-path-header strong {
+  color: var(--fg);
+  font-size: 15px;
+}
+
+.mouse-path-header span,
+.mouse-path-selection span,
+.mouse-path-selection b {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.mouse-path-selection {
+  display: grid;
+  justify-items: end;
+  gap: 3px;
+  text-align: right;
+}
+
+.mouse-path-selection b {
+  color: var(--vault-signal-sync);
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.mouse-path-stage {
+  position: relative;
+  overflow: hidden;
+  min-height: 300px;
+  border: 1px solid var(--vault-console-border-subtle);
+  border-radius: var(--vault-radius-lg);
+  background: radial-gradient(circle at 50% 20%, rgba(85, 214, 255, .08), transparent 46%), rgba(22, 19, 32, .58);
+}
+
+.mouse-path-canvas {
+  display: block;
+  width: 100%;
+  min-height: 300px;
+  height: auto;
+}
+
+.mouse-path-canvas path[role="button"] {
+  cursor: pointer;
+  outline: none;
+  transition: opacity var(--vault-motion-fast) var(--vault-motion-state-ease),
+              stroke-width var(--vault-motion-fast) var(--vault-motion-state-ease),
+              filter var(--vault-motion-fast) var(--vault-motion-state-ease);
+}
+
+.mouse-path-canvas path[role="button"]:focus-visible {
+  stroke: var(--vault-signal-warning);
+  stroke-width: 5;
+}
+
+.mouse-path-preview {
+  stroke-dasharray: 12 7;
+  animation: mousePathMarch 1.2s linear infinite;
+}
+
+@keyframes mousePathMarch {
+  to { stroke-dashoffset: -38; }
+}
+
+.mouse-path-empty {
+  display: grid;
+  min-height: 300px;
+  place-items: center;
+  color: var(--muted);
+  font-size: 12px;
+  font-style: italic;
+}
+
+.mouse-path-tooltip,
+.hotspot-tooltip {
+  display: grid;
+  gap: 3px;
+  pointer-events: none;
+  padding: 9px 11px;
+  border: 1px solid color-mix(in srgb, var(--vault-signal-relay) 38%, var(--border));
+  border-radius: var(--vault-radius-md);
+  color: var(--fg);
+  background: color-mix(in srgb, var(--vault-console-bg) 92%, transparent);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, .28),
+              0 0 24px color-mix(in srgb, var(--vault-signal-relay) 12%, transparent);
+}
+
+.mouse-path-tooltip {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  max-width: min(330px, calc(100% - 24px));
+}
+
+.mouse-path-tooltip strong,
+.hotspot-tooltip strong {
+  color: var(--vault-signal-relay);
+  font-size: 12px;
+}
+
+.mouse-path-tooltip span,
+.hotspot-tooltip span {
+  color: var(--fg);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.mouse-path-tooltip small,
+.hotspot-tooltip small {
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.hotspot-monitor-wrap {
+  display: grid;
+  gap: var(--vault-spacing-2);
+}
+
+.hotspot-monitor {
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid color-mix(in srgb, var(--vault-signal-sync) 46%, var(--border));
+  border-radius: 16px;
+  background: linear-gradient(145deg, rgba(49, 39, 74, .9), rgba(22, 19, 32, .96));
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .025),
+              0 0 36px rgba(176, 124, 255, .1);
+}
+
+.hotspot-monitor-top,
+.hotspot-taskbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 12px;
+}
+
+.hotspot-monitor-top span {
+  flex: 1;
+  height: 5px;
+  margin-right: auto;
+  border-radius: 99px;
+  background: rgba(237, 230, 255, .16);
+}
+
+.hotspot-monitor-top i,
+.hotspot-taskbar span,
+.hotspot-taskbar b {
+  display: block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--vault-signal-sync);
+  opacity: .8;
+}
+
+.hotspot-monitor-top i:nth-child(2) { background: var(--vault-signal-online); }
+.hotspot-monitor-top i:nth-child(3) { background: var(--vault-signal-warning); }
+.hotspot-monitor-top i:nth-child(4) { background: var(--vault-signal-alert); }
+
+.hotspot-screen {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 3px;
+  aspect-ratio: 12 / 9;
+  padding: 7px;
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: 8px;
+  background: radial-gradient(circle at 50% 50%, rgba(85, 214, 255, .08), transparent 70%),
+              var(--vault-console-bg);
+}
+
+.hotspot-cell {
+  min-width: 0;
+  min-height: 0;
+  border-radius: 3px;
+  cursor: crosshair;
+  background: color-mix(in srgb, var(--vault-signal-relay) calc(12% + var(--hotspot-intensity) * 72%), transparent);
+  box-shadow: 0 0 calc(4px + var(--hotspot-intensity) * 16px)
+              color-mix(in srgb, var(--vault-signal-relay) calc(var(--hotspot-intensity) * 72%), transparent);
+  transition: transform var(--vault-motion-fast) var(--vault-motion-state-ease),
+              filter var(--vault-motion-fast) var(--vault-motion-state-ease);
+}
+
+.hotspot-cell:hover {
+  z-index: 1;
+  transform: scale(1.22);
+  filter: brightness(1.45) saturate(1.2);
+}
+
+.hotspot-taskbar {
+  justify-content: flex-start;
+  min-height: 14px;
+  padding: 3px 5px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, .06);
+}
+
+.hotspot-taskbar b {
+  margin-left: auto;
+  background: var(--vault-signal-warning);
+}
+
+.hotspot-tooltip {
+  min-height: 62px;
+}
+
+@media (max-width: 640px) {
+  .mouse-path-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .mouse-path-selection {
+    justify-items: start;
+    text-align: left;
+  }
+
+  .mouse-path-canvas,
+  .mouse-path-empty {
+    min-height: 230px;
+  }
+}
