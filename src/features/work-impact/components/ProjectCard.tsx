@@ -26,7 +26,7 @@ export default function ProjectCard({ project, t }: ProjectCardProps) {
             </span>
           )}
           {meta?.isPrivate && (
-            <span className="text-[11px] text-vault-slate shrink-0" title="Private Repository">🔒</span>
+            <span className="text-[11px] text-vault-slate shrink-0" title={t.privateRepository}>🔒</span>
           )}
         </div>
         <div className="flex items-center gap-4 shrink-0">

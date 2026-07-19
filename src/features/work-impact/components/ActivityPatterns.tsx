@@ -10,7 +10,7 @@ interface ActivityPatternsProps {
   t: I18nStrings
 }
 
-export default function ActivityPatterns({ byHour, byDow }: ActivityPatternsProps) {
+export default function ActivityPatterns({ byHour, byDow, t }: ActivityPatternsProps) {
   const hasHour = byHour && byHour.length > 0
   const hasDow  = byDow  && byDow.length  > 0
   if (!hasHour && !hasDow) return null
@@ -20,7 +20,7 @@ export default function ActivityPatterns({ byHour, byDow }: ActivityPatternsProp
       {hasHour && (
         <div className="flex flex-col gap-2">
           <h3 className="text-[11px] font-bold uppercase tracking-[0.06em] text-vault-muted">
-            Hour of Day
+            {t.activityHourTitle}
           </h3>
           <MicroBarChart
             items={byHour.map(b => ({ label: b.label, value: b.count }))}
@@ -31,7 +31,7 @@ export default function ActivityPatterns({ byHour, byDow }: ActivityPatternsProp
       {hasDow && (
         <div className="flex flex-col gap-2">
           <h3 className="text-[11px] font-bold uppercase tracking-[0.06em] text-vault-muted">
-            Day of Week
+            {t.activityDowTitle}
           </h3>
           <MicroBarChart
             items={byDow.map(b => ({ label: b.label, value: b.count }))}

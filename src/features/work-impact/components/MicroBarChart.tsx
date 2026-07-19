@@ -1,6 +1,7 @@
 // ── MicroBarChart — vertical micro bars, 56px tall ───────────────────────────
 
 import { fmtInt } from '../lib/utils'
+import Tooltip from './Tooltip'
 
 interface MicroBarItem {
   label: string
@@ -31,9 +32,9 @@ export default function MicroBarChart({ items, color = 'cyan' }: MicroBarChartPr
         return (
           <div key={label} className="flex flex-col items-center gap-[3px] shrink-0">
             <div className="flex items-end" style={{ height: 56 }}>
-              <Tooltip label={label} value={value}>
+              <Tooltip content={`${label}: ${fmtInt(value)}`}>
                 <div
-                  className={`${fill} rounded-t-[2px] w-[18px] min-h-[2px] transition-all`}
+                  className={`${fill} rounded-t-[2px] w-[18px] min-h-[2px] transition-all cursor-pointer`}
                   style={{ height: `${pct}%` }}
                 />
               </Tooltip>
@@ -42,15 +43,6 @@ export default function MicroBarChart({ items, color = 'cyan' }: MicroBarChartPr
           </div>
         )
       })}
-    </div>
-  )
-}
-
-/* local title tooltip — simpler than importing full Tooltip component tree */
-function Tooltip({ label, value, children }: { label: string; value: number; children: React.ReactNode }) {
-  return (
-    <div title={`${label}: ${fmtInt(value)}`} className="flex items-end h-full">
-      {children}
     </div>
   )
 }
