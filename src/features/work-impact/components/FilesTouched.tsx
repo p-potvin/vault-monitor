@@ -16,10 +16,10 @@ export default function FilesTouched({ filesTouched, t }: FilesTouchedProps) {
 
   return (
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-      <KpiCard label="Mean"   value={fmt1(filesTouched.mean)}   />
-      <KpiCard label="Median" value={fmt1(filesTouched.median)} />
-      <KpiCard label="p90"    value={fmt1(filesTouched.p90)}    variant="accent" />
-      <KpiCard label="Max"    value={String(filesTouched.max)}  />
+      <KpiCard label={t.commitStatMean}   value={fmt1(filesTouched.mean)}   />
+      <KpiCard label={t.commitStatMedian} value={fmt1(filesTouched.median)} />
+      <KpiCard label={t.commitStatP90}    value={fmt1(filesTouched.p90)}    variant="accent" />
+      <KpiCard label={t.commitStatMax}    value={String(filesTouched.max)}  />
     </div>
   )
 }

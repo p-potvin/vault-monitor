@@ -229,7 +229,7 @@ function pathDetails(path: MousePath) {
   return { direction, headline: `${direction} ${path.trigger} path` };
 }
 
-function MousePathCanvas({ paths, selectedId, hoveredId, onSelect, onHover }: { paths: MousePath[]; selectedId?: string; hoveredId?: string; onSelect: (id: string) => void; onHover: (id?: string) => void }) {
+function MousePathCanvas({ paths, selectedId, hoveredId, onSelect, onHover, input }: { paths: MousePath[]; selectedId?: string; hoveredId?: string; onSelect: (id: string) => void; onHover: (id?: string) => void; input: typeof I18N.en.input }) {
   const points = paths.flatMap((path) => path.points);
   const minX = Math.min(...points.map((point) => point.x), 0);
   const maxX = Math.max(...points.map((point) => point.x), 1);
@@ -240,7 +240,7 @@ function MousePathCanvas({ paths, selectedId, hoveredId, onSelect, onHover }: { 
   const toCanvas = (point: PathPoint) => ({ x: 34 + ((point.x - minX) / rangeX) * 932, y: 28 + ((point.y - minY) / rangeY) * 424 });
   const active = paths.find((path) => path.id === (hoveredId || selectedId));
 
-  if (paths.length === 0) return <div className="mouse-path-empty">No natural path samples in this window.</div>;
+  if (paths.length === 0) return <div className="mouse-path-empty">{input.mousePathEmpty}</div>;
 
   return (
     <div className="mouse-path-stage">
@@ -257,7 +257,7 @@ function MousePathCanvas({ paths, selectedId, hoveredId, onSelect, onHover }: { 
           return <path key={path.id} d={d} fill="none" stroke={signalColors[index % signalColors.length]} strokeWidth={activePath ? 4 : 1.7} strokeLinecap="round" strokeLinejoin="round" opacity={activePath ? 1 : 0.27} filter={activePath ? 'url(#mouse-path-glow)' : undefined} className={path.id === selectedId ? 'mouse-path-preview' : undefined} tabIndex={0} role="button" aria-label={`Preview ${pathDetails(path).headline}`} onMouseEnter={() => onHover(path.id)} onMouseLeave={() => onHover(undefined)} onFocus={() => onHover(path.id)} onBlur={() => onHover(undefined)} onClick={() => onSelect(path.id)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); onSelect(path.id); } }} />;
         })}
       </svg>
-      {active ? <div className="mouse-path-tooltip"><strong>{pathDetails(active).headline}</strong><span>{active.points.length} points · {fmt1(active.distancePx)} px · {fmt1(active.durationMs / 1000)}s</span><small>{active.endedReason} · click to preview inside the canvas</small></div> : null}
+      {active ? <div className="mouse-path-tooltip"><strong>{pathDetails(active).headline}</strong><span>{active.points.length} points · {fmt1(active.distancePx)} px · {fmt1(active.durationMs / 1000)}s</span><small>{active.endedReason} · {input.mousePathClickHint}</small></div> : null}
     </div>
   );
 }
@@ -268,26 +268,28 @@ function MousePathWidget({ paths, input }: { paths: MousePath[]; input: typeof I
   const totalPoints = paths.reduce((sum, path) => sum + path.points.length, 0);
   const selected = paths.find((path) => path.id === selectedId);
   return <Card className="col-span-12">
-    <WidgetTitle icon={<IconActivity width={13} height={13} />} title="Natural path field" tooltip="Sampled natural mouse paths from the selected input-tracker window. Hover a trace for details; click to preview it inside this canvas." />
-    <div className="mouse-path-header"><div><strong>{paths.length ? `${fmtInt(paths.length)} paths in the field` : 'No path field yet'}</strong><span>{fmtInt(totalPoints)} sampled points · layered density view</span></div>{selected ? <div className="mouse-path-selection"><b>Previewing</b><span>{pathDetails(selected).headline}</span></div> : <div className="mouse-path-selection"><b>{input.activeWindowLabel}</b><span>Hover a trace to inspect it</span></div>}</div>
-    <MousePathCanvas paths={paths} selectedId={selectedId} hoveredId={hoveredId} onSelect={setSelectedId} onHover={setHoveredId} />
+    <WidgetTitle icon={<IconActivity width={13} height={13} />} title={input.mousePathTitle} tooltip={input.mousePathTooltip} />
+    <div className="mouse-path-header"><div><strong>{paths.length ? `${fmtInt(paths.length)} ${input.mousePathsInField}` : input.mousePathNone}</strong><span>{fmtInt(totalPoints)} {input.mousePathPointsSuffix} · {input.mousePathDensityView}</span></div>{selected ? <div className="mouse-path-selection"><b>{input.mousePathPreviewing}</b><span>{pathDetails(selected).headline}</span></div> : <div className="mouse-path-selection"><b>{input.activeWindowLabel}</b><span>{input.mousePathHoverHint}</span></div>}</div>
+    <MousePathCanvas paths={paths} selectedId={selectedId} hoveredId={hoveredId} onSelect={setSelectedId} onHover={setHoveredId} input={input} />
   </Card>;
 }
 
 function HotspotMonitor({ rows, input }: { rows?: { name: string; count: number }[]; input: typeof I18N.en.input }) {
   const [hovered, setHovered] = useState<string>();
+  const [tapped, setTapped] = useState<string>();
   const values = new Map((rows || []).map((row) => [row.name, row.count || 0]));
   const max = Math.max(1, ...(rows || []).map((row) => row.count || 0));
   const total = (rows || []).reduce((sum, row) => sum + (row.count || 0), 0);
   const cells = Array.from({ length: 9 }, (_, row) => Array.from({ length: 12 }, (_, col) => `${col}:${row}`));
-  const active = hovered ? { name: hovered, count: values.get(hovered) || 0 } : undefined;
+  const activeName = hovered ?? tapped;
+  const active = activeName ? { name: activeName, count: values.get(activeName) || 0 } : undefined;
   return <div className="hotspot-monitor-wrap">
     <div className="hotspot-monitor" role="img" aria-label="Click hotspot screen map">
       <div className="hotspot-monitor-top"><span /> <i /> <i /> <i /></div>
-      <div className="hotspot-screen">{cells.flat().map((name) => { const count = values.get(name) || 0; const intensity = count / max; return <span key={name} className="hotspot-cell" style={{ '--hotspot-intensity': intensity } as React.CSSProperties} onMouseEnter={() => setHovered(name)} onMouseLeave={() => setHovered(undefined)} title={`${humanHotspot(name, input)}: ${fmtInt(count)} ${input.clicksUnit}`} />; })}</div>
+      <div className="hotspot-screen">{cells.flat().map((name) => { const count = values.get(name) || 0; const intensity = count / max; return <span key={name} className="hotspot-cell" style={{ '--hotspot-intensity': intensity } as React.CSSProperties} onMouseEnter={() => setHovered(name)} onMouseLeave={() => setHovered(undefined)} onClick={() => setTapped(name)} title={`${humanHotspot(name, input)}: ${fmtInt(count)} ${input.clicksUnit}`} />; })}</div>
       <div className="hotspot-taskbar"><span /><span /><span /><b /></div>
     </div>
-    <div className="hotspot-tooltip">{active ? <><strong>{humanHotspot(active.name, input)}</strong><span>{fmtInt(active.count)} clicks · {total ? fmtPct(active.count / total) : '0%'} of sampled clicks</span><small>{input.hotspotRaw} {active.name}</small></> : <><strong>Hover the screen</strong><span>Inspect click concentration by screen zone</span><small>{fmtInt(total)} total sampled clicks</small></>}</div>
+    <div className="hotspot-tooltip">{active ? <><strong>{humanHotspot(active.name, input)}</strong><span>{fmtInt(active.count)} {input.clicksUnit} · {total ? fmtPct(active.count / total) : '0%'} {input.hotspotOfSampledClicks}</span><small>{input.hotspotRaw} {active.name}</small></> : <><strong>{input.hotspotHoverPrompt}</strong><span>{input.hotspotHoverHint}</span><small>{fmtInt(total)} {input.hotspotTotalSuffix}</small></>}</div>
   </div>;
 }
 

@@ -35,6 +35,8 @@ export interface I18nStrings {
   commitStatMedian: string
   commitStatMode: string
   commitStatSamples: string
+  commitStatP90: string
+  commitStatMax: string
   commitHistTitle: string
   commitBoxTitle: string
   commitOutliersTitle: string
@@ -78,7 +80,10 @@ export interface I18nStrings {
   agentHint: string
   activityTitle: string
   activityHint: string
+  activityHourTitle: string
+  activityDowTitle: string
 
+  privateRepository: string
   noCommitData: string
   commitLineDataUnavailable: string
   lineStatsUnavailable: string
@@ -131,6 +136,8 @@ const en: I18nStrings = {
   commitStatMedian:      'Median',
   commitStatMode:        'Mode',
   commitStatSamples:     'Samples',
+  commitStatP90:         'p90',
+  commitStatMax:         'Max',
   commitHistTitle:       'Histogram',
   commitBoxTitle:        'Box Plot by Month',
   commitOutliersTitle:   'Outliers (>3200 lines)',
@@ -174,7 +181,10 @@ const en: I18nStrings = {
   agentHint:             'Extracted from ledger events with MCP/tool metadata.',
   activityTitle:         'Activity Pulse',
   activityHint:          'When work happens - hourly and daily patterns.',
+  activityHourTitle:     'Hour of Day',
+  activityDowTitle:      'Day of Week',
 
+  privateRepository:         'Private Repository',
   noCommitData:              'No commit size data available.',
   commitLineDataUnavailable: 'Commit line data unavailable.',
   lineStatsUnavailable:      'Line stats unavailable.',
@@ -242,6 +252,8 @@ const qc: I18nStrings = {
   commitStatMedian:      'Médiane',
   commitStatMode:        'Mode',
   commitStatSamples:     'Échantillons',
+  commitStatP90:         'p90',
+  commitStatMax:         'Max',
   commitHistTitle:       'Histogramme',
   commitBoxTitle:        'Boîte à moustaches par mois',
   commitOutliersTitle:   'Aberrants (>3200 lignes)',
@@ -285,7 +297,10 @@ const qc: I18nStrings = {
   agentHint:             'Extraite des événements du registre avec métadonnées MCP/outil.',
   activityTitle:         'Pouls d\'activité',
   activityHint:          'Quand le travail se produit - motifs horaires et quotidiens.',
+  activityHourTitle:     'Heure de la journée',
+  activityDowTitle:      'Jour de la semaine',
 
+  privateRepository:         'Dépôt privé',
   noCommitData:              'Aucune donnée de taille de commit disponible.',
   commitLineDataUnavailable: 'Données de lignes de commit indisponibles.',
   lineStatsUnavailable:      'Statistiques de lignes indisponibles.',
