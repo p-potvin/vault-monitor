@@ -16,9 +16,9 @@ export default function Highlights({ highlights, t }: HighlightsProps) {
     <div className="flex flex-col gap-5">
       {/* 3 headline KPIs */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <KpiCard label={t.hlMostConsistentMonth} value={highlights.mostConsistentMonth} variant="accent" />
-        <KpiCard label={t.hlWidestProjectDay}    value={highlights.widestProjectDay}    variant="green"  />
-        <KpiCard label={t.hlStrongestWeek}       value={highlights.strongestWeek}       />
+        <KpiCard label={t.hlMostConsistentMonth} value={highlights.mostConsistentMonth} variant="accent" tooltip={t.hlMostConsistentMonthTooltip} />
+        <KpiCard label={t.hlWidestProjectDay}    value={highlights.widestProjectDay}    variant="green"  tooltip={t.hlWidestProjectDayTooltip} />
+        <KpiCard label={t.hlStrongestWeek}       value={highlights.strongestWeek}       tooltip={t.hlStrongestWeekTooltip} />
       </div>
 
       {/* Top projects */}
