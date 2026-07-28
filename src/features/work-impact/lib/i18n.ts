@@ -19,13 +19,23 @@ export interface I18nStrings {
   metricBusiestWeek: string
   metricCommits: string
 
+  metricEventsTooltip: string
+  metricDaysTooltip: string
+  metricProjectsTooltip: string
+  metricStreakTooltip: string
+  metricCommitsTooltip: string
+  metricBusiestDayTooltip: string
+  metricBusiestWeekTooltip: string
+
   calendarTitle: string
   calendarHint: string
   less: string
   more: string
 
   monthlyTitle: string
+  monthlyHint: string
   kindsTitle: string
+  kindsHint: string
   projectsTitle: string
   projectsNote: string
 
@@ -52,6 +62,7 @@ export interface I18nStrings {
   statExcluded: string
 
   filesTouchedTitle: string
+  filesTouchedHint: string
   concentrationTitle: string
   concentrationHint: string
 
@@ -61,6 +72,9 @@ export interface I18nStrings {
   hlWidestProjectDay: string
   hlStrongestWeek: string
   hlMilestones: string
+  hlMostConsistentMonthTooltip: string
+  hlWidestProjectDayTooltip: string
+  hlStrongestWeekTooltip: string
 
   labelProjects: string
   labelKinds: string
@@ -120,15 +134,25 @@ const en: I18nStrings = {
   metricBusiestWeek:     'Busiest Week',
   metricCommits:         'Commits',
 
+  metricEventsTooltip:      'All logged ledger entries in the tracked range, across every project.',
+  metricDaysTooltip:        'Number of days with at least one logged entry.',
+  metricProjectsTooltip:    'Distinct owned projects with at least one entry in range.',
+  metricStreakTooltip:      'Consecutive days up to today with at least one logged entry.',
+  metricCommitsTooltip:     'Commits recomputed from ledger-referenced git history, not the full GitHub history.',
+  metricBusiestDayTooltip:  'The single day with the most logged entries.',
+  metricBusiestWeekTooltip: 'The single calendar week with the most logged entries.',
+
   calendarTitle:         'Activity Calendar',
   calendarHint:          'Each cell = one day. Color intensity = event count.',
   less:                  'Less',
   more:                  'More',
 
   monthlyTitle:          'Monthly Activity',
+  monthlyHint:           'Entries per calendar month across the tracked range.',
   kindsTitle:            'Activity by Kind',
+  kindsHint:             'Entries grouped by ledger event type.',
   projectsTitle:         'Projects by Volume',
-  projectsNote:          'Top 20 shown.',
+  projectsNote:          'Top 8 shown.',
 
   commitSizeTitle:       'Commit Size Distribution',
   commitSizeHint:        'Lines changed per commit. Only evaluates commits associated with VaultWares ledger events, not the full GitHub history.',
@@ -153,6 +177,7 @@ const en: I18nStrings = {
   statExcluded:          'Excluded',
 
   filesTouchedTitle:     'Files Touched per Commit',
+  filesTouchedHint:      'Total number of files modified across all logged commits.',
   concentrationTitle:    'Work Concentration',
   concentrationHint:     'Share of total events per top project.',
 
@@ -162,6 +187,9 @@ const en: I18nStrings = {
   hlWidestProjectDay:    'Widest Project Spread (day)',
   hlStrongestWeek:       'Strongest Week',
   hlMilestones:          'Milestones',
+  hlMostConsistentMonthTooltip: 'The month with the most even day-to-day activity, rather than the highest total.',
+  hlWidestProjectDayTooltip:    'The single day touching the most distinct projects at once.',
+  hlStrongestWeekTooltip:       'The single calendar week with the most total activity.',
 
   labelProjects:         'Projects',
   labelKinds:            'Kinds',
@@ -178,7 +206,7 @@ const en: I18nStrings = {
   colExamples:           'Recent Examples',
 
   agentTitle:            'AI Agent Activity',
-  agentHint:             'Extracted from ledger events with MCP/tool metadata.',
+  agentHint:             'Extracted from ledger events with MCP/tool metadata, filtered to exclude direct human activity such as your own GitHub profile.',
   activityTitle:         'Activity Pulse',
   activityHint:          'When work happens - hourly and daily patterns.',
   activityHourTitle:     'Hour of Day',
@@ -236,15 +264,25 @@ const qc: I18nStrings = {
   metricBusiestWeek:     'Semaine la plus active',
   metricCommits:         'Commits',
 
+  metricEventsTooltip:      'Toutes les entrées du registre dans la période suivie, tous projets confondus.',
+  metricDaysTooltip:        'Nombre de jours avec au moins une entrée enregistrée.',
+  metricProjectsTooltip:    'Projets détenus distincts avec au moins une entrée dans la période.',
+  metricStreakTooltip:      'Jours consécutifs jusqu\'à aujourd\'hui avec au moins une entrée enregistrée.',
+  metricCommitsTooltip:     'Commits recalculés depuis l\'historique git référencé par le registre, pas l\'historique GitHub complet.',
+  metricBusiestDayTooltip:  'La journée avec le plus d\'entrées enregistrées.',
+  metricBusiestWeekTooltip: 'La semaine civile avec le plus d\'entrées enregistrées.',
+
   calendarTitle:         'Calendrier d\'activité',
   calendarHint:          'Chaque cellule = un jour. Intensité = nombre d\'événements.',
   less:                  'Moins',
   more:                  'Plus',
 
   monthlyTitle:          'Activité mensuelle',
+  monthlyHint:           'Entrées par mois civil dans la période suivie.',
   kindsTitle:            'Activité par type',
+  kindsHint:             'Entrées regroupées par type d\'événement du registre.',
   projectsTitle:         'Projets par volume',
-  projectsNote:          'Top 20 affiché.',
+  projectsNote:          'Top 8 affiché.',
 
   commitSizeTitle:       'Distribution de la taille des commits',
   commitSizeHint:        'Lignes modifiées par commit (insertions + suppressions).',
@@ -269,6 +307,7 @@ const qc: I18nStrings = {
   statExcluded:          'Exclus',
 
   filesTouchedTitle:     'Fichiers modifiés par commit',
+  filesTouchedHint:      'Nombre total de fichiers modifiés dans tous les commits enregistrés.',
   concentrationTitle:    'Concentration du travail',
   concentrationHint:     'Part des événements totaux par projet principal.',
 
@@ -278,6 +317,9 @@ const qc: I18nStrings = {
   hlWidestProjectDay:    'Plus grand écart de projets (jour)',
   hlStrongestWeek:       'Semaine la plus forte',
   hlMilestones:          'Jalons',
+  hlMostConsistentMonthTooltip: 'Le mois avec l\'activité quotidienne la plus régulière, plutôt que le total le plus élevé.',
+  hlWidestProjectDayTooltip:    'La journée touchant le plus de projets distincts à la fois.',
+  hlStrongestWeekTooltip:       'La semaine civile avec le plus d\'activité totale.',
 
   labelProjects:         'Projets',
   labelKinds:            'Types',
@@ -294,7 +336,7 @@ const qc: I18nStrings = {
   colExamples:           'Exemples récents',
 
   agentTitle:            'Activité des agents IA',
-  agentHint:             'Extraite des événements du registre avec métadonnées MCP/outil.',
+  agentHint:             'Extraite des événements du registre avec métadonnées MCP/outil, filtrée pour exclure l\'activité humaine directe comme votre propre profil GitHub.',
   activityTitle:         'Pouls d\'activité',
   activityHint:          'Quand le travail se produit - motifs horaires et quotidiens.',
   activityHourTitle:     'Heure de la journée',

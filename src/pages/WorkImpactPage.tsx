@@ -40,29 +40,29 @@ export function WorkImpactPage() {
   return (
     <main className="max-w-[1400px] mx-auto px-6 py-8 flex flex-col gap-6">
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-        <KpiCard label={t.metricEvents} value={d.totalEvents} variant="accent" />
-        <KpiCard label={t.metricDays} value={d.activeDays} />
-        <KpiCard label={t.metricProjects} value={d.totalProjects} />
-        <KpiCard label={t.metricStreak} value={d.streakCurrent} variant="green" sub={t.streakMax(d.streakLongest)} />
-        <KpiCard label={t.metricCommits} value={d.totalCommits} />
+        <KpiCard label={t.metricEvents} value={d.totalEvents} variant="accent" tooltip={t.metricEventsTooltip} />
+        <KpiCard label={t.metricDays} value={d.activeDays} tooltip={t.metricDaysTooltip} />
+        <KpiCard label={t.metricProjects} value={d.totalProjects} tooltip={t.metricProjectsTooltip} />
+        <KpiCard label={t.metricStreak} value={d.streakCurrent} variant="green" sub={t.streakMax(d.streakLongest)} tooltip={t.metricStreakTooltip} />
+        <KpiCard label={t.metricCommits} value={d.totalCommits} tooltip={t.metricCommitsTooltip} />
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <KpiCard label={t.metricBusiestDay} value={`${d.busiestDay} (${d.busiestDayCount})`} />
-        <KpiCard label={t.metricBusiestWeek} value={`${d.busiestWeek} (${d.busiestWeekCount})`} />
+        <KpiCard label={t.metricBusiestDay} value={`${d.busiestDay} (${d.busiestDayCount})`} tooltip={t.metricBusiestDayTooltip} />
+        <KpiCard label={t.metricBusiestWeek} value={`${d.busiestWeek} (${d.busiestWeekCount})`} tooltip={t.metricBusiestWeekTooltip} />
       </div>
       <Section title={t.calendarTitle} hint={t.calendarHint}><HeatmapGrid daySeries={d.daySeries} t={t} /></Section>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Section title={t.monthlyTitle}><BarList items={d.byMonth} color="cyan" /></Section>
-        <Section title={t.kindsTitle}><BarList items={d.byKind} color="violet" logScale /></Section>
-        <Section title={t.projectsTitle}><BarList items={d.byProject.slice(0, 8)} color="gold" /></Section>
+        <Section title={t.monthlyTitle} hint={t.monthlyHint}><BarList items={d.byMonth} color="cyan" /></Section>
+        <Section title={t.kindsTitle} hint={t.kindsHint}><BarList items={d.byKind} color="violet" logScale /></Section>
+        <Section title={t.projectsTitle} hint={t.projectsNote}><BarList items={d.byProject.slice(0, 8)} color="gold" /></Section>
       </div>
       <Section title={t.commitSizeTitle} hint={t.commitSizeHint}><CommitStats commitStats={d.commitStats} commitBuckets={d.commitBuckets} monthBoxes={d.monthBoxes} commitOutliers={d.commitOutliers} t={t} /></Section>
       <Section title={t.techTitle} hint={t.techHint}><TechVolumeTable techVolume={d.techVolume} t={t} /></Section>
-      <Section title={t.filesTouchedTitle} hint="Total number of files modified across all logged commits."><FilesTouched filesTouched={d.filesTouched} t={t} /></Section>
+      <Section title={t.filesTouchedTitle} hint={t.filesTouchedHint}><FilesTouched filesTouched={d.filesTouched} t={t} /></Section>
       <Section title={t.concentrationTitle} hint={t.concentrationHint}><ConcentrationBars concentration={d.concentration} t={t} /></Section>
       <Section title={t.activityTitle} hint={t.activityHint}><ActivityPatterns byHour={d.byHour} byDow={d.byDow} t={t} /></Section>
       {d.projects?.length ? <Section title={t.evidenceTitle} hint={t.evidenceHint}><div className="flex flex-col gap-[3px]">{d.projects.map((project) => <ProjectCard key={project.name} project={project} t={t} />)}</div></Section> : null}
-      <Section title={t.agentTitle} hint="Agent activity is specifically filtered to exclude direct human activity (e.g. your GitHub profile)."><AgentSection agent={d.agentData} t={t} /></Section>
+      <Section title={t.agentTitle} hint={t.agentHint}><AgentSection agent={d.agentData} t={t} /></Section>
       {d.highlights ? <Section title={t.highlightsTitle} hint={t.highlightsHint}><Highlights highlights={d.highlights} t={t} /></Section> : null}
     </main>
   );

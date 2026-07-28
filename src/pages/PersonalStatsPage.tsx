@@ -301,7 +301,7 @@ function PauseBreakdown({ totals, input }: { totals: Record<string, number>; inp
   const effectivePause = pause || (!hasSplit ? totals.rest_blocks || 0 : 0);
   return (
     <Card className="col-span-4 max-lg:col-span-6 max-md:col-span-12">
-      <WidgetTitle title={input.pauseBreakdown} tooltip={input.tooltips.pauses} />
+      <WidgetTitle title={input.pauseBreakdown} tooltip={input.pauseBreakdownTooltip} />
       <div className="grid grid-cols-2 gap-2">
         <MiniStat label={input.microPause} value={fmtInt(totals.micro_pauses)} tooltip={input.pauseMicroRange} />
         <MiniStat label={input.pause} value={fmtInt(effectivePause)} tooltip={input.pauseRange} />
@@ -345,7 +345,7 @@ export function PersonalStatsPage() {
   const restMinutes = (totals.rest_gap_seconds_total || 0) / 60;
   const activeRestBalance = restMinutes > 0 ? activeMinutes / restMinutes : undefined;
   const selectedWindowLabel = `${input[activeRange.labelKey]} - ${input[activeRange.hintKey]}`;
-  const activeHours = activeRange.hours || data?.window_hours || 0;
+  const activeHours = data?.window_hours || activeRange.hours || 0;
   const activeDays = activeHours > 0 ? Math.max(1, activeHours / 24) : undefined;
   const extraKpis = {
     keysPerSwitch: contextSwitches > 0 ? (totals.keystrokes || 0) / contextSwitches : undefined,
