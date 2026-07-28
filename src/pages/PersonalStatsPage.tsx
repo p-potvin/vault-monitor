@@ -298,20 +298,16 @@ function PauseBreakdown({ totals, input }: { totals: Record<string, number>; inp
   const healthy = countFrom(totals, ['healthy_pause_blocks', 'pauses_20m_60m', 'healthy_pause_count']);
   const timeOff = countFrom(totals, ['time_off_blocks', 'pauses_1h_plus', 'time_off_count']);
   const hasSplit = pause > 0 || healthy > 0 || timeOff > 0;
+  const effectivePause = pause || (!hasSplit ? totals.rest_blocks || 0 : 0);
   return (
     <Card className="col-span-4 max-lg:col-span-6 max-md:col-span-12">
       <WidgetTitle title={input.pauseBreakdown} tooltip={input.tooltips.pauses} />
       <div className="grid grid-cols-2 gap-2">
         <MiniStat label={input.microPause} value={fmtInt(totals.micro_pauses)} tooltip={input.pauseMicroRange} />
-        <MiniStat label={input.pause} value={fmtInt(pause)} tooltip={input.pauseRange} />
+        <MiniStat label={input.pause} value={fmtInt(effectivePause)} tooltip={input.pauseRange} />
         <MiniStat label={input.healthyPause} value={fmtInt(healthy)} tooltip={input.healthyPauseRange} />
         <MiniStat label={input.timeOff} value={fmtInt(timeOff)} tooltip={input.timeOffRange} />
       </div>
-      {!hasSplit && totals.rest_blocks ? (
-        <div className="mt-2 text-[11px] leading-4 text-[var(--muted)]">
-          {input.legacyPauseNote} {input.legacyRestBlocks}: {fmtInt(totals.rest_blocks)}.
-        </div>
-      ) : null}
     </Card>
   );
 }

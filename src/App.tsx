@@ -2,20 +2,22 @@ import { useEffect, useState, type ReactNode } from "react";
 import { NavLink, Navigate, Route, Routes } from "react-router-dom";
 import { getServices } from "./api";
 import { LangProvider, useLangState } from "./i18n";
-import { IconActivity, IconBarChart, IconDatabase, IconSearch, IconServer } from "./icons";
+import { IconActivity, IconBarChart, IconDatabase, IconSearch, IconServer, IconZap } from "./icons";
 import { LedgerPage } from "./pages/LedgerPage";
 import { PersonalStatsPage } from "./pages/PersonalStatsPage";
 import { SearchPage } from "./pages/SearchPage";
 import { ServicesPage } from "./pages/ServicesPage";
+import { UptimePage } from "./pages/UptimePage";
 import { WorkImpactPage } from "./pages/WorkImpactPage";
 
 const copy = {
-  en: { workImpact: "Work Impact", personalStats: "Personal Stats", ledger: "The Ledger", search: "Search", services: "Services", status: "System status", online: "API online", degraded: "API degraded", language: "Language" },
-  qc: { workImpact: "Impact du travail", personalStats: "Stats personnelles", ledger: "Le Registre", search: "Recherche", services: "Services", status: "Etat du systeme", online: "API en ligne", degraded: "API degradee", language: "Langue" },
+  en: { workImpact: "Work Impact", personalStats: "Personal Stats", ledger: "The Ledger", search: "Search", services: "Services", uptime: "Uptime Kuma", status: "System status", online: "API online", degraded: "API degraded", language: "Language" },
+  qc: { workImpact: "Impact du travail", personalStats: "Stats personnelles", ledger: "Le Registre", search: "Recherche", services: "Services", uptime: "Disponibilité", status: "Etat du systeme", online: "API en ligne", degraded: "API degradee", language: "Langue" },
 };
 const nav: Array<{ to: string; label: keyof typeof copy.en; icon: ReactNode }> = [
   { to: "/work-impact", label: "workImpact", icon: <IconBarChart /> },
   { to: "/personal-stats", label: "personalStats", icon: <IconActivity /> },
+  { to: "/uptime", label: "uptime", icon: <IconZap /> },
   { to: "/ledger", label: "ledger", icon: <IconDatabase /> },
   { to: "/search", label: "search", icon: <IconSearch /> },
   { to: "/services", label: "services", icon: <IconServer /> },
@@ -65,6 +67,7 @@ function Shell() {
       <Routes>
         <Route path="/work-impact" element={<WorkImpactPage />} />
         <Route path="/personal-stats" element={<PersonalStatsPage />} />
+        <Route path="/uptime" element={<UptimePage />} />
         <Route path="/ledger" element={<LedgerPage />} />
         <Route path="/search" element={<SearchPage />} />
         <Route path="/services" element={<ServicesPage />} />
