@@ -2073,6 +2073,8 @@ td span {
 .monitor-stage {
   flex-grow: 1;
   min-width: 0;
+  /* Positioning context for .vw-splash. */
+  position: relative;
 }
 
 /* ============================================
@@ -2324,4 +2326,137 @@ td span {
   .mouse-path-empty {
     min-height: 230px;
   }
+}
+/* ============================================
+   VIEW TRANSITION SPLASH
+   Console-mode overlay played when switching
+   tabs or time windows. Portalled to <body>,
+   so it is outside .app-shell's zoom and can
+   cover the true viewport.
+   ============================================ */
+
+.vw-splash {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Base wash: console violet blooming from the upper left, echoing
+   .monitor-stage's own radial so the splash reads as the surface lighting up. */
+.vw-splash-wash {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 22% 12%, color-mix(in srgb, var(--vault-signal-sync) 62%, transparent), transparent 40rem),
+    radial-gradient(circle at 82% 88%, color-mix(in srgb, var(--vault-signal-relay) 40%, transparent), transparent 34rem),
+    linear-gradient(135deg,
+      color-mix(in srgb, var(--vault-console-elevated) 97%, transparent) 0%,
+      color-mix(in srgb, var(--vault-console-surface) 95%, transparent) 48%,
+      color-mix(in srgb, var(--vault-console-bg) 98%, transparent) 100%);
+  animation: vwSplashWash 700ms var(--vault-motion-state-ease) forwards;
+}
+
+/* Faint scanline grid, echoing the hotspot monitor's console styling. */
+.vw-splash-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--vault-signal-relay) 16%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--vault-signal-sync) 16%, transparent) 1px, transparent 1px);
+  background-size: 52px 52px;
+  animation: vwSplashGrid 700ms var(--vault-motion-entry-ease) forwards;
+}
+
+/* The colourful part: a chromatic band raking across the viewport. */
+.vw-splash-sweep {
+  position: absolute;
+  inset: -25% -70%;
+  background: linear-gradient(100deg,
+    transparent 32%,
+    color-mix(in srgb, var(--vault-signal-relay) 70%, transparent) 42%,
+    color-mix(in srgb, var(--vault-signal-sync) 92%, transparent) 50%,
+    color-mix(in srgb, var(--vault-console-gold) 72%, transparent) 58%,
+    transparent 68%);
+  filter: blur(34px);
+  transform: translate3d(-45%, 0, 0);
+  animation: vwSplashSweep 700ms var(--vault-motion-state-ease) forwards;
+}
+
+.vw-splash-core {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+
+.vw-splash-ring {
+  grid-area: 1 / 1;
+  width: 190px;
+  height: 190px;
+  border-radius: 50%;
+  border: 2px solid color-mix(in srgb, var(--vault-signal-sync) 85%, transparent);
+  box-shadow:
+    0 0 46px color-mix(in srgb, var(--vault-signal-sync) 60%, transparent),
+    inset 0 0 30px color-mix(in srgb, var(--vault-signal-relay) 34%, transparent);
+  animation: vwSplashRing 700ms var(--vault-motion-entry-ease) forwards;
+}
+
+.vw-splash-ring-2 {
+  border-color: color-mix(in srgb, var(--vault-console-gold) 78%, transparent);
+  box-shadow: 0 0 40px color-mix(in srgb, var(--vault-console-gold) 46%, transparent);
+  animation-delay: 90ms;
+}
+
+.vw-splash-ring-3 {
+  border-color: color-mix(in srgb, var(--vault-signal-relay) 70%, transparent);
+  box-shadow: 0 0 34px color-mix(in srgb, var(--vault-signal-relay) 40%, transparent);
+  animation-delay: 180ms;
+}
+
+.vw-splash-label {
+  grid-area: 1 / 1;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--fg);
+  text-shadow:
+    0 0 22px color-mix(in srgb, var(--vault-signal-sync) 85%, transparent),
+    0 0 44px color-mix(in srgb, var(--vault-console-bg) 90%, transparent);
+  animation: vwSplashLabel 700ms var(--vault-motion-entry-ease) forwards;
+}
+
+@keyframes vwSplashWash {
+  0%   { opacity: 0; }
+  18%  { opacity: 1; }
+  62%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes vwSplashGrid {
+  0%   { opacity: 0; transform: scale(1.08); }
+  28%  { opacity: 0.8; transform: scale(1); }
+  100% { opacity: 0; transform: scale(0.98); }
+}
+
+@keyframes vwSplashSweep {
+  0%   { opacity: 0; transform: translate3d(-45%, 0, 0); }
+  22%  { opacity: 1; }
+  100% { opacity: 0; transform: translate3d(45%, 0, 0); }
+}
+
+@keyframes vwSplashRing {
+  0%   { opacity: 0; transform: scale(0.4); }
+  32%  { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.75); }
+}
+
+@keyframes vwSplashLabel {
+  0%   { opacity: 0; transform: translateY(10px) scale(0.96); }
+  32%  { opacity: 1; transform: translateY(0) scale(1); }
+  70%  { opacity: 1; }
+  100% { opacity: 0; transform: scale(1.02); }
 }

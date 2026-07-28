@@ -30,6 +30,7 @@ const INPUT_RANGES = [
 type InputRangeId = (typeof INPUT_RANGES)[number]['id'];
 
 import { InfoTooltip } from '../components/InfoTooltip';
+import { ViewTransition } from '../components/ViewTransition';
 function WidgetTitle({ icon, title, tooltip }: { icon?: ReactNode; title: string; tooltip: string }) {
   return (
     <h2 className="text-[11px] text-[var(--muted)] font-bold uppercase tracking-wider m-0 mb-3 flex items-center gap-1.5">
@@ -274,12 +275,15 @@ function MousePathWidget({ paths, input }: { paths: MousePath[]; input: typeof I
   </Card>;
 }
 
-function HotspotMonitor({ rows, input }: { rows?: { name: string; count: number }[]; input: typeof I18N.en.input }) {
+function HotspotMonitor({ rows, total: apiTotal, input }: { rows?: { name: string; count: number }[]; total?: number; input: typeof I18N.en.input }) {
   const [hovered, setHovered] = useState<string>();
   const [tapped, setTapped] = useState<string>();
   const values = new Map((rows || []).map((row) => [row.name, row.count || 0]));
   const max = Math.max(1, ...(rows || []).map((row) => row.count || 0));
-  const total = (rows || []).reduce((sum, row) => sum + (row.count || 0), 0);
+  // `rows` is only the top 20 buckets, so summing it understates the true
+  // denominator and made these percentages disagree with the Top hotspot KPI.
+  // Prefer the API's full bucket total when present.
+  const total = apiTotal ?? (rows || []).reduce((sum, row) => sum + (row.count || 0), 0);
   const cells = Array.from({ length: 9 }, (_, row) => Array.from({ length: 12 }, (_, col) => `${col}:${row}`));
   const activeName = hovered ?? tapped;
   const active = activeName ? { name: activeName, count: values.get(activeName) || 0 } : undefined;
@@ -298,15 +302,25 @@ function PauseBreakdown({ totals, input }: { totals: Record<string, number>; inp
   const healthy = countFrom(totals, ['healthy_pause_blocks', 'pauses_20m_60m', 'healthy_pause_count']);
   const timeOff = countFrom(totals, ['time_off_blocks', 'pauses_1h_plus', 'time_off_count']);
   const hasSplit = pause > 0 || healthy > 0 || timeOff > 0;
-  const effectivePause = pause || (!hasSplit ? totals.rest_blocks || 0 : 0);
+  const restBlocks = totals.rest_blocks || 0;
   return (
     <Card className="col-span-4 max-lg:col-span-6 max-md:col-span-12">
       <WidgetTitle title={input.pauseBreakdown} tooltip={input.pauseBreakdownTooltip} />
       <div className="grid grid-cols-2 gap-2">
         <MiniStat label={input.microPause} value={fmtInt(totals.micro_pauses)} tooltip={input.pauseMicroRange} />
-        <MiniStat label={input.pause} value={fmtInt(effectivePause)} tooltip={input.pauseRange} />
-        <MiniStat label={input.healthyPause} value={fmtInt(healthy)} tooltip={input.healthyPauseRange} />
-        <MiniStat label={input.timeOff} value={fmtInt(timeOff)} tooltip={input.timeOffRange} />
+        {hasSplit ? (
+          <>
+            <MiniStat label={input.pause} value={fmtInt(pause)} tooltip={input.pauseRange} />
+            <MiniStat label={input.healthyPause} value={fmtInt(healthy)} tooltip={input.healthyPauseRange} />
+            <MiniStat label={input.timeOff} value={fmtInt(timeOff)} tooltip={input.timeOffRange} />
+          </>
+        ) : (
+          // The tracker only sent the aggregate `rest_blocks`. Showing it in the
+          // "5-20 min" tile would misattribute every longer gap to that bucket,
+          // and showing 0/0/0 alongside a non-zero rest-block count elsewhere on
+          // the page reads as a contradiction. Surface it as one honest total.
+          <MiniStat label={input.legacyRestBlocks} value={fmtInt(restBlocks)} tooltip={input.legacyPauseNote} />
+        )}
       </div>
     </Card>
   );
@@ -361,11 +375,21 @@ export function PersonalStatsPage() {
   };
 
   if (loading) {
-    return <div className="text-center py-20 text-[var(--muted)]">{dict.errors.loading}</div>;
+    // ViewTransition must stay in the same position/type across both branches
+    // so React keeps the instance mounted. Early-returning without it made the
+    // splash remount on every refetch, resetting its first-render guard and
+    // swallowing the animation for the switch that triggered the refetch.
+    return (
+      <>
+        <ViewTransition token={rangeId} label={input[activeRange.labelKey]} />
+        <div className="text-center py-20 text-[var(--muted)]">{dict.errors.loading}</div>
+      </>
+    );
   }
 
   return (
     <>
+      <ViewTransition token={rangeId} label={input[activeRange.labelKey]} />
       <div className="flex items-center justify-between flex-wrap gap-3 pb-4 border-b border-[var(--border)] mb-1">
         <div>
           <h1 className="text-xl font-bold m-0 flex items-center gap-2">
@@ -448,7 +472,7 @@ export function PersonalStatsPage() {
             rows={data?.key_latency_buckets}
             empty={input.noLatency}
             formatName={(name) => humanLatency(name, input.latencyLabels)}
-            formatValue={(row) => `${fmtInt(row.count)} ${input.keySamplesUnit}`}
+            formatValue={(row) => fmtInt(row.count)}
             valueHeader={input.latencyValueHeader}
           />
         </Card>
@@ -457,7 +481,7 @@ export function PersonalStatsPage() {
           <BarRows
             rows={data?.focus_categories}
             empty={input.noFocus}
-            formatValue={(row) => `${fmtMinutesValue(row.count)} ${input.activeMinutesUnit}`}
+            formatValue={(row) => fmtMinutesValue(row.count)}
             valueHeader={input.focusValueHeader}
           />
         </Card>
@@ -467,7 +491,7 @@ export function PersonalStatsPage() {
             <strong className="block text-[var(--fg)]">{input.hotspotLegendTitle}</strong>
             {input.hotspotLegend}
           </div>
-          <HotspotMonitor rows={data?.click_hotspots} input={input} />
+          <HotspotMonitor rows={data?.click_hotspots} total={data?.click_hotspot_total} input={input} />
         </Card>
         <Card className="col-span-6 max-md:col-span-12">
           <WidgetTitle icon={<IconPieChart width={13} height={13} />} title={input.focusWindows} tooltip={input.tooltips.focusWindows} />
@@ -475,7 +499,7 @@ export function PersonalStatsPage() {
             rows={data?.focus_windows}
             empty={input.noFocusWindows}
             formatName={(name, row) => `${row.category || 'unknown'} · ${name}`}
-            formatValue={(row) => `${fmtMinutesValue(row.count)} ${input.activeMinutesUnit}`}
+            formatValue={(row) => fmtMinutesValue(row.count)}
             valueHeader={input.focusValueHeader}
           />
         </Card>
