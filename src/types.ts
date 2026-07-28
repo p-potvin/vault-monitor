@@ -262,6 +262,8 @@ export interface InputTrackerData {
   };
   key_latency_buckets?: { name: string; count: number }[];
   click_hotspots?: { name: string; count: number }[];
+  /** Sum over ALL hotspot buckets, not just the top 20 in click_hotspots. */
+  click_hotspot_total?: number;
   focus_categories?: { name: string; count: number }[];
   focus_windows?: { name: string; category?: string; count: number }[];
   events?: Array<{

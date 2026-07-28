@@ -1,5 +1,6 @@
 import { useEffect, useState, type ReactNode } from "react";
-import { NavLink, Navigate, Route, Routes } from "react-router-dom";
+import { NavLink, Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { ViewTransition } from "./components/ViewTransition";
 import { getServices } from "./api";
 import { LangProvider, useLangState } from "./i18n";
 import { IconActivity, IconBarChart, IconDatabase, IconSearch, IconServer, IconZap } from "./icons";
@@ -32,6 +33,8 @@ function Shell() {
   const [apiOnline, setApiOnline] = useState<boolean | null>(null);
   const [collapsed, setCollapsed] = useState(() => localStorage.getItem("vault-monitor-sidebar-collapsed") === "1");
   const t = copy[lang];
+  const location = useLocation();
+  const navLabel = t[nav.find((item) => item.to === location.pathname)?.label ?? "workImpact"];
   useEffect(() => {
     const controller = new AbortController();
     getServices(controller.signal).then(() => setApiOnline(true)).catch((reason: Error) => reason.name !== "AbortError" && setApiOnline(false));
@@ -64,6 +67,7 @@ function Shell() {
       <div className="locale-toggle" aria-label={t.language}><button className={lang === "en" ? "active" : ""} onClick={() => setLang("en")}>EN</button><button className={lang === "qc" ? "active" : ""} onClick={() => setLang("qc")}>QC</button></div>
     </aside>
     <section className="monitor-stage">
+      <ViewTransition token={location.pathname} label={navLabel} />
       <Routes>
         <Route path="/work-impact" element={<WorkImpactPage />} />
         <Route path="/personal-stats" element={<PersonalStatsPage />} />
