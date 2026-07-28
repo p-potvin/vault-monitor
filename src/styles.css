@@ -886,7 +886,7 @@ p {
 }
 
 .service-sortbar button,
-.service-column > header button,
+.service-column>header button,
 .service-detail-button,
 .service-modal header button {
   min-height: 34px;
@@ -900,7 +900,7 @@ p {
 
 .service-sortbar button.active,
 .service-sortbar button:hover,
-.service-column > header button:hover,
+.service-column>header button:hover,
 .service-detail-button:hover,
 .service-modal header button:hover {
   border-color: color-mix(in srgb, var(--vault-console-gold) 48%, transparent);
@@ -912,7 +912,7 @@ p {
   gap: var(--vault-spacing-3);
 }
 
-.deployments-focus > header {
+.deployments-focus>header {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
@@ -939,7 +939,7 @@ p {
   background: color-mix(in srgb, var(--vault-console-surface) 76%, transparent);
 }
 
-.service-column > header {
+.service-column>header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -948,7 +948,7 @@ p {
   border-bottom: 1px solid var(--vault-console-border-subtle);
 }
 
-.service-column > header strong {
+.service-column>header strong {
   display: block;
   min-width: 0;
   overflow: hidden;
@@ -958,7 +958,7 @@ p {
   white-space: nowrap;
 }
 
-.service-column > header span {
+.service-column>header span {
   display: block;
   color: var(--muted);
   font-size: 12px;
@@ -1990,23 +1990,6 @@ td span {
   }
 }
 
-/* ============================================
-   27. REDUCED MOTION
-   ============================================ */
-
-@media (prefers-reduced-motion: reduce) {
-
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    scroll-behavior: auto !important;
-  }
-}
-
-
-
 .brand-text {
   flex-grow: 1;
   min-width: 0;
@@ -2104,7 +2087,7 @@ td span {
   margin-bottom: var(--vault-spacing-2);
 }
 
-.mouse-path-header > div {
+.mouse-path-header>div {
   display: grid;
   gap: 3px;
   min-width: 0;
@@ -2156,8 +2139,8 @@ td span {
   cursor: pointer;
   outline: none;
   transition: opacity var(--vault-motion-fast) var(--vault-motion-state-ease),
-              stroke-width var(--vault-motion-fast) var(--vault-motion-state-ease),
-              filter var(--vault-motion-fast) var(--vault-motion-state-ease);
+    stroke-width var(--vault-motion-fast) var(--vault-motion-state-ease),
+    filter var(--vault-motion-fast) var(--vault-motion-state-ease);
 }
 
 .mouse-path-canvas path[role="button"]:focus-visible {
@@ -2171,7 +2154,9 @@ td span {
 }
 
 @keyframes mousePathMarch {
-  to { stroke-dashoffset: -38; }
+  to {
+    stroke-dashoffset: -38;
+  }
 }
 
 .mouse-path-empty {
@@ -2194,7 +2179,7 @@ td span {
   color: var(--fg);
   background: color-mix(in srgb, var(--vault-console-bg) 92%, transparent);
   box-shadow: 0 12px 35px rgba(0, 0, 0, .28),
-              0 0 24px color-mix(in srgb, var(--vault-signal-relay) 12%, transparent);
+    0 0 24px color-mix(in srgb, var(--vault-signal-relay) 12%, transparent);
 }
 
 .mouse-path-tooltip {
@@ -2236,7 +2221,7 @@ td span {
   border-radius: 16px;
   background: linear-gradient(145deg, rgba(49, 39, 74, .9), rgba(22, 19, 32, .96));
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .025),
-              0 0 36px rgba(176, 124, 255, .1);
+    0 0 36px rgba(176, 124, 255, .1);
 }
 
 .hotspot-monitor-top,
@@ -2266,9 +2251,17 @@ td span {
   opacity: .8;
 }
 
-.hotspot-monitor-top i:nth-child(2) { background: var(--vault-signal-online); }
-.hotspot-monitor-top i:nth-child(3) { background: var(--vault-signal-warning); }
-.hotspot-monitor-top i:nth-child(4) { background: var(--vault-signal-alert); }
+.hotspot-monitor-top i:nth-child(2) {
+  background: var(--vault-signal-online);
+}
+
+.hotspot-monitor-top i:nth-child(3) {
+  background: var(--vault-signal-warning);
+}
+
+.hotspot-monitor-top i:nth-child(4) {
+  background: var(--vault-signal-alert);
+}
 
 .hotspot-screen {
   display: grid;
@@ -2279,7 +2272,7 @@ td span {
   border: 1px solid rgba(255, 255, 255, .08);
   border-radius: 8px;
   background: radial-gradient(circle at 50% 50%, rgba(85, 214, 255, .08), transparent 70%),
-              var(--vault-console-bg);
+    var(--vault-console-bg);
 }
 
 .hotspot-cell {
@@ -2288,10 +2281,9 @@ td span {
   border-radius: 3px;
   cursor: crosshair;
   background: color-mix(in srgb, var(--vault-signal-relay) calc(12% + var(--hotspot-intensity) * 72%), transparent);
-  box-shadow: 0 0 calc(4px + var(--hotspot-intensity) * 16px)
-              color-mix(in srgb, var(--vault-signal-relay) calc(var(--hotspot-intensity) * 72%), transparent);
+  box-shadow: 0 0 calc(4px + var(--hotspot-intensity) * 16px) color-mix(in srgb, var(--vault-signal-relay) calc(var(--hotspot-intensity) * 72%), transparent);
   transition: transform var(--vault-motion-fast) var(--vault-motion-state-ease),
-              filter var(--vault-motion-fast) var(--vault-motion-state-ease);
+    filter var(--vault-motion-fast) var(--vault-motion-state-ease);
 }
 
 .hotspot-cell:hover {
