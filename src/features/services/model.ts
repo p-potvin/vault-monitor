@@ -20,7 +20,7 @@ export interface ServiceHostGroup {
 const statusRank: Record<ServiceStatus, number> = {
   offline: 0,
   degraded: 1,
-  stale: 2,
+  suspended: 2,
   unmonitored: 3,
   healthy: 4,
 };
@@ -29,7 +29,9 @@ export function summarizeServices(items: MonitoredService[]): ServiceSummary {
   return items.reduce<ServiceSummary>(
     (summary, item) => {
       summary.total += 1;
-      summary[item.status] += 1;
+      if (item.status in summary) {
+        summary[item.status] += 1;
+      }
       return summary;
     },
     {
@@ -37,7 +39,7 @@ export function summarizeServices(items: MonitoredService[]): ServiceSummary {
       healthy: 0,
       degraded: 0,
       offline: 0,
-      stale: 0,
+      suspended: 0,
       unmonitored: 0,
     },
   );

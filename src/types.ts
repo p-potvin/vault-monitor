@@ -189,7 +189,7 @@ export type ServiceStatus =
   | "healthy"
   | "degraded"
   | "offline"
-  | "stale"
+  | "suspended"
   | "unmonitored";
 
 export interface MonitoredService {
@@ -226,7 +226,7 @@ export interface ServiceSummary {
   healthy: number;
   degraded: number;
   offline: number;
-  stale: number;
+  suspended: number;
   unmonitored: number;
 }
 

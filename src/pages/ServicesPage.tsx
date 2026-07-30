@@ -154,6 +154,7 @@ export function ServicesPage({ setLoading: setLoadingProp }: { setLoading: (load
       </div>
     </section>
 
+    {/* Hide deployments section for now
     <section className="deployments-focus">
       <header>
         <div>
@@ -163,6 +164,7 @@ export function ServicesPage({ setLoading: setLoadingProp }: { setLoading: (load
       </header>
       <DeploysPanel />
     </section>
+    */}
 
     {hostGroups.length === 0 ? <div className="empty-state">{t.noServices}</div> : <section className="service-board" aria-label={t.services}>
       {hostGroups.map((group) => (
@@ -178,7 +180,7 @@ export function ServicesPage({ setLoading: setLoadingProp }: { setLoading: (load
             {group.services.map((service) => (
               <article className="service-card" key={service.id}>
                 <div className="service-card-head">
-                  <span className={`status-led ${service.status === "degraded" || service.status === "unmonitored" ? "stale" : service.status}`} />
+                  <span className={`status-led ${service.status}`} />
                   <div>
                     <h3>{service.name}</h3>
                     <p>{service.id}{service.runtime ? ` · ${service.runtime}` : ""}</p>

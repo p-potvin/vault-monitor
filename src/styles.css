@@ -281,53 +281,75 @@
 /* Brand Block */
 .brand-block {
   display: flex;
+  flex-direction: column;
   position: relative;
   align-items: center;
+  justify-content: center;
+  text-align: center;
   gap: var(--vault-spacing-2);
   min-width: 0;
+  width: 100%;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--vault-warm-border-subtle);
+  transition: all var(--vault-motion-base) var(--vault-motion-state-ease);
 }
 
 .app-shell.collapsed .brand-block {
-  margin-left: 9px;
+  flex-direction: row;
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-left: 0;
 }
 
 .brand-mark {
   display: grid;
-  width: 48px;
-  height: 48px;
+  width: 110px;
+  height: 110px;
   place-items: center;
-  border: 1px solid color-mix(in srgb, var(--vault-console-gold) 66%, transparent);
-  border-radius: var(--vault-radius-lg);
-  color: var(--vault-console-gold);
-  background: linear-gradient(145deg, var(--vault-console-surface), var(--vault-console-bg));
-  box-shadow: 0 16px 30px rgba(22, 19, 32, 0.2);
+  transition: all var(--vault-motion-base) var(--vault-motion-state-ease);
 }
 
-.brand-mark svg {
-  width: 28px;
-  height: 28px;
+.app-shell.collapsed .brand-mark {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto;
+}
+
+.brand-mark img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 16px rgba(22, 19, 32, 0.15));
 }
 
 .brand-block strong {
   display: block;
   color: #161320;
-  font-size: 15px;
-  font-weight: 500;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
   white-space: nowrap;
 }
 
 .brand-block span {
   display: block;
   color: rgba(22, 19, 32, 0.62);
-  font-size: 13px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
   white-space: nowrap;
+  margin-top: 2px;
 }
 
 .app-shell.collapsed .brand-block>div:not(.brand-mark) {
   opacity: 0;
   width: 0;
+  height: 0;
   overflow: hidden;
-  transition: opacity var(--vault-motion-fast) var(--vault-motion-state-ease), width var(--vault-motion-fast) var(--vault-motion-state-ease);
+  margin: 0;
+  pointer-events: none;
+  transition: opacity var(--vault-motion-fast) var(--vault-motion-state-ease), width var(--vault-motion-fast) var(--vault-motion-state-ease), height var(--vault-motion-fast) var(--vault-motion-state-ease);
 }
 
 /* Rail Header */
@@ -734,7 +756,7 @@ p {
   box-shadow: 0 0 8px var(--vault-signal-online);
 }
 
-.status-led.stale {
+.status-led.degraded {
   background: var(--vault-signal-warning);
   box-shadow: 0 0 8px var(--vault-signal-warning);
 }
@@ -742,6 +764,16 @@ p {
 .status-led.offline {
   background: var(--vault-signal-alert);
   box-shadow: 0 0 8px var(--vault-signal-alert);
+}
+
+.status-led.suspended {
+  background: #b07cff;
+  box-shadow: 0 0 8px #b07cff;
+}
+
+.status-led.unmonitored {
+  background: var(--muted);
+  box-shadow: 0 0 4px var(--muted);
 }
 
 .service-summary {
@@ -1107,9 +1139,12 @@ p {
   color: var(--vault-signal-online);
 }
 
-.status-degraded,
-.status-stale {
+.status-degraded {
   color: var(--vault-signal-warning);
+}
+
+.status-suspended {
+  color: #b07cff;
 }
 
 .status-offline {
@@ -2330,6 +2365,7 @@ td span {
     min-height: 230px;
   }
 }
+
 /* ============================================
    VIEW TRANSITION SPLASH
    Console-mode overlay played when switching
@@ -2377,11 +2413,11 @@ td span {
   position: absolute;
   inset: -25% -70%;
   background: linear-gradient(100deg,
-    transparent 32%,
-    color-mix(in srgb, var(--vault-signal-relay) 70%, transparent) 42%,
-    color-mix(in srgb, var(--vault-signal-sync) 92%, transparent) 50%,
-    color-mix(in srgb, var(--vault-console-gold) 72%, transparent) 58%,
-    transparent 68%);
+      transparent 32%,
+      color-mix(in srgb, var(--vault-signal-relay) 70%, transparent) 42%,
+      color-mix(in srgb, var(--vault-signal-sync) 92%, transparent) 50%,
+      color-mix(in srgb, var(--vault-console-gold) 72%, transparent) 58%,
+      transparent 68%);
   filter: blur(34px);
   transform: translate3d(-45%, 0, 0);
   animation: vwSplashSweep 3.5s var(--vault-motion-state-ease) forwards;
@@ -2433,48 +2469,154 @@ td span {
 }
 
 @keyframes vwSplashWash {
-  0%   { opacity: 0; }
-  8%   { opacity: 1; }
-  88%  { opacity: 1; }
-  100% { opacity: 0; }
+  0% {
+    opacity: 0;
+  }
+
+  8% {
+    opacity: 1;
+  }
+
+  88% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
 }
 
 @keyframes vwSplashGrid {
-  0%   { opacity: 0; transform: scale(1.08); }
-  12%  { opacity: 0.8; transform: scale(1); }
-  88%  { opacity: 0.8; transform: scale(1); }
-  100% { opacity: 0; transform: scale(0.98); }
+  0% {
+    opacity: 0;
+    transform: scale(1.08);
+  }
+
+  12% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+
+  88% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(0.98);
+  }
 }
 
 @keyframes vwSplashSweep {
-  0%   { opacity: 0; transform: translate3d(-45%, 0, 0); }
-  10%  { opacity: 1; }
-  50%  { opacity: 0.7; transform: translate3d(0%, 0, 0); }
-  88%  { opacity: 0.4; transform: translate3d(20%, 0, 0); }
-  100% { opacity: 0; transform: translate3d(45%, 0, 0); }
+  0% {
+    opacity: 0;
+    transform: translate3d(-45%, 0, 0);
+  }
+
+  10% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.7;
+    transform: translate3d(0%, 0, 0);
+  }
+
+  88% {
+    opacity: 0.4;
+    transform: translate3d(20%, 0, 0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate3d(45%, 0, 0);
+  }
 }
 
 @keyframes vwSplashRing {
-  0%   { opacity: 0; transform: scale(0.4); }
-  14%  { opacity: 1; transform: scale(1); }
-  20%  { transform: scale(1.05); }
-  26%  { transform: scale(1); }
-  32%  { transform: scale(1.05); }
-  38%  { transform: scale(1); }
-  44%  { transform: scale(1.05); }
-  50%  { transform: scale(1); }
-  56%  { transform: scale(1.05); }
-  62%  { transform: scale(1); }
-  68%  { transform: scale(1.05); }
-  74%  { transform: scale(1); }
-  80%  { transform: scale(1.05); }
-  86%  { opacity: 1; transform: scale(1); }
-  100% { opacity: 0; transform: scale(1.75); }
+  0% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+
+  14% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  20% {
+    transform: scale(1.05);
+  }
+
+  26% {
+    transform: scale(1);
+  }
+
+  32% {
+    transform: scale(1.05);
+  }
+
+  38% {
+    transform: scale(1);
+  }
+
+  44% {
+    transform: scale(1.05);
+  }
+
+  50% {
+    transform: scale(1);
+  }
+
+  56% {
+    transform: scale(1.05);
+  }
+
+  62% {
+    transform: scale(1);
+  }
+
+  68% {
+    transform: scale(1.05);
+  }
+
+  74% {
+    transform: scale(1);
+  }
+
+  80% {
+    transform: scale(1.05);
+  }
+
+  86% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.75);
+  }
 }
 
 @keyframes vwSplashLabel {
-  0%   { opacity: 0; transform: translateY(10px) scale(0.96); }
-  14%  { opacity: 1; transform: translateY(0) scale(1); }
-  88%  { opacity: 1; }
-  100% { opacity: 0; transform: scale(1.02); }
+  0% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.96);
+  }
+
+  14% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  88% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.02);
+  }
 }

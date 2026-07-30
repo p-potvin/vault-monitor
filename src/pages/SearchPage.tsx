@@ -10,7 +10,7 @@ const copy = {
     title: "Cross-ledger search",
     subtitle: "Bounded, submit-driven search across Agent Ledger and Health Ledger.",
     query: "Query",
-    queryPlaceholder: "project, service, summary",
+    queryPlaceholder: "summary, kind, actor, commands, files, plan, runtime...",
     source: "Source",
     sourceAll: "All",
     sourceAgentLedger: "Agent Ledger",
@@ -38,7 +38,7 @@ const copy = {
     title: "Recherche multi-registres",
     subtitle: "Recherche bornee et lancee sur demande dans le Registre d agents et le Registre de sante.",
     query: "Requete",
-    queryPlaceholder: "projet, service, resume",
+    queryPlaceholder: "resume, type, acteur, commandes, fichiers, plan, runtime...",
     source: "Source",
     sourceAll: "Tous",
     sourceAgentLedger: "Registre d agents",
@@ -88,9 +88,14 @@ export function SearchPage({ setLoading: setLoadingProp }: { setLoading: (loadin
       });
   }, []);
 
-  const defaultDateValue = useMemo(() => {
+  const defaultStartDate = useMemo(() => {
     const d = new Date();
-    d.setDate(d.getDate() - 30);
+    d.setDate(d.getDate() - 7);
+    return d.toISOString().split('T')[0];
+  }, []);
+
+  const defaultEndDate = useMemo(() => {
+    const d = new Date();
     return d.toISOString().split('T')[0];
   }, []);
 
@@ -99,10 +104,11 @@ export function SearchPage({ setLoading: setLoadingProp }: { setLoading: (loadin
     if (![...params.keys()].length) {
       setParams({
         source: "agent-ledger",
-        date: defaultDateValue
+        start_date: defaultStartDate,
+        end_date: defaultEndDate
       });
     }
-  }, [params, setParams, defaultDateValue]);
+  }, [params, setParams, defaultStartDate, defaultEndDate]);
 
   useEffect(() => {
     setLoadingProp(loading);
@@ -190,12 +196,22 @@ export function SearchPage({ setLoading: setLoadingProp }: { setLoading: (loadin
             </select>
           </label>
 
-          <label className="w-[160px] flex flex-col gap-1.5">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--muted)]">{t.date}</span>
+          <label className="w-[140px] flex flex-col gap-1.5">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--muted)]">Start Date</span>
             <input 
               type="date" 
-              name="date" 
-              defaultValue={params.get("date") ?? defaultDateValue}
+              name="start_date" 
+              defaultValue={params.get("start_date") ?? defaultStartDate}
+              className="bg-[var(--card)] border border-[var(--border)] rounded-md px-3.5 py-2 text-[13px] text-white focus:outline-none focus:border-[var(--accent)] cursor-pointer"
+            />
+          </label>
+
+          <label className="w-[140px] flex flex-col gap-1.5">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--muted)]">End Date</span>
+            <input 
+              type="date" 
+              name="end_date" 
+              defaultValue={params.get("end_date") ?? defaultEndDate}
               className="bg-[var(--card)] border border-[var(--border)] rounded-md px-3.5 py-2 text-[13px] text-white focus:outline-none focus:border-[var(--accent)] cursor-pointer"
             />
           </label>
