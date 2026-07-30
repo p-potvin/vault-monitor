@@ -50,19 +50,18 @@ export function UptimePage({ setLoading }: { setLoading: (loading: boolean) => v
       </div>
 
       {/* Embedded Uptime Kuma Frame */}
-      <Card
-        className="col-span-12 p-0 overflow-hidden flex flex-col border-[var(--border)]"
-        style={{ minHeight: "calc((100vh / 0.8) - 170px)" }}
-      >
-        <iframe
-          key={key}
-          src={uptimeUrl}
-          title="Uptime Kuma Dashboard"
-          className="w-full flex-1 border-0 bg-[var(--vault-console-bg)]"
-          style={{ minHeight: "calc((100vh / 0.8) - 180px)" }}
-          allow="autoplay; clipboard-write; encrypted-media; picture-in-picture"
-        />
-      </Card>
+      <div className="col-span-12 flex flex-col" style={{ minHeight: "calc((100vh / 0.8) - 170px)" }}>
+        <Card className="w-full flex-1 p-0 overflow-hidden flex flex-col border-[var(--border)]">
+          <iframe
+            key={key}
+            src={uptimeUrl}
+            title="Uptime Kuma Dashboard"
+            className="w-full flex-1 border-0 bg-[var(--vault-console-bg)]"
+            style={{ minHeight: "calc((100vh / 0.8) - 180px)" }}
+            allow="autoplay; clipboard-write; encrypted-media; picture-in-picture"
+          />
+        </Card>
+      </div>
     </>
   );
 }

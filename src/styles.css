@@ -477,7 +477,7 @@
 .monitor-stage {
   min-width: 0;
   min-height: calc(100vh / 0.8);
-  padding: var(--vault-spacing-3);
+  padding: 32px 40px;
   color: var(--fg);
   background:
     radial-gradient(circle at 15% 0%, rgba(176, 124, 255, 0.14), transparent 32rem),

@@ -25,7 +25,7 @@ const nav: Array<{ to: string; label: keyof typeof copy.en; icon: ReactNode }> =
 ];
 
 function Logo() {
-  return <svg viewBox="0 0 120 120" aria-hidden="true"><path d="M20 15h18l22 67 22-67h18l-33 93H53z" fill="currentColor" /><circle cx="60" cy="58" r="10" fill="none" stroke="currentColor" strokeWidth="3" /><circle cx="60" cy="58" r="4" fill="currentColor" /></svg>;
+  return <img src="/vault-monitor.svg" alt="VAULT Logo" style={{ width: "32px", height: "32px", objectFit: "contain" }} />;
 }
 
 function Shell() {

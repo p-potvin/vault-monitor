@@ -13,6 +13,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
+const MIN_DURATION_MS = 2000;
 const MAX_DURATION_MS = 8000;
 
 export function ViewTransition({
@@ -28,15 +29,18 @@ export function ViewTransition({
   const [shown, setShown] = useState(label);
   const tokenRef = useRef(token);
   const loadingRef = useRef(loading);
+  const minTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
   const maxTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   // Track loading state in a ref so the effect closure sees the latest value
   // without re-triggering the effect on every loading change.
   useEffect(() => {
     loadingRef.current = loading;
-    // If loading just finished, immediately hide splash.
+    // If loading just finished and the minimum time has elapsed, hide splash.
     if (!loading && active) {
-      setActive(false);
+      if (minTimer.current === undefined) {
+        setActive(false);
+      }
     }
   }, [loading, active]);
 
@@ -44,20 +48,32 @@ export function ViewTransition({
     setShown(label);
     tokenRef.current = token;
     setActive(true);
+    clearTimeout(minTimer.current);
     clearTimeout(maxTimer.current);
+
+    // Minimum display time — after this, hide only if loading is done.
+    minTimer.current = setTimeout(() => {
+      minTimer.current = undefined;
+      if (!loadingRef.current) {
+        setActive(false);
+      }
+    }, MIN_DURATION_MS);
 
     // Safety valve — never keep the splash longer than MAX_DURATION_MS.
     maxTimer.current = setTimeout(() => {
+      minTimer.current = undefined;
       setActive(false);
     }, MAX_DURATION_MS);
 
     return () => {
+      clearTimeout(minTimer.current);
       clearTimeout(maxTimer.current);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token, label]);
 
   useEffect(() => () => {
+    clearTimeout(minTimer.current);
     clearTimeout(maxTimer.current);
   }, []);
 

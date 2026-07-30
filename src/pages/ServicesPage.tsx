@@ -103,10 +103,6 @@ export function ServicesPage({ setLoading: setLoadingProp }: { setLoading: (load
     return () => controller.abort();
   }, []);
 
-  if (loading) {
-    return null;
-  }
-
   const visible = useMemo(() => sortServices(filterServices(items, filters, query), sort), [items, filters, query, sort]);
   const hostGroups = useMemo(() => groupServicesByHost(visible), [visible]);
   const summary = useMemo(() => summarizeServices(items), [items]);
@@ -116,18 +112,30 @@ export function ServicesPage({ setLoading: setLoadingProp }: { setLoading: (load
     direction: current.key === key && current.direction === "asc" ? "desc" : "asc",
   }));
 
+  if (loading) {
+    return null;
+  }
+
   return <main className="view-stack">
-    <header className="services-hero">
+    <div className="flex items-center justify-between flex-wrap gap-3 pb-4 border-b border-[var(--border)] mb-6">
       <div>
-        <span>{visible.length} / {summary.total} {t.showing}</span>
-        <h1>{t.title}</h1>
-        <p>{t.subtitle}</p>
+        <h1 className="text-[28px] font-extrabold m-0 mb-2 tracking-tight">
+          {t.title}
+        </h1>
+        <p className="m-0 text-[var(--muted)] text-[13px]">
+          {t.subtitle}
+        </p>
       </div>
-      <label className="service-search">
-        <span>{t.search}</span>
-        <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={t.searchPlaceholder} />
-      </label>
-    </header>
+      <div className="flex items-center gap-4 flex-wrap">
+        <label className="service-search">
+          <span>{t.search}</span>
+          <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={t.searchPlaceholder} />
+        </label>
+        <div className="text-[11px] font-bold uppercase tracking-wider text-[var(--muted)] bg-[var(--card)] px-3 py-1.5 border border-[var(--border)] rounded-md">
+          {visible.length} / {summary.total} {t.showing}
+        </div>
+      </div>
+    </div>
     {error && <div className="error-line">{error}</div>}
     <section className="service-summary">{Object.entries(summary).map(([label, value]) => <div className={`summary-stat status-${label}`} key={label}><span>{label}</span><strong>{value}</strong></div>)}</section>
     <section className="service-controls">
