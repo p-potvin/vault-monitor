@@ -134,25 +134,46 @@ function RecentEvents({ events, lang }: { events: NonNullable<ReturnType<typeof 
   }
   return (
     <div className="space-y-2">
-      {events.slice(0, 8).map((event) => (
-        <div key={event.event_id} className="rounded-lg border border-[var(--border)] bg-[var(--card)] px-3 py-2">
-          <div className="flex items-center gap-2 text-xs">
-            <IconClock width={13} height={13} className="text-[var(--muted)]" />
-            <span className="text-[var(--fg)]">{event.timestamp || '-'}</span>
-            <span className="ml-auto text-[var(--muted)]">{event.event_type}</span>
+      {events.slice(0, 8).map((event) => {
+        const isNaturalPath = event.event_type === 'natural_path';
+        const stats = isNaturalPath ? (event.metrics?.stats as Record<string, unknown> | undefined) : undefined;
+        const trigger = isNaturalPath ? String(event.metrics?.trigger || 'activity') : '';
+        const durationMs = isNaturalPath ? num(event.metrics?.duration_ms) : undefined;
+        const distancePx = isNaturalPath ? num(stats?.distance_px) : undefined;
+        const pointCount = isNaturalPath ? num(stats?.point_count) : undefined;
+        const endedReason = isNaturalPath ? String(stats?.ended_reason || '-') : '';
+        return (
+          <div key={event.event_id} className="rounded-lg border border-[var(--border)] bg-[var(--card)] px-3 py-2">
+            <div className="flex items-center gap-2 text-xs">
+              <IconClock width={13} height={13} className="text-[var(--muted)]" />
+              <span className="text-[var(--fg)]">{event.timestamp || '-'}</span>
+              <span className="ml-auto text-[var(--muted)]">{isNaturalPath ? `natural path · ${trigger}` : event.event_type}</span>
+            </div>
+            {isNaturalPath ? (
+              <div className="mt-2 grid grid-cols-5 gap-1 max-sm:grid-cols-2">
+                <MiniStat label={dict.input.travel} value={distancePx != null ? `${fmt1(distancePx)}px` : '-'} />
+                <MiniStat label={dict.input.mousePathPointsSuffix} value={pointCount != null ? fmtInt(pointCount) : '-'} />
+                <MiniStat label={dict.input.activeTime} value={durationMs != null ? `${fmt1(durationMs / 1000)}s` : '-'} />
+                <MiniStat label="Ended" value={endedReason} />
+                <MiniStat label={dict.input.clicks} value={fmtInt(num(stats?.key_count)) || '0'} />
+              </div>
+            ) : (
+              <div className="mt-2 grid grid-cols-5 gap-1 max-sm:grid-cols-2">
+                <MiniStat label={dict.input.activeTime} value={`${fmt1(num(event.metrics?.active_seconds) || 0)}s`} />
+                <MiniStat label={dict.input.keysShort} value={fmtInt(num(event.metrics?.keystrokes))} />
+                <MiniStat label={dict.input.clicks} value={fmtInt(num(event.metrics?.clicks))} />
+                <MiniStat label={dict.input.scroll} value={fmtInt(num(event.metrics?.scroll_ticks))} />
+                <MiniStat label={dict.input.contextSwitches} value={fmtInt(num(event.metrics?.context_switches))} />
+              </div>
+            )}
+            {!isNaturalPath && (
+              <div className="mt-2 text-[11px] text-[var(--muted)] truncate" title={`${String(event.dimensions?.focus_category || 'unknown')} - ${String(event.dimensions?.window_name || 'unknown')}`}>
+                {dict.input.focusShort}: {String(event.dimensions?.focus_category || 'unknown')} / {dict.input.appShort}: {String(event.dimensions?.window_name || 'unknown')}
+              </div>
+            )}
           </div>
-          <div className="mt-2 grid grid-cols-5 gap-1 max-sm:grid-cols-2">
-            <MiniStat label={dict.input.activeTime} value={`${fmt1(num(event.metrics?.active_seconds) || 0)}s`} />
-            <MiniStat label={dict.input.keysShort} value={fmtInt(num(event.metrics?.keystrokes))} />
-            <MiniStat label={dict.input.clicks} value={fmtInt(num(event.metrics?.clicks))} />
-            <MiniStat label={dict.input.scroll} value={fmtInt(num(event.metrics?.scroll_ticks))} />
-            <MiniStat label={dict.input.contextSwitches} value={fmtInt(num(event.metrics?.context_switches))} />
-          </div>
-          <div className="mt-2 text-[11px] text-[var(--muted)] truncate" title={`${String(event.dimensions?.focus_category || 'unknown')} - ${String(event.dimensions?.window_name || 'unknown')}`}>
-            {dict.input.focusShort}: {String(event.dimensions?.focus_category || 'unknown')} / {dict.input.appShort}: {String(event.dimensions?.window_name || 'unknown')}
-          </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
@@ -202,12 +223,12 @@ function extractMousePaths(events: NonNullable<ReturnType<typeof useInputTracker
     const raw = metrics.mouse_path;
     const points: PathPoint[] = Array.isArray(raw)
       ? (raw as Record<string, unknown>[]).map((point) => {
-          const x = num(point.x);
-          const y = num(point.y);
-          if (typeof x !== 'number' || typeof y !== 'number') return null;
-          const tMs = num(point.t_ms);
-          return { x, y, ...(typeof tMs === 'number' ? { tMs } : {}) } as PathPoint;
-        }).filter((p): p is PathPoint => p !== null)
+        const x = num(point.x);
+        const y = num(point.y);
+        if (typeof x !== 'number' || typeof y !== 'number') return null;
+        const tMs = num(point.t_ms);
+        return { x, y, ...(typeof tMs === 'number' ? { tMs } : {}) } as PathPoint;
+      }).filter((p): p is PathPoint => p !== null)
       : [];
     if (points.length < 2) return [];
     return [{
@@ -263,14 +284,16 @@ function MousePathCanvas({ paths, selectedId, hoveredId, onSelect, onHover, inpu
   );
 }
 
-function MousePathWidget({ paths, input }: { paths: MousePath[]; input: typeof I18N.en.input }) {
+function MousePathWidget({ paths, totalCount, input }: { paths: MousePath[]; totalCount?: number; input: typeof I18N.en.input }) {
   const [selectedId, setSelectedId] = useState<string>();
   const [hoveredId, setHoveredId] = useState<string>();
   const totalPoints = paths.reduce((sum, path) => sum + path.points.length, 0);
   const selected = paths.find((path) => path.id === selectedId);
+  const headerCount = totalCount != null ? fmtInt(totalCount) : fmtInt(paths.length);
+  const headerLabel = totalCount != null ? input.mousePathsInField : input.mousePathsInField;
   return <Card className="col-span-12">
     <WidgetTitle icon={<IconActivity width={13} height={13} />} title={input.mousePathTitle} tooltip={input.mousePathTooltip} />
-    <div className="mouse-path-header"><div><strong>{paths.length ? `${fmtInt(paths.length)} ${input.mousePathsInField}` : input.mousePathNone}</strong><span>{fmtInt(totalPoints)} {input.mousePathPointsSuffix} · {input.mousePathDensityView}</span></div>{selected ? <div className="mouse-path-selection"><b>{input.mousePathPreviewing}</b><span>{pathDetails(selected).headline}</span></div> : <div className="mouse-path-selection"><b>{input.activeWindowLabel}</b><span>{input.mousePathHoverHint}</span></div>}</div>
+    <div className="mouse-path-header"><div><strong>{paths.length || totalCount ? `${headerCount} ${headerLabel}` : input.mousePathNone}</strong><span>{paths.length < (totalCount || 0) ? `${fmtInt(paths.length)} sampled · ` : ''}{fmtInt(totalPoints)} {input.mousePathPointsSuffix} · {input.mousePathDensityView}</span></div>{selected ? <div className="mouse-path-selection"><b>{input.mousePathPreviewing}</b><span>{pathDetails(selected).headline}</span></div> : <div className="mouse-path-selection"><b>{input.activeWindowLabel}</b><span>{input.mousePathHoverHint}</span></div>}</div>
     <MousePathCanvas paths={paths} selectedId={selectedId} hoveredId={hoveredId} onSelect={setSelectedId} onHover={setHoveredId} input={input} />
   </Card>;
 }
@@ -303,6 +326,8 @@ function PauseBreakdown({ totals, input }: { totals: Record<string, number>; inp
   const timeOff = countFrom(totals, ['time_off_blocks', 'pauses_1h_plus', 'time_off_count']);
   const hasSplit = pause > 0 || healthy > 0 || timeOff > 0;
   const restBlocks = totals.rest_blocks || 0;
+  const splitTotal = pause + healthy + timeOff;
+  const uncategorized = hasSplit && restBlocks > splitTotal ? restBlocks - splitTotal : 0;
   return (
     <Card className="col-span-4 max-lg:col-span-6 max-md:col-span-12">
       <WidgetTitle title={input.pauseBreakdown} tooltip={input.pauseBreakdownTooltip} />
@@ -313,15 +338,19 @@ function PauseBreakdown({ totals, input }: { totals: Record<string, number>; inp
             <MiniStat label={input.pause} value={fmtInt(pause)} tooltip={input.pauseRange} />
             <MiniStat label={input.healthyPause} value={fmtInt(healthy)} tooltip={input.healthyPauseRange} />
             <MiniStat label={input.timeOff} value={fmtInt(timeOff)} tooltip={input.timeOffRange} />
+            {uncategorized > 0 ? (
+              <MiniStat label={input.legacyRestBlocks} value={fmtInt(restBlocks)} tooltip={input.legacyPauseNote} />
+            ) : null}
           </>
         ) : (
-          // The tracker only sent the aggregate `rest_blocks`. Showing it in the
-          // "5-20 min" tile would misattribute every longer gap to that bucket,
-          // and showing 0/0/0 alongside a non-zero rest-block count elsewhere on
-          // the page reads as a contradiction. Surface it as one honest total.
           <MiniStat label={input.legacyRestBlocks} value={fmtInt(restBlocks)} tooltip={input.legacyPauseNote} />
         )}
       </div>
+      {hasSplit && uncategorized > 0 ? (
+        <div className="mt-2 text-[10px] text-[var(--muted)] leading-tight">
+          {fmtInt(restBlocks)} total 5m+ gaps · {fmtInt(uncategorized)} uncategorized · {fmtInt(splitTotal)} in buckets
+        </div>
+      ) : null}
     </Card>
   );
 }
@@ -381,7 +410,7 @@ export function PersonalStatsPage() {
     // swallowing the animation for the switch that triggered the refetch.
     return (
       <>
-        <ViewTransition token={rangeId} label={input[activeRange.labelKey]} />
+        <ViewTransition token={rangeId} label={input[activeRange.labelKey]} loading={loading} />
         <div className="text-center py-20 text-[var(--muted)]">{dict.errors.loading}</div>
       </>
     );
@@ -389,7 +418,7 @@ export function PersonalStatsPage() {
 
   return (
     <>
-      <ViewTransition token={rangeId} label={input[activeRange.labelKey]} />
+      <ViewTransition token={rangeId} label={input[activeRange.labelKey]} loading={loading} />
       <div className="flex items-center justify-between flex-wrap gap-3 pb-4 border-b border-[var(--border)] mb-1">
         <div>
           <h1 className="text-xl font-bold m-0 flex items-center gap-2">
@@ -462,7 +491,7 @@ export function PersonalStatsPage() {
       </section>
 
       <section className="grid grid-cols-12 gap-3 mt-5">
-        <MousePathWidget paths={mousePaths} input={input} />
+        <MousePathWidget paths={mousePaths} totalCount={data?.natural_paths?.count} input={input} />
       </section>
 
       <section className="grid grid-cols-12 gap-3 mt-5">
@@ -537,6 +566,7 @@ export function PersonalStatsPage() {
             <KpiStat label={input.kpiLabels.coverage} value={fmtPctPoints(kpis.reliability?.data_coverage_percent)} tooltip={input.kpiTooltips.coverage} />
             <KpiStat label={input.kpiLabels.batchLag} value={fmtUnit(kpis.reliability?.batch_lag_minutes, 'm')} tooltip={input.kpiTooltips.batchLag} />
             <KpiStat label={input.kpiLabels.missingMinutes} value={fmtValue(kpis.reliability?.missing_minutes_estimate)} tooltip={input.kpiTooltips.missingMinutes} />
+            <KpiStat label={input.kpiLabels.idleMinutes} value={fmtValue(kpis.reliability?.idle_minutes)} tooltip={input.kpiTooltips.idleMinutes} />
             <KpiStat label={input.kpiLabels.spoolBacklog} value={fmtInt(kpis.reliability?.spool_backlog_batches as number | undefined)} tooltip={input.kpiTooltips.spoolBacklog} />
           </div>
         </Card>

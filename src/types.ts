@@ -266,6 +266,15 @@ export interface InputTrackerData {
   click_hotspot_total?: number;
   focus_categories?: { name: string; count: number }[];
   focus_windows?: { name: string; category?: string; count: number }[];
+  natural_paths?: {
+    count?: number;
+    latest_started_at?: string;
+    triggers?: { name: string; count: number }[];
+    avg_duration_seconds?: number;
+    avg_points?: number;
+    avg_keys?: number;
+    total_distance_m?: number;
+  };
   events?: Array<{
     event_id?: string; event_type?: string; timestamp?: string;
     metrics?: Record<string, unknown>; dimensions?: Record<string, unknown>;

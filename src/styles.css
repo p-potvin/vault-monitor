@@ -141,7 +141,7 @@
 
   html {
     min-width: 320px;
-    background: var(--vault-warm-bg);
+    background: var(--vault-console-bg);
     color: #161320;
     font-family: var(--font-sans);
     letter-spacing: 0;
@@ -152,6 +152,7 @@
   body {
     min-width: 320px;
     min-height: 100vh;
+    background: var(--vault-console-bg);
     margin: 0;
     line-height: 1.5;
   }
@@ -2034,6 +2035,8 @@ td span {
 .app-shell.collapsed .nav-list button {
   width: 48px !important;
   min-width: 48px !important;
+  height: 48px !important;
+  min-height: 48px !important;
   padding: 0 !important;
   display: flex !important;
   align-items: center !important;
@@ -2355,7 +2358,7 @@ td span {
       color-mix(in srgb, var(--vault-console-elevated) 97%, transparent) 0%,
       color-mix(in srgb, var(--vault-console-surface) 95%, transparent) 48%,
       color-mix(in srgb, var(--vault-console-bg) 98%, transparent) 100%);
-  animation: vwSplashWash 700ms var(--vault-motion-state-ease) forwards;
+  animation: vwSplashWash 3.5s var(--vault-motion-state-ease) forwards;
 }
 
 /* Faint scanline grid, echoing the hotspot monitor's console styling. */
@@ -2366,7 +2369,7 @@ td span {
     linear-gradient(to right, color-mix(in srgb, var(--vault-signal-relay) 16%, transparent) 1px, transparent 1px),
     linear-gradient(to bottom, color-mix(in srgb, var(--vault-signal-sync) 16%, transparent) 1px, transparent 1px);
   background-size: 52px 52px;
-  animation: vwSplashGrid 700ms var(--vault-motion-entry-ease) forwards;
+  animation: vwSplashGrid 3.5s var(--vault-motion-entry-ease) forwards;
 }
 
 /* The colourful part: a chromatic band raking across the viewport. */
@@ -2381,7 +2384,7 @@ td span {
     transparent 68%);
   filter: blur(34px);
   transform: translate3d(-45%, 0, 0);
-  animation: vwSplashSweep 700ms var(--vault-motion-state-ease) forwards;
+  animation: vwSplashSweep 3.5s var(--vault-motion-state-ease) forwards;
 }
 
 .vw-splash-core {
@@ -2400,7 +2403,7 @@ td span {
   box-shadow:
     0 0 46px color-mix(in srgb, var(--vault-signal-sync) 60%, transparent),
     inset 0 0 30px color-mix(in srgb, var(--vault-signal-relay) 34%, transparent);
-  animation: vwSplashRing 700ms var(--vault-motion-entry-ease) forwards;
+  animation: vwSplashRing 3.5s var(--vault-motion-entry-ease) forwards;
 }
 
 .vw-splash-ring-2 {
@@ -2426,37 +2429,52 @@ td span {
   text-shadow:
     0 0 22px color-mix(in srgb, var(--vault-signal-sync) 85%, transparent),
     0 0 44px color-mix(in srgb, var(--vault-console-bg) 90%, transparent);
-  animation: vwSplashLabel 700ms var(--vault-motion-entry-ease) forwards;
+  animation: vwSplashLabel 3.5s var(--vault-motion-entry-ease) forwards;
 }
 
 @keyframes vwSplashWash {
   0%   { opacity: 0; }
-  18%  { opacity: 1; }
-  62%  { opacity: 1; }
+  8%   { opacity: 1; }
+  88%  { opacity: 1; }
   100% { opacity: 0; }
 }
 
 @keyframes vwSplashGrid {
   0%   { opacity: 0; transform: scale(1.08); }
-  28%  { opacity: 0.8; transform: scale(1); }
+  12%  { opacity: 0.8; transform: scale(1); }
+  88%  { opacity: 0.8; transform: scale(1); }
   100% { opacity: 0; transform: scale(0.98); }
 }
 
 @keyframes vwSplashSweep {
   0%   { opacity: 0; transform: translate3d(-45%, 0, 0); }
-  22%  { opacity: 1; }
+  10%  { opacity: 1; }
+  50%  { opacity: 0.7; transform: translate3d(0%, 0, 0); }
+  88%  { opacity: 0.4; transform: translate3d(20%, 0, 0); }
   100% { opacity: 0; transform: translate3d(45%, 0, 0); }
 }
 
 @keyframes vwSplashRing {
   0%   { opacity: 0; transform: scale(0.4); }
-  32%  { opacity: 1; transform: scale(1); }
+  14%  { opacity: 1; transform: scale(1); }
+  20%  { transform: scale(1.05); }
+  26%  { transform: scale(1); }
+  32%  { transform: scale(1.05); }
+  38%  { transform: scale(1); }
+  44%  { transform: scale(1.05); }
+  50%  { transform: scale(1); }
+  56%  { transform: scale(1.05); }
+  62%  { transform: scale(1); }
+  68%  { transform: scale(1.05); }
+  74%  { transform: scale(1); }
+  80%  { transform: scale(1.05); }
+  86%  { opacity: 1; transform: scale(1); }
   100% { opacity: 0; transform: scale(1.75); }
 }
 
 @keyframes vwSplashLabel {
   0%   { opacity: 0; transform: translateY(10px) scale(0.96); }
-  32%  { opacity: 1; transform: translateY(0) scale(1); }
-  70%  { opacity: 1; }
+  14%  { opacity: 1; transform: translateY(0) scale(1); }
+  88%  { opacity: 1; }
   100% { opacity: 0; transform: scale(1.02); }
 }

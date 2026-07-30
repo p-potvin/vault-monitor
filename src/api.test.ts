@@ -14,7 +14,7 @@ describe("getInputTracker", () => {
 
     await getInputTracker(undefined, 24);
 
-    expect(fetchMock).toHaveBeenCalledWith("/monitor/input-tracker?hours=24", expect.any(Object));
+    expect(fetchMock).toHaveBeenCalledWith("https://api.vaultwares.ca/monitor/input-tracker?hours=24", expect.any(Object));
   });
 
   it("omits non-positive hour values", async () => {
@@ -25,6 +25,6 @@ describe("getInputTracker", () => {
 
     await getInputTracker(undefined, 0);
 
-    expect(fetchMock).toHaveBeenCalledWith("/monitor/input-tracker", expect.any(Object));
+    expect(fetchMock).toHaveBeenCalledWith("https://api.vaultwares.ca/monitor/input-tracker", expect.any(Object));
   });
 });

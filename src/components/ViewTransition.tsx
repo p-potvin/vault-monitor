@@ -1,7 +1,9 @@
 // ── ViewTransition — console-mode splash shown between views / time windows ──
 //
-// Renders a short, self-cancelling overlay whenever `token` changes (a route
-// change or a time-window switch).
+// Renders a splash overlay whenever `token` changes (a route change or a
+// time-window switch). The splash stays visible until `loading` becomes false
+// AND at least `minDurationMs` has elapsed, ensuring the broken UI never
+// flashes before data is ready.
 //
 // It portals to document.body on purpose: `.app-shell` carries `zoom: 0.8`,
 // and a `position: fixed` element inside a zoomed subtree gets its coordinates
@@ -11,35 +13,71 @@
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
-const DURATION_MS = 700;
+const MIN_DURATION_MS = 3000;
+const MAX_DURATION_MS = 8000;
 
-export function ViewTransition({ token, label }: { token: string; label?: string }) {
+export function ViewTransition({
+  token,
+  label,
+  loading = false,
+}: {
+  token: string;
+  label?: string;
+  loading?: boolean;
+}) {
   const [active, setActive] = useState(false);
   const [shown, setShown] = useState(label);
-  const first = useRef(true);
-  const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const tokenRef = useRef(token);
+  const loadingRef = useRef(loading);
+  const minTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const maxTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
+
+  // Track loading state in a ref so the effect closure sees the latest value
+  // without re-triggering the effect on every loading change.
+  useEffect(() => {
+    loadingRef.current = loading;
+    // If loading just finished and the minimum time has elapsed, hide splash.
+    if (!loading && active) {
+      // The min timer will handle hiding if it hasn't fired yet.
+      // If it has fired, hide now.
+      if (minTimer.current === undefined) {
+        setActive(false);
+      }
+    }
+  }, [loading, active]);
 
   useEffect(() => {
-    // Don't flash on first paint — only on an actual switch.
-    if (first.current) {
-      first.current = false;
-      setShown(label);
-      return;
-    }
     setShown(label);
-    setActive(false);
-    // Re-arm on the next frame so a switch mid-animation restarts the sweep
-    // cleanly instead of continuing the previous one.
-    const raf = requestAnimationFrame(() => setActive(true));
-    clearTimeout(timer.current);
-    timer.current = setTimeout(() => setActive(false), DURATION_MS);
+    tokenRef.current = token;
+    setActive(true);
+    clearTimeout(minTimer.current);
+    clearTimeout(maxTimer.current);
+
+    // Minimum display time — after this, hide only if loading is done.
+    minTimer.current = setTimeout(() => {
+      minTimer.current = undefined;
+      if (!loadingRef.current) {
+        setActive(false);
+      }
+    }, MIN_DURATION_MS);
+
+    // Safety valve — never keep the splash longer than MAX_DURATION_MS.
+    maxTimer.current = setTimeout(() => {
+      minTimer.current = undefined;
+      setActive(false);
+    }, MAX_DURATION_MS);
+
     return () => {
-      cancelAnimationFrame(raf);
-      clearTimeout(timer.current);
+      clearTimeout(minTimer.current);
+      clearTimeout(maxTimer.current);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token, label]);
 
-  useEffect(() => () => clearTimeout(timer.current), []);
+  useEffect(() => () => {
+    clearTimeout(minTimer.current);
+    clearTimeout(maxTimer.current);
+  }, []);
 
   if (!active) return null;
 
