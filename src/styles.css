@@ -237,7 +237,7 @@
 
 .app-shell {
   display: flex;
-  min-height: 100vh;
+  min-height: calc(100vh / 0.8);
   zoom: 0.8;
 }
 
@@ -263,8 +263,8 @@
   display: grid;
   grid-template-rows: auto auto 1fr auto auto;
   gap: var(--vault-spacing-2);
-  height: 100vh;
-  max-height: 100vh;
+  height: calc(100vh / 0.8);
+  max-height: calc(100vh / 0.8);
   /* overflow must stay visible so the floating collapse-toggle (which sits at
      right:-25px, past the rail edge) isn't clipped. The nav list scrolls on its
      own instead. z-index lifts the rail (and its overhang) above content cards. */
@@ -476,7 +476,7 @@
 
 .monitor-stage {
   min-width: 0;
-  min-height: 100vh;
+  min-height: calc(100vh / 0.8);
   padding: var(--vault-spacing-3);
   color: var(--fg);
   background:
