@@ -30,10 +30,17 @@ function Section({ title, hint, children }: { title: string; hint?: string; chil
   );
 }
 
-export function WorkImpactPage() {
+import { useEffect } from "react";
+
+export function WorkImpactPage({ setLoading }: { setLoading: (loading: boolean) => void }) {
   const [lang] = useLangState();
   const { data, loading, error } = useWorkImpactData();
-  if (loading) return <div className="page-state">Loading...</div>;
+
+  useEffect(() => {
+    setLoading(loading);
+  }, [loading, setLoading]);
+
+  if (loading) return null;
   if (error || !data) return <div className="page-state error-line">{error || "No work impact data"}</div>;
   const t = getI18n(lang);
   const d = data;

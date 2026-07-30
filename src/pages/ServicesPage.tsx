@@ -80,7 +80,7 @@ function Filter({ label, value, values, allLabel, onChange }: {
   return <label className="filter-field"><span>{label}</span><select value={value} onChange={(event) => onChange(event.target.value)}><option value="all">{allLabel}</option>{values.map((item) => <option key={item}>{item}</option>)}</select></label>;
 }
 
-export function ServicesPage() {
+export function ServicesPage({ setLoading: setLoadingProp }: { setLoading: (loading: boolean) => void }) {
   const [lang] = useLangState();
   const t = copy[lang];
   const [items, setItems] = useState<MonitoredService[]>([]);
@@ -92,12 +92,20 @@ export function ServicesPage() {
   const [error, setError] = useState("");
 
   useEffect(() => {
+    setLoadingProp(loading);
+  }, [loading, setLoadingProp]);
+
+  useEffect(() => {
     const controller = new AbortController();
     getServices(controller.signal).then((body) => setItems(body.items)).catch((reason: Error) => {
       if (reason.name !== "AbortError") setError(reason.message);
     }).finally(() => setLoading(false));
     return () => controller.abort();
   }, []);
+
+  if (loading) {
+    return null;
+  }
 
   const visible = useMemo(() => sortServices(filterServices(items, filters, query), sort), [items, filters, query, sort]);
   const hostGroups = useMemo(() => groupServicesByHost(visible), [visible]);
@@ -108,7 +116,6 @@ export function ServicesPage() {
     direction: current.key === key && current.direction === "asc" ? "desc" : "asc",
   }));
 
-  if (loading) return <div className="page-state">{t.loading}</div>;
   return <main className="view-stack">
     <header className="services-hero">
       <div>

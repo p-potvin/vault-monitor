@@ -362,10 +362,19 @@ function statusLabel(status: string | undefined, input: typeof I18N.en.input) {
   return input.statusUnavailable;
 }
 
-export function PersonalStatsPage() {
+import { useEffect } from 'react';
+
+export function PersonalStatsPage({ setLoading }: { setLoading?: (loading: boolean) => void }) {
   const [rangeId, setRangeId] = useState<InputRangeId>('week');
   const activeRange = INPUT_RANGES.find((range) => range.id === rangeId) || INPUT_RANGES[1];
   const { data, loading, error } = useInputTrackerData(activeRange.hours);
+
+  useEffect(() => {
+    if (setLoading) {
+      setLoading(loading);
+    }
+  }, [loading, setLoading]);
+
   const mousePaths = useMemo(() => extractMousePaths(data?.events), [data?.events]);
   const [lang] = useLangState();
   const dict = I18N[lang];

@@ -1,9 +1,12 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Card } from '../components/Card';
 import { useLangState, I18N } from '../i18n';
 import { IconExternalLink, IconRefresh, IconZap } from '../icons';
 
-export function UptimePage() {
+export function UptimePage({ setLoading }: { setLoading: (loading: boolean) => void }) {
+  useEffect(() => {
+    setLoading(false);
+  }, [setLoading]);
   const [lang] = useLangState();
   const [key, setKey] = useState(0);
   const dict = I18N[lang];

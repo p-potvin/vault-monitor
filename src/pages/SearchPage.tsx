@@ -64,7 +64,7 @@ const copy = {
   },
 } satisfies Record<Lang, Record<string, unknown>>;
 
-export function SearchPage() {
+export function SearchPage({ setLoading: setLoadingProp }: { setLoading: (loading: boolean) => void }) {
   const [lang] = useLangState();
   const t = copy[lang];
   const [params, setParams] = useSearchParams();
@@ -74,7 +74,14 @@ export function SearchPage() {
   const activeRequest = useRef<AbortController | null>(null);
 
   useEffect(() => {
-    if (![...params.keys()].length) return;
+    setLoadingProp(loading);
+  }, [loading, setLoadingProp]);
+
+  useEffect(() => {
+    if (![...params.keys()].length) {
+      setLoadingProp(false);
+      return;
+    }
     activeRequest.current?.abort();
     const controller = new AbortController();
     activeRequest.current = controller;

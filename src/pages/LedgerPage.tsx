@@ -169,15 +169,19 @@ function EventCard({
   );
 }
 
-export function LedgerPage() {
+import { useEffect } from 'react';
+
+export function LedgerPage({ setLoading }: { setLoading: (loading: boolean) => void }) {
   const { events, loading, error } = useChangesData();
   const [lang] = useLangState();
   const dict = I18N[lang];
 
+  useEffect(() => {
+    setLoading(loading);
+  }, [loading, setLoading]);
+
   if (loading) {
-    return (
-      <div className="text-center py-20 text-[var(--muted)]">{dict.errors.loading}</div>
-    );
+    return null;
   }
   if (error) {
     return (

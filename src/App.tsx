@@ -32,6 +32,7 @@ function Shell() {
   const [lang, setLang] = useLangState();
   const [apiOnline, setApiOnline] = useState<boolean | null>(null);
   const [collapsed, setCollapsed] = useState(() => localStorage.getItem("vault-monitor-sidebar-collapsed") === "1");
+  const [pageLoading, setPageLoading] = useState(true);
   const t = copy[lang];
   const location = useLocation();
   const navLabel = t[nav.find((item) => item.to === location.pathname)?.label ?? "workImpact"];
@@ -43,6 +44,9 @@ function Shell() {
   useEffect(() => {
     localStorage.setItem("vault-monitor-sidebar-collapsed", collapsed ? "1" : "0");
   }, [collapsed]);
+  useEffect(() => {
+    setPageLoading(true);
+  }, [location.pathname]);
   return <div className={`app-shell ${collapsed ? "collapsed" : ""}`}>
     <aside className="warm-rail">
       <div className="brand-block">
@@ -67,14 +71,14 @@ function Shell() {
       <div className="locale-toggle" aria-label={t.language}><button className={lang === "en" ? "active" : ""} onClick={() => setLang("en")}>EN</button><button className={lang === "qc" ? "active" : ""} onClick={() => setLang("qc")}>QC</button></div>
     </aside>
     <section className="monitor-stage">
-      <ViewTransition token={location.pathname} label={navLabel} />
+      <ViewTransition token={location.pathname} label={navLabel} loading={pageLoading} />
       <Routes>
-        <Route path="/work-impact" element={<WorkImpactPage />} />
-        <Route path="/personal-stats" element={<PersonalStatsPage />} />
-        <Route path="/uptime" element={<UptimePage />} />
-        <Route path="/ledger" element={<LedgerPage />} />
-        <Route path="/search" element={<SearchPage />} />
-        <Route path="/services" element={<ServicesPage />} />
+        <Route path="/work-impact" element={<WorkImpactPage setLoading={setPageLoading} />} />
+        <Route path="/personal-stats" element={<PersonalStatsPage setLoading={setPageLoading} />} />
+        <Route path="/uptime" element={<UptimePage setLoading={setPageLoading} />} />
+        <Route path="/ledger" element={<LedgerPage setLoading={setPageLoading} />} />
+        <Route path="/search" element={<SearchPage setLoading={setPageLoading} />} />
+        <Route path="/services" element={<ServicesPage setLoading={setPageLoading} />} />
         <Route path="/" element={<Navigate replace to="/work-impact" />} />
         <Route path="/health" element={<Navigate replace to="/services" />} />
         <Route path="/agents" element={<Navigate replace to="/ledger" />} />
