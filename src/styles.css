@@ -310,6 +310,8 @@
 }
 
 .app-shell.collapsed .brand-mark {
+  background: #2a2340;
+  border-radius: 50%;
   width: 48px;
   height: 48px;
   margin: 0 auto;
@@ -342,7 +344,7 @@
   margin-top: 2px;
 }
 
-.app-shell.collapsed .brand-block>div:not(.brand-mark) {
+.app-shell.collapsed .brand-block > div:not(.brand-mark) {
   opacity: 0;
   width: 0;
   height: 0;
@@ -525,7 +527,7 @@
   display: block;
 }
 
-.topbar>div:first-child span {
+.topbar > div:first-child span {
   color: var(--vault-console-text-secondary);
   font-size: 11px;
   font-weight: 800;
@@ -533,7 +535,7 @@
   text-transform: uppercase;
 }
 
-.topbar>div:first-child strong {
+.topbar > div:first-child strong {
   color: #fff;
   font-size: 16px;
   font-weight: 500;
@@ -609,7 +611,7 @@
   gap: var(--vault-spacing-3);
 }
 
-.section-header>div:first-child {
+.section-header > div:first-child {
   min-width: 0;
 }
 
@@ -667,7 +669,7 @@ p {
   font-weight: 500;
 }
 
-.panel-heading>svg {
+.panel-heading > svg {
   color: var(--vault-console-violet);
 }
 
@@ -919,7 +921,7 @@ p {
 }
 
 .service-sortbar button,
-.service-column>header button,
+.service-column > header button,
 .service-detail-button,
 .service-modal header button {
   min-height: 34px;
@@ -933,7 +935,7 @@ p {
 
 .service-sortbar button.active,
 .service-sortbar button:hover,
-.service-column>header button:hover,
+.service-column > header button:hover,
 .service-detail-button:hover,
 .service-modal header button:hover {
   border-color: color-mix(in srgb, var(--vault-console-gold) 48%, transparent);
@@ -945,7 +947,7 @@ p {
   gap: var(--vault-spacing-3);
 }
 
-.deployments-focus>header {
+.deployments-focus > header {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
@@ -972,7 +974,7 @@ p {
   background: color-mix(in srgb, var(--vault-console-surface) 76%, transparent);
 }
 
-.service-column>header {
+.service-column > header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -981,7 +983,7 @@ p {
   border-bottom: 1px solid var(--vault-console-border-subtle);
 }
 
-.service-column>header strong {
+.service-column > header strong {
   display: block;
   min-width: 0;
   overflow: hidden;
@@ -991,7 +993,7 @@ p {
   white-space: nowrap;
 }
 
-.service-column>header span {
+.service-column > header span {
   display: block;
   color: var(--muted);
   font-size: 12px;
@@ -2127,7 +2129,7 @@ td span {
   margin-bottom: var(--vault-spacing-2);
 }
 
-.mouse-path-header>div {
+.mouse-path-header > div {
   display: grid;
   gap: 3px;
   min-width: 0;
