@@ -2,19 +2,23 @@
 
 import { num, type AiTimelinePoint } from "../types";
 
+// Tailwind v4 exposes the palette as `--color-vault-*` (see @theme in
+// styles.css), not `--vault-*`. Using the utility classes keeps this in step
+// with BarList and avoids silently painting transparent bars if a token is
+// ever renamed — the class names are static literals so they survive purging.
 const TOOL_FILL: Record<string, string> = {
-  "claude-code": "var(--vault-gold)",
-  codex: "var(--vault-cyan)",
-  "copilot-vscode": "var(--vault-green)",
-  "copilot-cli": "var(--vault-violet)",
-  "gemini-cli": "var(--vault-burgundy)",
-  antigravity: "var(--vault-slate)",
-  "windsurf-cascade": "var(--vault-muted)",
-  devin: "var(--vault-fg)"
+  "claude-code": "bg-vault-gold",
+  codex: "bg-vault-cyan",
+  "copilot-vscode": "bg-vault-green",
+  "copilot-cli": "bg-vault-violet",
+  "gemini-cli": "bg-vault-burgundy",
+  antigravity: "bg-vault-slate",
+  "windsurf-cascade": "bg-vault-muted",
+  devin: "bg-vault-fg"
 };
 
 function fillFor(tool: string): string {
-  return TOOL_FILL[tool] ?? "var(--vault-slate)";
+  return TOOL_FILL[tool] ?? "bg-vault-slate";
 }
 
 function monthLabel(bucket: string): string {
@@ -83,7 +87,8 @@ export default function ToolTimeline({ points, metric = "sessions", emptyLabel }
                   return (
                     <div
                       key={tool}
-                      style={{ height: `${(v / total) * 100}%`, background: fillFor(tool) }}
+                      className={fillFor(tool)}
+                      style={{ height: `${(v / total) * 100}%` }}
                     />
                   );
                 })}
@@ -98,8 +103,8 @@ export default function ToolTimeline({ points, metric = "sessions", emptyLabel }
         {tools.map((tool) => (
           <span key={tool} className="flex items-center gap-1.5 text-[11px] text-vault-slate">
             <span
-              className="inline-block rounded-[2px]"
-              style={{ width: 9, height: 9, background: fillFor(tool) }}
+              className={`inline-block rounded-[2px] ${fillFor(tool)}`}
+              style={{ width: 9, height: 9 }}
             />
             {tool}
           </span>
