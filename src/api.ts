@@ -1,4 +1,10 @@
 import type { ChangeEvent, InputTrackerData, SearchResponse, ServicesResponse } from "./types";
+import type {
+  AiProjectRow,
+  AiSessionsData,
+  AiSummary,
+  AiTimelinePoint
+} from "./features/ai-sessions/types";
 import type { WorkImpactData } from "./features/work-impact/lib/types";
 import workImpactSnapshot from "./features/work-impact/lib/data.json";
 import { normalizeProject, isOwnedProject, initAliases } from "./features/work-impact/lib/aliases";
@@ -305,4 +311,24 @@ void AUTO_OUTLIER_THRESHOLD;
 
 export async function getWorkImpact(signal?: AbortSignal): Promise<WorkImpactData> {
   return await adaptWorkImpact(await getJson<Record<string, unknown>>("/monitor/work-impact", signal), signal);
+}
+
+// ── AI assistant sessions ─────────────────────────────────────────────────────
+
+export async function getAiSessions(signal?: AbortSignal, months = 12): Promise<AiSessionsData> {
+  const days = Math.max(1, Math.trunc(months * 31));
+  const [summary, projects, timeline] = await Promise.all([
+    getJson<AiSummary>("/api/telemetry/ai-sessions/summary", signal),
+    getJson<{ projects: AiProjectRow[] }>(`/api/telemetry/ai-sessions/projects?limit=12`, signal),
+    getJson<{ bucket: string; points: AiTimelinePoint[] }>(
+      `/api/telemetry/ai-sessions/timeline?bucket=month&days=${days}`,
+      signal
+    )
+  ]);
+  return {
+    summary,
+    projects: projects.projects ?? [],
+    timeline: timeline.points ?? [],
+    timelineBucket: timeline.bucket ?? "month"
+  };
 }
