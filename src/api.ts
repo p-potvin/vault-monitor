@@ -5,6 +5,14 @@ import type {
   AiSummary,
   AiTimelinePoint
 } from "./features/ai-sessions/types";
+import type {
+  AiRunsData,
+  LatencyBucket,
+  RunErrorRow,
+  RunRow,
+  RunSummary,
+  RunTimelinePoint
+} from "./features/ai-runs/types";
 import type { WorkImpactData } from "./features/work-impact/lib/types";
 import workImpactSnapshot from "./features/work-impact/lib/data.json";
 import { normalizeProject, isOwnedProject, initAliases } from "./features/work-impact/lib/aliases";
@@ -330,5 +338,32 @@ export async function getAiSessions(signal?: AbortSignal, months = 12): Promise<
     projects: projects.projects ?? [],
     timeline: timeline.points ?? [],
     timelineBucket: timeline.bucket ?? "month"
+  };
+}
+
+// ── Model runs ────────────────────────────────────────────────────────────────
+
+export async function getAiRuns(signal?: AbortSignal, days = 30): Promise<AiRunsData> {
+  const window = Math.max(1, Math.trunc(days));
+  // An hourly timeline over a long window would return thousands of points for
+  // a chart ~60 columns wide, so the bucket widens with the range.
+  const bucket = window <= 2 ? "hour" : window <= 90 ? "day" : "week";
+  const [summary, timeline, latency, errors, recent] = await Promise.all([
+    getJson<RunSummary>(`/api/telemetry/ai-runs/summary?days=${window}`, signal),
+    getJson<{ bucket: string; points: RunTimelinePoint[] }>(
+      `/api/telemetry/ai-runs/timeline?bucket=${bucket}&days=${window}`,
+      signal
+    ),
+    getJson<{ buckets: LatencyBucket[] }>(`/api/telemetry/ai-runs/latency?days=${window}`, signal),
+    getJson<{ errors: RunErrorRow[] }>(`/api/telemetry/ai-runs/errors?days=${window}&limit=12`, signal),
+    getJson<{ runs: RunRow[] }>(`/api/telemetry/ai-runs/runs?days=${window}&limit=50`, signal)
+  ]);
+  return {
+    summary,
+    timeline: timeline.points ?? [],
+    timelineBucket: timeline.bucket ?? bucket,
+    latency: latency.buckets ?? [],
+    errors: errors.errors ?? [],
+    recent: recent.runs ?? []
   };
 }

@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
-import { getAiSessions, getChanges, getInputTracker, getWorkImpact } from "./api";
+import { getAiRuns, getAiSessions, getChanges, getInputTracker, getWorkImpact } from "./api";
 import type { ChangeEvent, InputTrackerData } from "./types";
 import type { AiSessionsData } from "./features/ai-sessions/types";
+import type { AiRunsData } from "./features/ai-runs/types";
 import type { WorkImpactData } from "./features/work-impact/lib/types";
 
 function useRequest<T>(request: (signal: AbortSignal) => Promise<T>) {
@@ -36,6 +37,11 @@ export function useChangesData() {
 export function useAiSessionsData(months = 12) {
   const request = useCallback((signal: AbortSignal) => getAiSessions(signal, months), [months]);
   return useRequest<AiSessionsData>(request);
+}
+
+export function useAiRunsData(days = 30) {
+  const request = useCallback((signal: AbortSignal) => getAiRuns(signal, days), [days]);
+  return useRequest<AiRunsData>(request);
 }
 
 export function useInputTrackerData(hours = 168) {

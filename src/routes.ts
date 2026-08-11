@@ -2,6 +2,7 @@ export const primaryRoutes = [
   { path: "/work-impact", label: "workImpact" },
   { path: "/personal-stats", label: "personalStats" },
   { path: "/ai-stats", label: "aiStats" },
+  { path: "/model-runs", label: "modelRuns" },
   { path: "/ledger", label: "ledger" },
   { path: "/search", label: "search" },
   { path: "/services", label: "services" },
