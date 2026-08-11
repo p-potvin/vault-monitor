@@ -3,11 +3,12 @@ import { describe, expect, it } from "vitest";
 import { compatibilityRedirects, primaryRoutes } from "./routes";
 
 describe("monitor routes", () => {
-  it("defines the six approved tabs in order", () => {
+  it("defines the seven approved tabs in order", () => {
     expect(primaryRoutes.map((route) => route.path)).toEqual([
       "/work-impact",
       "/personal-stats",
       "/ai-stats",
+      "/model-runs",
       "/ledger",
       "/search",
       "/services",
