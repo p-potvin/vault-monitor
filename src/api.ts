@@ -367,3 +367,59 @@ export async function getAiRuns(signal?: AbortSignal, days = 30): Promise<AiRuns
     recent: recent.runs ?? []
   };
 }
+
+// ── Model Identities & Face Embeddings ───────────────────────────────────────
+
+import type {
+  IdentityModel,
+  IdentitySummaryStats,
+  Embedding3DPoint,
+  IdentityTaskLog,
+  IdentityCrop
+} from "./types";
+
+export async function getIdentitiesSummary(signal?: AbortSignal): Promise<IdentitySummaryStats> {
+  return getJson<IdentitySummaryStats>("/api/identities/stats/summary", signal);
+}
+
+export async function getIdentitiesList(
+  status?: string,
+  search?: string,
+  signal?: AbortSignal
+): Promise<{ identities: IdentityModel[]; count: number }> {
+  const params = new URLSearchParams();
+  if (status && status !== "all") params.set("status", status);
+  if (search) params.set("search", search);
+  const q = params.toString();
+  return getJson<{ identities: IdentityModel[]; count: number }>(`/api/identities${q ? `?${q}` : ""}`, signal);
+}
+
+export async function getIdentityDetails(
+  name: string,
+  signal?: AbortSignal
+): Promise<IdentityModel & { crops: IdentityCrop[] }> {
+  return getJson<IdentityModel & { crops: IdentityCrop[] }>(`/api/identities/${encodeURIComponent(name)}`, signal);
+}
+
+export async function get3dEmbeddings(signal?: AbortSignal): Promise<{ points: Embedding3DPoint[]; count: number }> {
+  return getJson<{ points: Embedding3DPoint[]; count: number }>("/api/identities/telemetry/embeddings-3d", signal);
+}
+
+export async function getIdentityTasks(limit = 50, signal?: AbortSignal): Promise<{ tasks: IdentityTaskLog[]; count: number }> {
+  return getJson<{ tasks: IdentityTaskLog[]; count: number }>(`/api/identities/telemetry/tasks?limit=${limit}`, signal);
+}
+
+export async function updateIdentityStatus(
+  name: string,
+  status: "locked" | "soft" | "invalid",
+  threshold?: number,
+  notes?: string
+): Promise<{ status: string; name: string }> {
+  const res = await fetch(`${base}/api/identities/${encodeURIComponent(name)}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ status, threshold, notes })
+  });
+  if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+  return res.json();
+}

@@ -296,3 +296,81 @@ export interface QAResponse {
   status: string;
   logs: QALogEntry[];
 }
+
+// ── Model Identities & Face Crops ──────────────────────────────────────────
+
+export interface ExemplarPreview {
+  rel_path: string;
+  quality_score: number;
+  feature_norm: number;
+}
+
+export interface IdentityModel {
+  id: number;
+  name: string;
+  status: "locked" | "soft" | "invalid";
+  threshold: number;
+  sample_count: number;
+  crop_count: number;
+  exemplar_count: number;
+  created_at: string;
+  validated_at?: string | null;
+  notes?: string | null;
+  exemplars_preview?: ExemplarPreview[];
+}
+
+export interface IdentityCrop {
+  id: number;
+  model_name: string;
+  image_path: string;
+  rel_path: string;
+  bbox?: string | null;
+  landmarks_5pts?: string | null;
+  feature_norm: number;
+  quality_score: number;
+  is_exemplar: boolean | number;
+  created_at: string;
+}
+
+export interface IdentitySummaryStats {
+  total_models: number;
+  locked_models: number;
+  soft_models: number;
+  invalid_models: number;
+  total_face_crops: number;
+  exemplars_count: number;
+  avg_quality_score: number;
+  avg_feature_norm: number;
+  total_tasks_run: number;
+  total_images_processed: number;
+  total_outliers_isolated: number;
+  avg_task_duration_ms: number;
+}
+
+export interface Embedding3DPoint {
+  id: number;
+  model_name: string;
+  model_status: "locked" | "soft" | "invalid";
+  rel_path: string;
+  feature_norm: number;
+  quality_score: number;
+  is_exemplar: boolean;
+  x: number;
+  y: number;
+  z: number;
+}
+
+export interface IdentityTaskLog {
+  id: number;
+  task_type: string;
+  target_model?: string | null;
+  status: string;
+  duration_ms: number;
+  images_scanned: number;
+  matched_count: number;
+  outliers_count: number;
+  no_face_count: number;
+  quarantined_count: number;
+  details?: Record<string, unknown> | null;
+  created_at: string;
+}

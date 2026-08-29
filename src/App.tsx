@@ -12,16 +12,18 @@ import { SearchPage } from "./pages/SearchPage";
 import { ServicesPage } from "./pages/ServicesPage";
 import { UptimePage } from "./pages/UptimePage";
 import { WorkImpactPage } from "./pages/WorkImpactPage";
+import { IdentitiesPage } from "./pages/IdentitiesPage";
 
 const copy = {
-  en: { workImpact: "Work Impact", personalStats: "Personal Stats", aiStats: "AI Stats", modelRuns: "Model Runs", ledger: "The Ledger", search: "Search", services: "Services", uptime: "Uptime Kuma", status: "System status", online: "API online", degraded: "API degraded", language: "Language" },
-  qc: { workImpact: "Impact du travail", personalStats: "Stats personnelles", aiStats: "Stats IA", modelRuns: "Exécutions", ledger: "Le Registre", search: "Recherche", services: "Services", uptime: "Disponibilité", status: "Etat du systeme", online: "API en ligne", degraded: "API degradee", language: "Langue" },
+  en: { workImpact: "Work Impact", personalStats: "Personal Stats", aiStats: "AI Stats", modelRuns: "Model Runs", identities: "Identities", ledger: "The Ledger", search: "Search", services: "Services", uptime: "Uptime Kuma", status: "System status", online: "API online", degraded: "API degraded", language: "Language" },
+  qc: { workImpact: "Impact du travail", personalStats: "Stats personnelles", aiStats: "Stats IA", modelRuns: "Exécutions", identities: "Identités", ledger: "Le Registre", search: "Recherche", services: "Services", uptime: "Disponibilité", status: "Etat du systeme", online: "API en ligne", degraded: "API degradee", language: "Langue" },
 };
 const nav: Array<{ to: string; label: keyof typeof copy.en; icon: ReactNode }> = [
   { to: "/work-impact", label: "workImpact", icon: <IconBarChart /> },
   { to: "/personal-stats", label: "personalStats", icon: <IconActivity /> },
   { to: "/ai-stats", label: "aiStats", icon: <IconTerminal /> },
   { to: "/model-runs", label: "modelRuns", icon: <IconPieChart /> },
+  { to: "/identities", label: "identities", icon: <IconActivity /> },
   { to: "/uptime", label: "uptime", icon: <IconZap /> },
   { to: "/ledger", label: "ledger", icon: <IconDatabase /> },
   { to: "/search", label: "search", icon: <IconSearch /> },
@@ -81,6 +83,7 @@ function Shell() {
         <Route path="/personal-stats" element={<PersonalStatsPage setLoading={setPageLoading} />} />
         <Route path="/ai-stats" element={<AiStatsPage setLoading={setPageLoading} />} />
         <Route path="/model-runs" element={<ModelRunsPage setLoading={setPageLoading} />} />
+        <Route path="/identities" element={<IdentitiesPage setLoading={setPageLoading} />} />
         <Route path="/uptime" element={<UptimePage setLoading={setPageLoading} />} />
         <Route path="/ledger" element={<LedgerPage setLoading={setPageLoading} />} />
         <Route path="/search" element={<SearchPage setLoading={setPageLoading} />} />
