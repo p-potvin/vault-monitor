@@ -27,7 +27,7 @@ export default function BarList({ items, max, color = 'gold', logScale = false }
 
   return (
     <div className="flex flex-col gap-[5px] w-full">
-      {items.map(({ label, count }) => {
+      {items.map(({ label, count }, idx) => {
         let pct = 0
         if (peak > 0) {
           if (logScale) {
@@ -37,7 +37,7 @@ export default function BarList({ items, max, color = 'gold', logScale = false }
           }
         }
         return (
-          <div key={label} className="flex items-center gap-2 min-w-0 text-[13px]">
+          <div key={`${label}-${idx}`} className="flex items-center gap-2 min-w-0 text-[13px]">
             <span
               className="text-vault-slate shrink-0 text-right overflow-hidden text-ellipsis whitespace-nowrap"
               style={{ width: 195 }}

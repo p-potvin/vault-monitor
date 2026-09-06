@@ -67,12 +67,36 @@ export interface ProjectSummary {
   recentSummaries: string[]
 }
 
+export interface CommitOutlier {
+  sha: string
+  project?: string
+  cleanChurnLines: number
+  day?: string
+  message?: string
+  author?: string
+}
+
+export interface MilestoneItem {
+  label: string
+  cur: number
+  max: number
+}
+
+export interface ContextSwitchPoint {
+  date: string
+  switches: number
+  projects: string[]
+}
+
 export interface HighlightData {
   mostConsistentMonth: string
+  mostConsistentDays?: number
   widestProjectDay:    string
+  widestProjectCount?: number
   strongestWeek:       string
-  milestones:          string[]
-  topProjects:         string[]
+  strongestWeekCount?: number
+  milestones:          MilestoneItem[] | string[]
+  topProjects:         BarItem[] | string[]
 }
 
 export interface WorkImpactData {
@@ -105,7 +129,7 @@ export interface WorkImpactData {
   commitStats?:    CommitStatRow
   commitBuckets?:  CommitBucket[]
   monthBoxes?:     MonthBox[]
-  commitOutliers?: string[]
+  commitOutliers?: (CommitOutlier | string)[]
 
   // Lines
   techVolume?:     TechVolumeData
@@ -117,6 +141,9 @@ export interface WorkImpactData {
   // Highlights
   highlights?:     HighlightData
 
+  // Context switches
+  contextSwitches?: ContextSwitchPoint[]
+
   // Activity patterns
   byHour?:         BarItem[]  // 0-23 hour labels
   byDow?:          BarItem[]  // Mon-Sun
@@ -127,3 +154,4 @@ export interface WorkImpactData {
   // Projects detailed
   projects?:       ProjectSummary[]
 }
+

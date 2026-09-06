@@ -96,6 +96,8 @@ export interface I18nStrings {
   activityHint: string
   activityHourTitle: string
   activityDowTitle: string
+  whenWorkHappensTitle: string
+  contextSwitchesTitle: string
 
   privateRepository: string
   noCommitData: string
@@ -211,6 +213,8 @@ const en: I18nStrings = {
   activityHint:          'When work happens - hourly and daily patterns.',
   activityHourTitle:     'Hour of Day',
   activityDowTitle:      'Day of Week',
+  whenWorkHappensTitle:  'When Work Happens',
+  contextSwitchesTitle:  'Context Switches per Day',
 
   privateRepository:         'Private Repository',
   noCommitData:              'No commit size data available.',
@@ -341,6 +345,8 @@ const qc: I18nStrings = {
   activityHint:          'Quand le travail se produit - motifs horaires et quotidiens.',
   activityHourTitle:     'Heure de la journée',
   activityDowTitle:      'Jour de la semaine',
+  whenWorkHappensTitle:  'Quand le travail se passe',
+  contextSwitchesTitle:  'Changements de contexte par jour',
 
   privateRepository:         'Dépôt privé',
   noCommitData:              'Aucune donnée de taille de commit disponible.',

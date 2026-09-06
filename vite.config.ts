@@ -46,6 +46,16 @@ export default defineConfig({
         target: monitorApiTarget,
         changeOrigin: true,
         secure: false
+      },
+      "/api": {
+        target: monitorApiTarget,
+        changeOrigin: true,
+        secure: false
+      },
+      "/projects": {
+        target: monitorApiTarget,
+        changeOrigin: true,
+        secure: false
       }
     }
   }

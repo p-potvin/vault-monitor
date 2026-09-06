@@ -109,4 +109,61 @@ describe("adaptWorkImpact", () => {
     expect(result.busiestWeek).toMatch(/^[A-Z][a-z]{2} \d{1,2}/);
     expect(result.busiestWeek).not.toMatch(/W\d{2}/);
   });
+
+  it("regroups rare or duplicate kinds into canonical kinds", async () => {
+    const result = await adaptWorkImpact({
+      generated_at: "2026-06-25T08:00:00Z",
+      data: {
+        totals: { events: 10, activeDays: 1, projects: 1 },
+        series: {
+          days: [{ day: "2026-06-25", entries: 10 }],
+          projects: [{ project: "vault-monitor", entries: 10 }],
+          kinds: [
+            { kind: "code-change", count: 4 },
+            { kind: "deploy", count: 2 },
+            { kind: "release", count: 1 },
+            { kind: "bug", count: 1 },
+            { kind: "docs", count: 1 },
+            { kind: "config", count: 1 },
+          ],
+          months: [{ month: "2026-06", count: 10 }],
+        },
+      },
+    });
+    const kinds = result.byKind.reduce((acc, k) => ({ ...acc, [k.label]: k.count }), {} as Record<string, number>);
+    expect(kinds["devops"]).toBe(4); // deploy (2) + release (1) + config (1)
+    expect(kinds["code-change"]).toBe(4); // code-change (4)
+    expect(kinds["bug"]).toBe(1); // bug (1)
+    expect(kinds["documentation"]).toBe(1); // docs (1)
+    expect(kinds["deploy"]).toBeUndefined();
+    expect(kinds["release"]).toBeUndefined();
+    expect(kinds["config"]).toBeUndefined();
+  });
+
+  it("calculates byMonth directly from daySeries matching totalEvents exactly", async () => {
+    const result = await adaptWorkImpact({
+      generated_at: "2026-06-25T08:00:00Z",
+      data: {
+        totals: { events: 30, activeDays: 2, projects: 1 },
+        series: {
+          days: [
+            { day: "2026-03-05", entries: 5 }, // pre-cutoff, must be ignored
+            { day: "2026-03-15", entries: 15 },
+            { day: "2026-04-10", entries: 10 },
+          ],
+          projects: [{ project: "vault-monitor", entries: 25 }],
+          kinds: [{ kind: "code-change", count: 25 }],
+          months: [
+            { month: "2026-03", count: 20 }, // has pre-cutoff noise in raw series
+            { month: "2026-04", count: 10 },
+          ],
+        },
+      },
+    });
+    const totalByMonth = result.byMonth.reduce((sum, m) => sum + m.count, 0);
+    expect(totalByMonth).toBe(result.totalEvents);
+    expect(result.totalEvents).toBe(25);
+    const march = result.byMonth.find(m => m.label === "2026-03");
+    expect(march?.count).toBe(15);
+  });
 });

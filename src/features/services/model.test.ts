@@ -49,7 +49,7 @@ describe("services model", () => {
       healthy: 1,
       degraded: 1,
       offline: 0,
-      stale: 0,
+      suspended: 0,
       unmonitored: 1,
     });
   });

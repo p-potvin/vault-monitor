@@ -5,6 +5,8 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
+const expectedBase = (import.meta.env.VITE_MONITOR_API_BASE ?? "https://api.vaultwares.ca").replace(/\/$/, "");
+
 describe("getInputTracker", () => {
   it("requests the selected rolling hour window", async () => {
     const fetchMock = vi.spyOn(globalThis, "fetch").mockResolvedValue({
@@ -14,7 +16,7 @@ describe("getInputTracker", () => {
 
     await getInputTracker(undefined, 24);
 
-    expect(fetchMock).toHaveBeenCalledWith("https://api.vaultwares.ca/monitor/input-tracker?hours=24", expect.any(Object));
+    expect(fetchMock).toHaveBeenCalledWith(`${expectedBase}/monitor/input-tracker?hours=24`, expect.any(Object));
   });
 
   it("omits non-positive hour values", async () => {
@@ -25,6 +27,6 @@ describe("getInputTracker", () => {
 
     await getInputTracker(undefined, 0);
 
-    expect(fetchMock).toHaveBeenCalledWith("https://api.vaultwares.ca/monitor/input-tracker", expect.any(Object));
+    expect(fetchMock).toHaveBeenCalledWith(`${expectedBase}/monitor/input-tracker`, expect.any(Object));
   });
 });

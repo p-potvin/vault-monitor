@@ -1,10 +1,9 @@
 import { clampInt, histogramBuckets, quantile } from './utils';
-import type { CommitBucket, CommitStatRow, MonthBox, TechVolumeData, TechRow } from './types';
+import type { CommitBucket, CommitOutlier, CommitStatRow, MonthBox, TechVolumeData, TechRow } from './types';
 
-// The auto outlier threshold is defined in api.ts as 15000.
-// We can accept it as an argument or redefine it.
-const AUTO_OUTLIER_THRESHOLD = 15000;
-const NAMED_COMMIT_OUTLIERS = new Set<string>(['a1d4b42', '486f844', '37dfb53', '0998411']);
+// Outlier threshold: bump to 10000 clean churn lines. Everything under that shouldn't be counted as an outlier.
+export const AUTO_OUTLIER_THRESHOLD = 10000;
+export const NAMED_COMMIT_OUTLIERS = new Set<string>(['a1d4b42', '486f844', '37dfb53', '0998411']);
 
 export function computeCommitStats(samples: any[]): CommitStatRow {
   if (!samples.length) return { mean: 0, median: 0, mode: 0, samples: 0 };
@@ -57,15 +56,41 @@ export function computeMonthBoxes(samples: any[]): MonthBox[] {
   return boxes;
 }
 
-export function computeCommitOutliers(samples: any[]): string[] {
-  const outliers: string[] = [];
+export function computeCommitOutliers(samples: any[]): CommitOutlier[] {
+  const map = new Map<string, CommitOutlier>();
   for (const s of samples) {
-    const sha = s.commit?.substring(0, 7) || '';
-    if ((s.cleanChurnLines || 0) > AUTO_OUTLIER_THRESHOLD || NAMED_COMMIT_OUTLIERS.has(sha)) {
-      if (sha) outliers.push(sha);
+    const churn = s.cleanChurnLines || 0;
+    const sha = s.commit?.substring(0, 7) || (typeof s === 'string' ? s.substring(0, 7) : '');
+    const proj = String(s.project || '').toLowerCase();
+    const msg = String(s.message || '').toLowerCase();
+
+    // Filter out agent-ledger commits, mostly the ones committing a batch of json spools
+    if (
+      proj.includes('agent-ledger') ||
+      msg.includes('json spool') ||
+      msg.includes('batch of json') ||
+      msg.includes('archive agent-ledger') ||
+      msg.includes('events/2026') ||
+      msg.includes('agent-ledger events')
+    ) {
+      continue;
+    }
+
+    // Everything under 10000 clean churn lines shouldn't be counted as an outlier
+    if (churn >= AUTO_OUTLIER_THRESHOLD) {
+      if (sha && !map.has(sha)) {
+        map.set(sha, {
+          sha,
+          project: s.project,
+          cleanChurnLines: churn,
+          day: s.day,
+          message: s.message,
+          author: s.author,
+        });
+      }
     }
   }
-  return Array.from(new Set(outliers));
+  return Array.from(map.values()).sort((a, b) => b.cleanChurnLines - a.cleanChurnLines);
 }
 
 export function computeFilesTouchedStats(samples: any[]) {

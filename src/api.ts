@@ -15,7 +15,15 @@ import type {
 } from "./features/ai-runs/types";
 import type { WorkImpactData } from "./features/work-impact/lib/types";
 import workImpactSnapshot from "./features/work-impact/lib/data.json";
-import { normalizeProject, isOwnedProject, initAliases } from "./features/work-impact/lib/aliases";
+import {
+  normalizeProject,
+  isOwnedProject,
+  initAliases,
+  normalizeKind,
+  normalizeModel,
+  normalizeActor,
+  normalizeTool
+} from "./features/work-impact/lib/aliases";
 import {
   computeCommitStats,
   computeCommitBuckets,
@@ -33,8 +41,8 @@ const WORK_IMPACT_CUTOFF = "2026-03-11";
 // visible in the snapshot's commitOutliers field; this list is only used when
 // the API ever starts returning a commitSamples array we can re-aggregate.
 const NAMED_COMMIT_OUTLIERS = new Set<string>(["a1d4b42", "486f844", "37dfb53", "0998411"]);
-// Auto-flag any future commit above this many clean churn lines.
-const AUTO_OUTLIER_THRESHOLD = 15000;
+// Auto-flag any future commit above this many clean churn lines (bumped to 10000).
+const AUTO_OUTLIER_THRESHOLD = 10000;
 
 // ── Work Impact helpers ───────────────────────────────────────────────────────
 
@@ -284,15 +292,183 @@ export async function adaptWorkImpact(payload: Record<string, unknown>, signal?:
     busiestWeek,
     busiestWeekCount: busiestWeekCount || snapshot.busiestWeekCount,
     daySeries: daySeries.length ? daySeries : snapshot.daySeries,
-    byMonth: months.length
-      ? months
-          .filter((item: Record<string, any>) => String(item.month ?? "") >= WORK_IMPACT_CUTOFF.slice(0, 7))
-          .map((item: Record<string, any>) => ({ label: String(item.month), count: Number(item.count ?? 0) }))
+    // Derive byMonth directly from daySeries to ensure strict match with totalEvents (eliminating pre-cutoff noise)
+    byMonth: daySeries.length
+      ? (() => {
+          const mCounts = new Map<string, number>();
+          for (const d of daySeries) {
+            if (d.count > 0) {
+              const m = d.date.slice(0, 7);
+              mCounts.set(m, (mCounts.get(m) ?? 0) + d.count);
+            }
+          }
+          return [...mCounts.entries()]
+            .sort(([a], [b]) => a.localeCompare(b))
+            .map(([label, count]) => ({ label, count }));
+        })()
       : snapshot.byMonth,
-    byKind: kinds.length ? kinds.map((item: Record<string, any>) => ({ label: String(item.kind), count: Number(item.count ?? 0) })) : snapshot.byKind,
+    // Regroup kinds: minor kinds under deployment (< 8) are merged into parent semantic kinds
+    byKind: kinds.length
+      ? (() => {
+          const kCounts = new Map<string, number>();
+          for (const item of kinds) {
+            const k = normalizeKind(String(item.kind ?? ""));
+            const n = Number(item.entries ?? item.count ?? 0);
+            kCounts.set(k, (kCounts.get(k) ?? 0) + n);
+          }
+          return [...kCounts.entries()]
+            .sort(([, a], [, b]) => b - a)
+            .map(([label, count]) => ({ label, count }));
+        })()
+      : snapshot.byKind,
     byProject,
     byHour: Array.isArray(raw.hourSeries) ? raw.hourSeries.map((item: Record<string, any>) => ({ label: String(item.hour).padStart(2, "0"), count: Number(item.count ?? 0) })) : snapshot.byHour,
-    byDow: Array.isArray(raw.dowSeries) ? raw.dowSeries.map((item: Record<string, any>) => ({ label: String(item.label), count: Number(item.count ?? 0) })) : snapshot.byDow,
+    byDow: (() => {
+      // Calculate byDow from daySeries to ensure full accuracy
+      const dowLabels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+      const dowCounts = new Map<string, number>(dowLabels.map(l => [l, 0]));
+      for (const d of daySeries) {
+        if (d.count > 0) {
+          const dt = new Date(`${d.date}T00:00:00Z`);
+          const dayIndex = (dt.getUTCDay() + 6) % 7; // Monday = 0, Sunday = 6
+          const label = dowLabels[dayIndex];
+          dowCounts.set(label, (dowCounts.get(label) ?? 0) + d.count);
+        }
+      }
+      return dowLabels.map(label => ({ label, count: dowCounts.get(label) ?? 0 }));
+    })(),
+    // Highlights calculation (Most Consistent Month, Widest Project Spread, Strongest Week, Milestones, Top Projects)
+    highlights: (() => {
+      // Most consistent month: month with the most active days
+      const monthDays = new Map<string, Set<string>>();
+      for (const d of daySeries) {
+        if (d.count > 0) {
+          const m = d.date.slice(0, 7);
+          if (!monthDays.has(m)) monthDays.set(m, new Set());
+          monthDays.get(m)!.add(d.date);
+        }
+      }
+      let bestMonth = "";
+      let bestMonthDays = 0;
+      for (const [m, set] of monthDays) {
+        if (set.size > bestMonthDays) {
+          bestMonth = m;
+          bestMonthDays = set.size;
+        }
+      }
+
+      // Widest project spread day
+      let widestDay = "";
+      let widestCount = 0;
+      for (const d of days) {
+        const date = String(d.day ?? d.date ?? "");
+        if (date < WORK_IMPACT_CUTOFF) continue;
+        const set = new Set<string>();
+        for (const p of (d.projects ?? [])) {
+          const canonical = normalizeProject(String(p));
+          if (isOwnedProject(canonical)) set.add(canonical);
+        }
+        if (set.size > widestCount) {
+          widestDay = date;
+          widestCount = set.size;
+        }
+      }
+
+      const nextTarget = (cur: number, steps: number[]) => steps.find(s => s > cur) || cur;
+      const actualCommits = Array.isArray(raw.commitSamples) ? raw.commitSamples.length : Number(raw.totals?.uniqueCommitsRecomputed ?? raw.totals?.commits ?? snapshot.totalCommits ?? 0);
+
+      const milestones = [
+        { label: "Work entries", cur: totalEvents, max: nextTarget(totalEvents, [100, 250, 500, 1000, 2000, 5000, 10000]) },
+        { label: "Active days", cur: activeDays, max: nextTarget(activeDays, [25, 50, 100, 200, 365]) },
+        { label: "Projects touched", cur: totalProjects, max: nextTarget(totalProjects, [10, 25, 50, 100, 150, 200]) },
+        { label: "Commits sampled", cur: actualCommits, max: nextTarget(actualCommits, [100, 250, 500, 1000, 2000, 5000, 10000]) },
+      ];
+
+      return {
+        mostConsistentMonth: bestMonth || "2026-05",
+        mostConsistentDays: bestMonthDays,
+        widestProjectDay: widestDay || "2026-05-01",
+        widestProjectCount: widestCount,
+        strongestWeek: busiestWeekIso ? isoWeekToRange(busiestWeekIso) : snapshot.busiestWeek,
+        strongestWeekCount: busiestWeekCount,
+        milestones,
+        topProjects: byProject.slice(0, 5),
+      };
+    })(),
+    // Context switches per day (number of distinct projects touched minus 1, minimum 0)
+    contextSwitches: (() => {
+      const result: Array<{ date: string; switches: number; projects: string[] }> = [];
+      for (const d of days) {
+        const date = String(d.day ?? d.date ?? "");
+        if (date < WORK_IMPACT_CUTOFF) continue;
+        const set = new Set<string>();
+        for (const p of (d.projects ?? [])) {
+          const canonical = normalizeProject(String(p));
+          if (isOwnedProject(canonical)) set.add(canonical);
+        }
+        result.push({
+          date,
+          switches: Math.max(0, set.size - 1),
+          projects: Array.from(set),
+        });
+      }
+      return result.sort((a, b) => a.date.localeCompare(b.date));
+    })(),
+    // Clean up agentData with normalizers
+    agentData: (() => {
+      const rawAg = raw.agentData || snapshot.agentData;
+      if (!rawAg) return snapshot.agentData;
+
+      const mCounts = new Map<string, number>();
+      for (const m of (rawAg.models || [])) {
+        const norm = normalizeModel(m.name || m.label || "");
+        mCounts.set(norm, (mCounts.get(norm) ?? 0) + Number(m.count || 0));
+      }
+      const topModels = [...mCounts.entries()]
+        .sort(([, a], [, b]) => b - a)
+        .map(([label, count]) => ({ label, count }));
+
+      const aCounts = new Map<string, number>();
+      for (const a of (rawAg.actors || [])) {
+        const norm = normalizeActor(a.name || a.label || "");
+        aCounts.set(norm, (aCounts.get(norm) ?? 0) + Number(a.count || 0));
+      }
+      const topActors = [...aCounts.entries()]
+        .sort(([, a], [, b]) => b - a)
+        .map(([label, count]) => ({ label, count }));
+
+      const tCounts = new Map<string, number>();
+      for (const t of (rawAg.tools || [])) {
+        const norm = normalizeTool(t.name || t.label || "");
+        tCounts.set(norm, (tCounts.get(norm) ?? 0) + Number(t.count || 0));
+      }
+      const topTools = [...tCounts.entries()]
+        .sort(([, a], [, b]) => b - a)
+        .map(([label, count]) => ({ label, count }));
+
+      const sCounts = new Map<string, number>();
+      for (const s of (rawAg.mcpServers || [])) {
+        const rawName = s.name || s.label || "";
+        const norm = rawName.replace(/_/g, " ") || "VaultWares MCP";
+        sCounts.set(norm, (sCounts.get(norm) ?? 0) + Number(s.count || 0));
+      }
+      const topMcp = [...sCounts.entries()]
+        .sort(([, a], [, b]) => b - a)
+        .map(([label, count]) => ({ label, count }));
+
+      return {
+        totalEvents: rawAg.totalEvents || totalEvents,
+        distinctActors: topActors.length,
+        modelsUsed: topModels.length,
+        toolsUsed: topTools.length,
+        topActors,
+        topMcp,
+        topTools,
+        dayActivity: Array.isArray(rawAg.daySeries)
+          ? rawAg.daySeries.map((item: any) => ({ label: String(item.day), count: Number(item.count || 0) }))
+          : (snapshot.agentData?.dayActivity || []),
+      };
+    })(),
     // Dynamically aggregated data from commitSamples
     ...(Array.isArray(raw.commitSamples) && raw.commitSamples.length > 0 ? {
       commitStats: computeCommitStats(raw.commitSamples),
