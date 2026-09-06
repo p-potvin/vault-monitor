@@ -72,6 +72,37 @@ describe("adaptWorkImpact", () => {
     expect(result.totalProjects).toBe(3);
   });
 
+  it("normalizes user-advised project aliases (tailnet-sync, pro-realism, mini-omni, etc.)", async () => {
+    const result = await adaptWorkImpact({
+      generated_at: "2026-06-25T08:00:00Z",
+      data: {
+        totals: { events: 8, activeDays: 1, projects: 8 },
+        series: {
+          days: [{ day: "2026-06-25", entries: 8 }],
+          projects: [
+            { project: "tailnet-sync", entries: 1 },
+            { project: "pro-realism", entries: 1 },
+            { project: "mini-omni", entries: 1 },
+            { project: "ColONEL-KFC", entries: 1 },
+            { project: "Mai-ViBo-2ruViSum-AIO", entries: 1 },
+            { project: "openclaw", entries: 1 },
+            { project: "thoughts/memories", entries: 1 },
+            { project: "Prelanding-Page", entries: 1 },
+          ],
+          kinds: [], months: [],
+        },
+      },
+    });
+    const projMap = new Map(result.byProject.map(p => [p.label, p.count]));
+    expect(projMap.get("General Tasks")).toBe(2); // tailnet-sync + openclaw
+    expect(projMap.get("huggingface-spaces")).toBe(1); // pro-realism
+    expect(projMap.get("vault-cacophony")).toBe(1); // mini-omni
+    expect(projMap.get("colonel-kfc")).toBe(1); // ColONEL-KFC
+    expect(projMap.get("mai-vibo")).toBe(1); // Mai-ViBo-2ruViSum-AIO
+    expect(projMap.get("thoughts")).toBe(1); // thoughts/memories
+    expect(projMap.get("prelanding-page")).toBe(1); // Prelanding-Page
+  });
+
   it("drops events before the VaultWares foundation cutoff (2026-03-11)", async () => {
     const result = await adaptWorkImpact({
       generated_at: "2026-06-25T08:00:00Z",
