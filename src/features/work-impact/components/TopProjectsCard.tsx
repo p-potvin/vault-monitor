@@ -11,7 +11,7 @@ const PROJECT_COLORS = [
   { bar: 'bg-[#0ea5e9]', track: 'bg-[#0ea5e9]/15' }, // Cyan
   { bar: 'bg-[#a855f7]', track: 'bg-[#a855f7]/15' }, // Purple
   { bar: 'bg-[#10b981]', track: 'bg-[#10b981]/15' }, // Emerald
-  { bar: 'bg-[#3b82f6]', track: 'bg-[#3b82f6]/15' }, // Blue
+  { bar: 'bg-[#c84b31]', track: 'bg-[#c84b31]/15' }, // Rust / Red
   { bar: 'bg-vault-gold', track: 'bg-vault-gold/15' }, // Gold (accent)
 ]
 

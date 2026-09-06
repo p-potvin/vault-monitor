@@ -41,8 +41,8 @@ const WORK_IMPACT_CUTOFF = "2026-03-11";
 // visible in the snapshot's commitOutliers field; this list is only used when
 // the API ever starts returning a commitSamples array we can re-aggregate.
 const NAMED_COMMIT_OUTLIERS = new Set<string>(["a1d4b42", "486f844", "37dfb53", "0998411"]);
-// Auto-flag any future commit above this many clean churn lines (bumped to 10000).
-const AUTO_OUTLIER_THRESHOLD = 10000;
+// Auto-flag any future commit above this many clean churn lines (bumped to 40000).
+const AUTO_OUTLIER_THRESHOLD = 40000;
 
 // ── Work Impact helpers ───────────────────────────────────────────────────────
 

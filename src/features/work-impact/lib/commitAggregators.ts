@@ -1,8 +1,8 @@
 import { clampInt, histogramBuckets, quantile } from './utils';
 import type { CommitBucket, CommitOutlier, CommitStatRow, MonthBox, TechVolumeData, TechRow } from './types';
 
-// Outlier threshold: bump to 10000 clean churn lines. Everything under that shouldn't be counted as an outlier.
-export const AUTO_OUTLIER_THRESHOLD = 10000;
+// Outlier threshold: bump to 40000 clean churn lines. Everything under that shouldn't be counted as an outlier.
+export const AUTO_OUTLIER_THRESHOLD = 40000;
 export const NAMED_COMMIT_OUTLIERS = new Set<string>(['a1d4b42', '486f844', '37dfb53', '0998411']);
 
 export function computeCommitStats(samples: any[]): CommitStatRow {

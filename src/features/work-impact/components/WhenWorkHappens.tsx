@@ -14,7 +14,7 @@ const DAY_PALETTE = [
   { bg: 'bg-[#0ea5e9]', hover: 'hover:bg-[#38bdf8]', shadow: 'shadow-[0_2px_8px_rgba(14,165,233,0.25)]' }, // Mon: cyan
   { bg: 'bg-[#a855f7]', hover: 'hover:bg-[#c084fc]', shadow: 'shadow-[0_2px_8px_rgba(168,85,247,0.25)]' }, // Tue: purple
   { bg: 'bg-[#06b6d4]', hover: 'hover:bg-[#22d3ee]', shadow: 'shadow-[0_2px_8px_rgba(6,182,212,0.25)]' }, // Wed: teal
-  { bg: 'bg-[#8b5cf6]', hover: 'hover:bg-[#a78bfa]', shadow: 'shadow-[0_2px_8px_rgba(139,92,246,0.25)]' }, // Thu: violet
+  { bg: 'bg-[#c84b31]', hover: 'hover:bg-[#e0564c]', shadow: 'shadow-[0_2px_8px_rgba(200,75,49,0.25)]' }, // Thu: rust / red
   { bg: 'bg-[#0ea5e9]', hover: 'hover:bg-[#38bdf8]', shadow: 'shadow-[0_2px_8px_rgba(14,165,233,0.25)]' }, // Fri: cyan
   { bg: 'bg-[#a855f7]', hover: 'hover:bg-[#c084fc]', shadow: 'shadow-[0_2px_8px_rgba(168,85,247,0.25)]' }, // Sat: purple
   { bg: 'bg-[#06b6d4]', hover: 'hover:bg-[#22d3ee]', shadow: 'shadow-[0_2px_8px_rgba(6,182,212,0.25)]' }, // Sun: teal

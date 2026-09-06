@@ -27,10 +27,21 @@ export default function ContextSwitchesChart({ items = [], daysBack = 30 }: Cont
   const yTicks = [10, 8, 6, 4, 2, 0]
 
   return (
-    <div className="flex flex-col gap-2 w-full pt-2">
+    <div className="flex flex-col gap-2 w-full pt-1">
+      {/* Scope badge / info strip */}
+      <div className="flex items-center justify-between text-[11px] font-mono text-vault-muted px-1 mb-1">
+        <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-vault-raised text-vault-slate border border-vault-border/60 text-[10px] font-bold tracking-wide uppercase">
+          <span className="w-1.5 h-1.5 rounded-full bg-vault-cyan" />
+          Last 30 Days
+        </span>
+        <span className="text-[10px] text-vault-dim">
+          Day of month (01–31)
+        </span>
+      </div>
+
       <div className="relative flex items-stretch h-[170px] w-full">
         {/* Y Axis Labels */}
-        <div className="flex flex-col justify-between items-end pr-2 text-[10px] font-mono text-vault-muted select-none pb-[28px]">
+        <div className="flex flex-col justify-between items-end pr-2 text-[10px] font-mono text-vault-muted select-none pb-[24px]">
           {yTicks.map(tick => (
             <span key={tick} className="leading-none">{tick}</span>
           ))}
@@ -39,14 +50,14 @@ export default function ContextSwitchesChart({ items = [], daysBack = 30 }: Cont
         {/* Chart Area */}
         <div className="relative flex-1 flex flex-col justify-between">
           {/* Horizontal Grid lines */}
-          <div className="absolute inset-0 flex flex-col justify-between pointer-events-none pb-[28px]">
+          <div className="absolute inset-0 flex flex-col justify-between pointer-events-none pb-[24px]">
             {yTicks.map(tick => (
               <div key={tick} className="w-full border-b border-white/[0.04]" />
             ))}
           </div>
 
           {/* Bars */}
-          <div className="relative flex-1 flex items-end justify-between gap-1 z-10 pb-[28px] px-1">
+          <div className="relative flex-1 flex items-end justify-between gap-1 z-10 pb-[24px] px-1">
             {recent.map((pt) => {
               const heightPct = Math.min(100, Math.max((pt.switches / maxVal) * 100, pt.switches > 0 ? 5 : 0))
               const isHovered = hoveredDate === pt.date
@@ -74,17 +85,16 @@ export default function ContextSwitchesChart({ items = [], daysBack = 30 }: Cont
             })}
           </div>
 
-          {/* X Axis Rotated Labels (every 2nd or 3rd label) */}
-          <div className="absolute bottom-0 left-0 right-0 h-[28px] flex items-center justify-between text-[9px] font-mono text-vault-muted px-1 pointer-events-none">
+          {/* X Axis Labels: Day of month only (no year or month) */}
+          <div className="absolute bottom-0 left-0 right-0 h-[22px] flex items-center justify-between text-[10px] font-mono text-vault-muted px-1 pointer-events-none">
             {recent.map((pt, idx) => {
               const showLabel = idx % 2 === 0 || idx === recent.length - 1
+              const dayNum = pt.date.slice(8)
               return (
                 <div key={pt.date} className="flex-1 flex justify-center">
                   {showLabel ? (
-                    <span
-                      className="transform -rotate-45 origin-top-left translate-y-1 select-none whitespace-nowrap"
-                    >
-                      {pt.date}
+                    <span className="select-none font-medium tabular-nums text-vault-slate">
+                      {dayNum}
                     </span>
                   ) : null}
                 </div>

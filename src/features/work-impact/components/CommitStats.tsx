@@ -75,7 +75,7 @@ export default function CommitStats({
           ) {
             return false;
           }
-          return (item.cleanChurnLines || 0) >= 10000;
+          return (item.cleanChurnLines || 0) >= 40000;
         });
 
         if (filteredOutliers.length === 0) return null;
@@ -86,7 +86,7 @@ export default function CommitStats({
           <div className="flex flex-col gap-3">
             <div className="flex items-center justify-between">
               <h3 className="text-[11px] font-bold uppercase tracking-[0.06em] text-vault-muted">
-                {t.commitOutliersTitle} (&ge; 10,000 lines)
+                {t.commitOutliersTitle} (&ge; 40,000 lines)
               </h3>
               <span className="text-[11px] font-mono text-vault-dim">
                 {filteredOutliers.length} {filteredOutliers.length === 1 ? 'commit' : 'commits'}
