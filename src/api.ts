@@ -414,6 +414,16 @@ export async function adaptWorkImpact(payload: Record<string, unknown>, signal?:
       }
       return result.sort((a, b) => a.date.localeCompare(b.date));
     })(),
+    // Top 5 project work concentration share (%)
+    concentration: raw.concentration ?? (() => {
+      if (!byProject || byProject.length === 0) return [];
+      const top5 = byProject.slice(0, 5);
+      const total = totalEvents || byProject.reduce((sum, p) => sum + p.count, 0) || 1;
+      return top5.map(p => ({
+        label: p.label,
+        count: Math.round((p.count / total) * 100),
+      }));
+    })(),
     // Clean up agentData with normalizers
     agentData: (() => {
       const rawAg = raw.agentData || snapshot.agentData;

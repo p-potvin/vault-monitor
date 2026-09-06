@@ -92,18 +92,19 @@ export default function HourlyCircularChart({ byHour }: HourlyCircularChartProps
               'Z'
             ].join(' ')
 
-            let fill = '#b8882e'
-            let opacity = 0.78
+            // Alternate cyan and violet, with gold strictly as peak accent
+            let fill = hour % 2 === 0 ? '#0ea5e9' : '#8b5cf6'
+            let opacity = 0.75
 
             if (count === 0) {
-              fill = '#2a2438'
-              opacity = 0.4
+              fill = '#241f35'
+              opacity = 0.3
             } else if (isHovered) {
               fill = '#fcd34d'
               opacity = 1
             } else if (isPeak) {
               fill = '#e5a93c'
-              opacity = 0.95
+              opacity = 1
             } else {
               opacity = 0.55 + (count / peak) * 0.4
             }

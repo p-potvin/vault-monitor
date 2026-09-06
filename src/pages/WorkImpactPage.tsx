@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import ActivityPatterns from "../features/work-impact/components/ActivityPatterns";
 import AgentSection from "../features/work-impact/components/AgentSection";
 import BarList from "../features/work-impact/components/BarList";
 import CommitStats from "../features/work-impact/components/CommitStats";
@@ -24,7 +23,7 @@ import { InfoTooltip } from "../components/InfoTooltip";
 
 function Section({ title, hint, children }: { title: string; hint?: string; children: ReactNode }) {
   return (
-    <section className="bg-vault-surface border border-vault-border rounded-[10px] p-5 flex flex-col gap-4">
+    <section className="bg-vault-surface border border-vault-border rounded-[10px] p-5 flex flex-col gap-4 cursor-default">
       <div className="flex flex-col gap-1">
         <h2 className="text-[13px] font-bold uppercase tracking-[0.06em] text-vault-fg flex items-center gap-2">
           {title}
@@ -51,7 +50,7 @@ export function WorkImpactPage({ setLoading }: { setLoading: (loading: boolean) 
   const t = getI18n(lang);
   const d = data;
   return (
-    <main className="max-w-[1400px] mx-auto px-6 py-8 flex flex-col gap-6">
+    <main className="max-w-[1400px] mx-auto px-6 py-8 flex flex-col gap-6 cursor-default">
       {/* Top KPIs */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
         <KpiCard label={t.metricEvents} value={d.totalEvents} variant="accent" tooltip={t.metricEventsTooltip} />
@@ -83,7 +82,7 @@ export function WorkImpactPage({ setLoading }: { setLoading: (loading: boolean) 
 
       {/* When Work Happens - 2 columns: Day of Week + Circular Hours of Day */}
       <Section title={t.whenWorkHappensTitle || "When Work Happens"} hint={t.activityHint}>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
           <div className="flex flex-col gap-2">
             <h3 className="text-[11px] font-bold uppercase tracking-[0.06em] text-vault-muted">
               By Day of the Week
@@ -116,9 +115,9 @@ export function WorkImpactPage({ setLoading }: { setLoading: (loading: boolean) 
 
       {/* Bar list trio */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Section title={t.monthlyTitle} hint={t.monthlyHint}><BarList items={d.byMonth} color="cyan" /></Section>
-        <Section title={t.kindsTitle} hint={t.kindsHint}><BarList items={d.byKind} color="violet" logScale /></Section>
-        <Section title={t.projectsTitle} hint={t.projectsNote}><BarList items={d.byProject.slice(0, 8)} color="gold" /></Section>
+        <Section title={t.monthlyTitle} hint={t.monthlyHint}><BarList items={d.byMonth} color="cyan" alternateColors /></Section>
+        <Section title={t.kindsTitle} hint={t.kindsHint}><BarList items={d.byKind} color="violet" logScale alternateColors /></Section>
+        <Section title={t.projectsTitle} hint={t.projectsNote}><BarList items={d.byProject.slice(0, 8)} alternateColors /></Section>
       </div>
 
       {/* Commit size & Outliers */}
@@ -129,8 +128,11 @@ export function WorkImpactPage({ setLoading }: { setLoading: (loading: boolean) 
       {/* Tech Volume & Files */}
       <Section title={t.techTitle} hint={t.techHint}><TechVolumeTable techVolume={d.techVolume} t={t} /></Section>
       <Section title={t.filesTouchedTitle} hint={t.filesTouchedHint}><FilesTouched filesTouched={d.filesTouched} t={t} /></Section>
-      <Section title={t.concentrationTitle} hint={t.concentrationHint}><ConcentrationBars concentration={d.concentration} t={t} /></Section>
-      <Section title={t.activityTitle} hint={t.activityHint}><ActivityPatterns byHour={d.byHour} byDow={d.byDow} t={t} /></Section>
+      {d.concentration && d.concentration.length > 0 && (
+        <Section title={t.concentrationTitle} hint={t.concentrationHint}>
+          <ConcentrationBars concentration={d.concentration} t={t} />
+        </Section>
+      )}
 
       {/* Project Evidence Table */}
       {d.projects?.length ? <Section title={t.evidenceTitle} hint={t.evidenceHint}><div className="flex flex-col gap-[3px]">{d.projects.map((project) => <ProjectCard key={project.name} project={project} t={t} />)}</div></Section> : null}

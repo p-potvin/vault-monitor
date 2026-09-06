@@ -7,6 +7,13 @@ interface MilestonesCardProps {
   milestones?: MilestoneItem[] | string[]
 }
 
+const MILESTONE_COLORS = [
+  { bar: 'bg-[#0ea5e9]', track: 'bg-[#0ea5e9]/15' }, // Cyan
+  { bar: 'bg-[#a855f7]', track: 'bg-[#a855f7]/15' }, // Purple
+  { bar: 'bg-[#10b981]', track: 'bg-[#10b981]/15' }, // Emerald
+  { bar: 'bg-vault-gold', track: 'bg-vault-gold/15' }, // Gold (accent)
+]
+
 export default function MilestonesCard({ milestones }: MilestonesCardProps) {
   if (!milestones || milestones.length === 0) return null
 
@@ -29,8 +36,9 @@ export default function MilestonesCard({ milestones }: MilestonesCardProps) {
 
   return (
     <div className="flex flex-col gap-3 py-1">
-      {items.map((m) => {
+      {items.map((m, idx) => {
         const pct = Math.min(100, m.max > 0 ? (m.cur / m.max) * 100 : 100)
+        const color = MILESTONE_COLORS[idx % MILESTONE_COLORS.length]
         return (
           <div key={m.label} className="grid grid-cols-[130px_1fr_90px] items-center gap-3">
             <span className="text-[12px] font-medium text-vault-fg truncate" title={m.label}>
@@ -38,9 +46,9 @@ export default function MilestonesCard({ milestones }: MilestonesCardProps) {
             </span>
 
             {/* Progress Bar Track */}
-            <div className="h-2 rounded-full bg-vault-gold/15 overflow-hidden w-full">
+            <div className={`h-2 rounded-full ${color.track} overflow-hidden w-full`}>
               <div
-                className="h-full rounded-full bg-vault-gold transition-all duration-500"
+                className={`h-full rounded-full ${color.bar} transition-all duration-500`}
                 style={{ width: `${pct.toFixed(1)}%` }}
               />
             </div>

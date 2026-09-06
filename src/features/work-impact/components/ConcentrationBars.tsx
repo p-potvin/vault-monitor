@@ -15,7 +15,7 @@ export default function ConcentrationBars({ concentration, t }: ConcentrationBar
   return (
     <div className="flex flex-col gap-3">
       <p className="text-[12px] text-vault-muted">{t.concentrationHint}</p>
-      <BarList items={concentration.slice(0, 10)} color="cyan" />
+      <BarList items={concentration.slice(0, 10)} alternateColors unit="%" />
     </div>
   )
 }

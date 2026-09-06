@@ -166,7 +166,7 @@ const en: I18nStrings = {
   commitStatMax:         'Max',
   commitHistTitle:       'Histogram',
   commitBoxTitle:        'Box Plot by Month',
-  commitOutliersTitle:   'Outliers (>3200 lines)',
+  commitOutliersTitle:   'Outliers',
 
   techTitle:             'Line Changes by Scope',
   techHint:              'Raw = all commits; Clean = excluding generated/minified; Excluded = filtered-out files.',
@@ -298,7 +298,7 @@ const qc: I18nStrings = {
   commitStatMax:         'Max',
   commitHistTitle:       'Histogramme',
   commitBoxTitle:        'Boîte à moustaches par mois',
-  commitOutliersTitle:   'Aberrants (>3200 lignes)',
+  commitOutliersTitle:   'Aberrants',
 
   techTitle:             'Lignes modifiées par portée',
   techHint:              'Brut = tous les commits; Propre = hors généré/minifié; Exclus = fichiers filtrés.',

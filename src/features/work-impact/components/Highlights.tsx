@@ -36,48 +36,6 @@ export default function Highlights({ highlights, t }: HighlightsProps) {
           tooltip={t.hlStrongestWeekTooltip}
         />
       </div>
-
-      {/* Top projects (if rendered standalone) */}
-      {highlights.topProjects.length > 0 && (
-        <div className="flex flex-col gap-2">
-          <h3 className="text-[11px] font-bold uppercase tracking-[0.06em] text-vault-muted">
-            {t.labelProjects}
-          </h3>
-          <div className="flex flex-wrap gap-2">
-            {highlights.topProjects.map((p, i) => {
-              const label = typeof p === 'string' ? p : p.label
-              return (
-                <span
-                  key={i}
-                  className="px-[10px] py-[3px] rounded-[999px] text-[11px] font-bold bg-vault-raised text-vault-violet border border-vault-border"
-                >
-                  {label}
-                </span>
-              )
-            })}
-          </div>
-        </div>
-      )}
-
-      {/* Milestones (if rendered standalone) */}
-      {highlights.milestones.length > 0 && (
-        <div className="flex flex-col gap-2">
-          <h3 className="text-[11px] font-bold uppercase tracking-[0.06em] text-vault-muted">
-            {t.hlMilestones}
-          </h3>
-          <ul className="flex flex-col gap-[6px]">
-            {highlights.milestones.map((m, i) => {
-              const text = typeof m === 'string' ? m : `${m.label}: ${m.cur} / ${m.max}`
-              return (
-                <li key={i} className="flex items-start gap-2 text-[13px] text-vault-slate leading-snug">
-                  <span className="mt-[2px] shrink-0 w-[6px] h-[6px] rounded-full bg-vault-gold" />
-                  {text}
-                </li>
-              )
-            })}
-          </ul>
-        </div>
-      )}
     </div>
   )
 }

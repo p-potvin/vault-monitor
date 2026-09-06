@@ -1,5 +1,4 @@
-// ── CommitStats — commit size stats grid + histogram + boxplot ────────────────
-
+import { useState } from 'react'
 import KpiCard from './KpiCard'
 import HistogramChart from './HistogramChart'
 import BoxPlotList from './BoxPlotList'
@@ -22,6 +21,8 @@ export default function CommitStats({
   commitOutliers,
   t,
 }: CommitStatsProps) {
+  const [outliersExpanded, setOutliersExpanded] = useState(false)
+
   return (
     <div className="flex flex-col gap-5">
       {/* KPI row */}
@@ -79,6 +80,8 @@ export default function CommitStats({
 
         if (filteredOutliers.length === 0) return null;
 
+        const visibleOutliers = outliersExpanded ? filteredOutliers : filteredOutliers.slice(0, 8);
+
         return (
           <div className="flex flex-col gap-3">
             <div className="flex items-center justify-between">
@@ -91,7 +94,7 @@ export default function CommitStats({
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
-              {filteredOutliers.map((item, i) => {
+              {visibleOutliers.map((item, i) => {
               if (typeof item === 'string') {
                 return (
                   <div
@@ -150,6 +153,17 @@ export default function CommitStats({
               )
             })}
           </div>
+
+          {filteredOutliers.length > 8 && (
+            <button
+              type="button"
+              onClick={() => setOutliersExpanded(!outliersExpanded)}
+              className="mt-1 text-left text-[11px] font-semibold text-vault-gold hover:text-vault-fg transition-colors py-1 cursor-pointer flex items-center gap-1.5 select-none"
+            >
+              <span>{outliersExpanded ? 'Show less' : `See more (${filteredOutliers.length - 8} more)...`}</span>
+              <span className="text-[10px]">{outliersExpanded ? '▲' : '▼'}</span>
+            </button>
+          )}
         </div>
         )
       })()}

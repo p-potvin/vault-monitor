@@ -10,6 +10,16 @@ interface WhenWorkHappensProps {
 
 const ORDER = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
+const DAY_PALETTE = [
+  { bg: 'bg-[#0ea5e9]', hover: 'hover:bg-[#38bdf8]', shadow: 'shadow-[0_2px_8px_rgba(14,165,233,0.25)]' }, // Mon: cyan
+  { bg: 'bg-[#a855f7]', hover: 'hover:bg-[#c084fc]', shadow: 'shadow-[0_2px_8px_rgba(168,85,247,0.25)]' }, // Tue: purple
+  { bg: 'bg-[#06b6d4]', hover: 'hover:bg-[#22d3ee]', shadow: 'shadow-[0_2px_8px_rgba(6,182,212,0.25)]' }, // Wed: teal
+  { bg: 'bg-[#8b5cf6]', hover: 'hover:bg-[#a78bfa]', shadow: 'shadow-[0_2px_8px_rgba(139,92,246,0.25)]' }, // Thu: violet
+  { bg: 'bg-[#0ea5e9]', hover: 'hover:bg-[#38bdf8]', shadow: 'shadow-[0_2px_8px_rgba(14,165,233,0.25)]' }, // Fri: cyan
+  { bg: 'bg-[#a855f7]', hover: 'hover:bg-[#c084fc]', shadow: 'shadow-[0_2px_8px_rgba(168,85,247,0.25)]' }, // Sat: purple
+  { bg: 'bg-[#06b6d4]', hover: 'hover:bg-[#22d3ee]', shadow: 'shadow-[0_2px_8px_rgba(6,182,212,0.25)]' }, // Sun: teal
+]
+
 export default function WhenWorkHappens({ byDow }: WhenWorkHappensProps) {
   if (!byDow || byDow.length === 0) return null
 
@@ -21,9 +31,10 @@ export default function WhenWorkHappens({ byDow }: WhenWorkHappensProps) {
     <div className="w-full flex flex-col gap-2">
       {/* 7 columns container */}
       <div className="grid grid-cols-7 gap-2 items-end h-[160px] pt-4 px-1">
-        {items.map(({ label, count }) => {
+        {items.map(({ label, count }, idx) => {
           const heightPct = count > 0 ? Math.max((count / peak) * 100, 10) : 4
           const isPeak = count === peak && count > 0
+          const pal = DAY_PALETTE[idx % DAY_PALETTE.length]
           return (
             <div key={label} className="h-full flex flex-col justify-end items-center gap-1.5">
               <span className="text-[10px] font-mono text-vault-muted tabular-nums">
@@ -33,8 +44,8 @@ export default function WhenWorkHappens({ byDow }: WhenWorkHappensProps) {
                 <div
                   className={`w-full rounded-[4px] transition-all cursor-pointer ${
                     isPeak
-                      ? 'bg-[#e5a93c] hover:bg-[#fcd34d] shadow-[0_2px_12px_rgba(229,169,60,0.35)]'
-                      : 'bg-[#b8882e] hover:bg-[#c9983e] shadow-[0_2px_8px_rgba(184,136,46,0.2)]'
+                      ? 'bg-[#e5a93c] hover:bg-[#fcd34d] shadow-[0_2px_12px_rgba(229,169,60,0.4)] ring-1 ring-[#fcd34d]/40'
+                      : `${pal.bg} ${pal.hover} ${pal.shadow}`
                   }`}
                   style={{ height: `${heightPct}%` }}
                 />

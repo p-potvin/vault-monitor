@@ -9,6 +9,8 @@ interface BarListProps {
   max?: number
   color?: BarColor
   logScale?: boolean
+  unit?: string
+  alternateColors?: boolean
 }
 
 const FILL_CLASSES: Record<BarColor, string> = {
@@ -19,9 +21,10 @@ const FILL_CLASSES: Record<BarColor, string> = {
   burgundy: 'bg-vault-burgundy',
 }
 
-export default function BarList({ items, max, color = 'gold', logScale = false }: BarListProps) {
+const CYCLE_COLORS: BarColor[] = ['cyan', 'violet', 'green', 'gold', 'burgundy']
+
+export default function BarList({ items, max, color = 'gold', logScale = false, unit, alternateColors = false }: BarListProps) {
   const peak = max ?? Math.max(...items.map(i => i.count), 1)
-  const fill = FILL_CLASSES[color]
 
   if (!items.length) return null
 
@@ -36,27 +39,31 @@ export default function BarList({ items, max, color = 'gold', logScale = false }
             pct = Math.round((count / peak) * 100)
           }
         }
-        return (
-          <div key={`${label}-${idx}`} className="flex items-center gap-2 min-w-0 text-[13px]">
-            <span
-              className="text-vault-slate shrink-0 text-right overflow-hidden text-ellipsis whitespace-nowrap"
-              style={{ width: 195 }}
-              title={label}
-            >
-              {label}
-            </span>
-            <div className="flex-1 min-w-0 bg-vault-raised rounded-full h-[8px] overflow-hidden">
-              <div
-                className={`h-full ${fill} rounded-full transition-all`}
-                style={{ width: `${pct}%` }}
-              />
-            </div>
-            <span className="text-vault-muted tabular-nums shrink-0" style={{ width: 68, textAlign: 'right' }}>
-              {fmtInt(count)}
-            </span>
-          </div>
-        )
-      })}
-    </div>
-  )
-}
+            const fill = alternateColors
+              ? FILL_CLASSES[CYCLE_COLORS[idx % CYCLE_COLORS.length]]
+              : FILL_CLASSES[color]
+
+            return (
+              <div key={`${label}-${idx}`} className="flex items-center gap-2 min-w-0 text-[13px]">
+                <span
+                  className="text-vault-slate shrink-0 text-right overflow-hidden text-ellipsis whitespace-nowrap"
+                  style={{ width: 195 }}
+                  title={label}
+                >
+                  {label}
+                </span>
+                <div className="flex-1 min-w-0 bg-vault-raised rounded-full h-[8px] overflow-hidden">
+                  <div
+                    className={`h-full ${fill} rounded-full transition-all`}
+                    style={{ width: `${pct}%` }}
+                  />
+                </div>
+                <span className="text-vault-muted tabular-nums shrink-0" style={{ width: 68, textAlign: 'right' }}>
+                  {fmtInt(count)}{unit ? ` ${unit}` : ''}
+                </span>
+              </div>
+            )
+          })}
+        </div>
+      )
+    }

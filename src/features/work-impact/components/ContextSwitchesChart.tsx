@@ -52,12 +52,17 @@ export default function ContextSwitchesChart({ items = [], daysBack = 30 }: Cont
               const isHovered = hoveredDate === pt.date
               const tipContent = `${pt.date}: ${pt.switches} switches\nProjects (${pt.projects.length}):\n${pt.projects.join(', ')}`
 
+              const isHigh = pt.switches >= 4
+              const barColor = isHigh
+                ? 'bg-[#e5a93c] hover:bg-[#fcd34d]'
+                : 'bg-[#8b5cf6] hover:bg-[#a78bfa]'
+
               return (
                 <div key={pt.date} className="flex-1 flex flex-col items-center justify-end h-full min-w-0">
                   <Tooltip content={tipContent}>
                     <div
-                      className={`w-full max-w-[12px] bg-[#b8882e] hover:bg-[#d49e35] rounded-t-[2px] transition-all cursor-pointer ${
-                        isHovered ? 'opacity-100 ring-1 ring-vault-gold' : 'opacity-85'
+                      className={`w-full max-w-[12px] ${barColor} rounded-t-[2px] transition-all cursor-pointer ${
+                        isHovered ? 'opacity-100 ring-1 ring-white/60 shadow-[0_0_8px_rgba(168,85,247,0.4)]' : 'opacity-85'
                       }`}
                       style={{ height: `${heightPct}%` }}
                       onMouseEnter={() => setHoveredDate(pt.date)}
