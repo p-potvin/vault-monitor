@@ -187,13 +187,18 @@ function humanHotspot(name: string, input: typeof I18N.en.input) {
   const c = Number(col);
   const r = Number(row);
   if (Number.isFinite(c) && Number.isFinite(r)) {
-    const vertical = r === 0 ? 'top' : r >= 8 ? 'bottom' : r <= 2 ? 'upper' : r >= 6 ? 'lower' : 'middle';
-    const horizontal = c === 0 ? 'left edge' : c >= 11 ? 'right edge' : c <= 2 ? 'left side' : c >= 9 ? 'right side' : 'center';
-    if (r >= 8 && c === 0) return `Start/taskbar area (${input.hotspotRaw} ${name})`;
-    if (r >= 8 && c >= 11) return `Clock/show desktop area (${input.hotspotRaw} ${name})`;
-    if (r === 0 && c >= 10) return `Window controls area (${input.hotspotRaw} ${name})`;
-    if (r === 0 && c === 0) return `Top-left app controls (${input.hotspotRaw} ${name})`;
-    return `${vertical} ${horizontal} (${input.hotspotRaw} ${name})`;
+    if (r >= 8 && c === 0) return input.hotspotStartTaskbar;
+    if (r >= 8 && c >= 11) return input.hotspotClockDesktop;
+    if (r >= 8) return input.hotspotTaskbarRow;
+    if (r === 0 && c >= 10) return input.hotspotWindowControls;
+    if (r === 0 && c === 0) return input.hotspotTopLeftMenu;
+    if (r === 0) return input.hotspotTitleTabs;
+    if (c === 0) return input.hotspotLeftSidebar;
+    if (c >= 11) return input.hotspotRightScrollbar;
+    if (r >= 3 && r <= 5 && c >= 3 && c <= 8) return input.hotspotCenterWorkspace;
+    const vertical = r <= 2 ? input.hotspotUpper : r >= 6 ? input.hotspotLower : input.hotspotMiddle;
+    const horizontal = c <= 2 ? input.hotspotLeftSide : c >= 9 ? input.hotspotRightSide : input.hotspotCenter;
+    return `${vertical} ${horizontal}`;
   }
   return name;
 }
@@ -298,52 +303,154 @@ function MousePathWidget({ paths, totalCount, input }: { paths: MousePath[]; tot
   </Card>;
 }
 
-function HotspotMonitor({ rows, total: apiTotal, input }: { rows?: { name: string; count: number }[]; total?: number; input: typeof I18N.en.input }) {
+function HotspotCard({ rows, total: apiTotal, input }: { rows?: { name: string; count: number }[]; total?: number; input: typeof I18N.en.input }) {
+  const [viewMode, setViewMode] = useState<'map' | 'list'>('map');
   const [hovered, setHovered] = useState<string>();
   const [tapped, setTapped] = useState<string>();
   const values = new Map((rows || []).map((row) => [row.name, row.count || 0]));
   const max = Math.max(1, ...(rows || []).map((row) => row.count || 0));
-  // `rows` is only the top 20 buckets, so summing it understates the true
-  // denominator and made these percentages disagree with the Top hotspot KPI.
-  // Prefer the API's full bucket total when present.
   const total = apiTotal ?? (rows || []).reduce((sum, row) => sum + (row.count || 0), 0);
   const cells = Array.from({ length: 9 }, (_, row) => Array.from({ length: 12 }, (_, col) => `${col}:${row}`));
   const activeName = hovered ?? tapped;
   const active = activeName ? { name: activeName, count: values.get(activeName) || 0 } : undefined;
-  return <div className="hotspot-monitor-wrap">
-    <div className="hotspot-monitor" role="img" aria-label="Click hotspot screen map">
-      <div className="hotspot-monitor-top"><span /> <i /> <i /> <i /></div>
-      <div className="hotspot-screen">{cells.flat().map((name) => { const count = values.get(name) || 0; const intensity = count / max; return <span key={name} className="hotspot-cell" style={{ '--hotspot-intensity': intensity } as React.CSSProperties} onMouseEnter={() => setHovered(name)} onMouseLeave={() => setHovered(undefined)} onClick={() => setTapped(name)} title={`${humanHotspot(name, input)}: ${fmtInt(count)} ${input.clicksUnit}`} />; })}</div>
-      <div className="hotspot-taskbar"><span /><span /><span /><b /></div>
-    </div>
-    <div className="hotspot-tooltip">{active ? <><strong>{humanHotspot(active.name, input)}</strong><span>{fmtInt(active.count)} {input.clicksUnit} · {total ? fmtPct(active.count / total) : '0%'} {input.hotspotOfSampledClicks}</span><small>{input.hotspotRaw} {active.name}</small></> : <><strong>{input.hotspotHoverPrompt}</strong><span>{input.hotspotHoverHint}</span><small>{fmtInt(total)} {input.hotspotTotalSuffix}</small></>}</div>
-  </div>;
+
+  return (
+    <Card className="col-span-4 max-lg:col-span-12">
+      <div className="flex items-center justify-between mb-3 gap-2 flex-wrap">
+        <WidgetTitle icon={<IconBarChart width={13} height={13} />} title={input.hotspots} tooltip={input.tooltips.hotspots} />
+        <div className="flex items-center gap-1 rounded-full border border-[var(--border)] bg-[var(--card)] p-0.5 text-[10px]">
+          <button
+            type="button"
+            onClick={() => setViewMode('map')}
+            className={`px-2 py-0.5 rounded-full font-bold uppercase tracking-wider transition-colors ${viewMode === 'map' ? 'bg-[var(--accent)] text-[var(--vault-console-bg)]' : 'text-[var(--muted)] hover:text-[var(--fg)]'}`}
+          >
+            {input.hotspotViewMap}
+          </button>
+          <button
+            type="button"
+            onClick={() => setViewMode('list')}
+            className={`px-2 py-0.5 rounded-full font-bold uppercase tracking-wider transition-colors ${viewMode === 'list' ? 'bg-[var(--accent)] text-[var(--vault-console-bg)]' : 'text-[var(--muted)] hover:text-[var(--fg)]'}`}
+          >
+            {input.hotspotViewList}
+          </button>
+        </div>
+      </div>
+
+      {viewMode === 'map' ? (
+        <div className="hotspot-monitor-wrap">
+          <div className="hotspot-monitor" role="img" aria-label="Click hotspot screen map">
+            <div className="hotspot-monitor-top">
+              <span className="hotspot-monitor-label">1920 × 1080 matrix</span>
+              <span className="text-[10px] text-[var(--muted)] font-mono">{rows?.length || 0} active zones</span>
+            </div>
+            <div className="hotspot-screen">
+              {cells.flat().map((name) => {
+                const count = values.get(name) || 0;
+                const isActive = count > 0;
+                const intensity = isActive ? count / max : 0;
+                return (
+                  <span
+                    key={name}
+                    className="hotspot-cell"
+                    data-active={isActive ? 'true' : undefined}
+                    style={isActive ? ({ '--hotspot-intensity': intensity } as React.CSSProperties) : undefined}
+                    onMouseEnter={isActive ? () => setHovered(name) : undefined}
+                    onMouseLeave={isActive ? () => setHovered(undefined) : undefined}
+                    onClick={isActive ? () => setTapped(name) : undefined}
+                    title={isActive ? `${humanHotspot(name, input)}: ${fmtInt(count)} ${input.clicksUnit}` : undefined}
+                  />
+                );
+              })}
+            </div>
+          </div>
+          <div className="hotspot-tooltip">
+            {active ? (
+              <>
+                <div className="flex items-center justify-between gap-2">
+                  <strong className="text-xs text-[var(--fg)] truncate">{humanHotspot(active.name, input)}</strong>
+                  <span className="text-[10px] font-mono text-[var(--muted)]">{active.name}</span>
+                </div>
+                <div className="text-[11px] text-[var(--muted)]">
+                  <span className="font-semibold text-[var(--fg)]">{fmtInt(active.count)} {input.clicksUnit}</span>
+                  {' · '}
+                  <span>{total ? fmtPct(active.count / total) : '0%'} {input.hotspotOfSampledClicks}</span>
+                </div>
+              </>
+            ) : (
+              <>
+                <strong className="text-xs text-[var(--fg)]">{input.hotspotHoverPrompt}</strong>
+                <span className="text-[11px] text-[var(--muted)]">{input.hotspotHoverHint}</span>
+                <small className="text-[10px] text-[var(--muted)]">{fmtInt(total)} {input.hotspotTotalSuffix}</small>
+              </>
+            )}
+          </div>
+        </div>
+      ) : (
+        <BarRows
+          rows={rows}
+          empty={input.noClickSamples}
+          formatName={(name) => humanHotspot(name, input)}
+          formatValue={(row) => `${fmtInt(row.count)} (${total ? fmtPct(row.count / total) : '0%'})`}
+          valueHeader={input.hotspotValueHeader}
+        />
+      )}
+    </Card>
+  );
 }
 
 function PauseBreakdown({ totals, input }: { totals: Record<string, number>; input: typeof I18N.en.input }) {
-  const pause = countFrom(totals, ['pause_blocks', 'pauses_5m_20m', 'pause_count']);
-  const healthy = countFrom(totals, ['healthy_pause_blocks', 'pauses_20m_60m', 'healthy_pause_count']);
+  const micro = totals.micro_pauses || 0;
+  const shortBreak = countFrom(totals, ['pause_blocks', 'pauses_5m_20m', 'pause_count']);
+  const longBreak = countFrom(totals, ['healthy_pause_blocks', 'pauses_20m_60m', 'healthy_pause_count']);
   const timeOff = countFrom(totals, ['time_off_blocks', 'pauses_1h_plus', 'time_off_count']);
-  const hasSplit = pause > 0 || healthy > 0 || timeOff > 0;
+  const hasSplit = shortBreak > 0 || longBreak > 0 || timeOff > 0;
   const restBlocks = totals.rest_blocks || 0;
-  const splitTotal = pause + healthy + timeOff;
+  const splitTotal = shortBreak + longBreak + timeOff;
   const uncategorized = hasSplit && restBlocks > splitTotal ? restBlocks - splitTotal : 0;
+  const totalGaps = micro + restBlocks;
+
+  const pct = (val: number) => (totalGaps > 0 ? fmtPct(val / totalGaps) : '0%');
+
   return (
     <Card className="col-span-4 max-lg:col-span-6 max-md:col-span-12">
       <WidgetTitle title={input.pauseBreakdown} tooltip={input.pauseBreakdownTooltip} />
+      {totalGaps > 0 ? (
+        <div className="pause-distribution-bar" title="Distribution of inactivity gaps">
+          <div
+            className="pause-distribution-seg bg-[var(--vault-signal-online)]"
+            style={{ width: `${Math.max(micro > 0 ? 3 : 0, (micro / totalGaps) * 100)}%` }}
+            title={`${input.microPause}: ${fmtInt(micro)} (${pct(micro)})`}
+          />
+          <div
+            className="pause-distribution-seg bg-[var(--vault-signal-relay)]"
+            style={{ width: `${Math.max(shortBreak > 0 ? 3 : 0, (shortBreak / totalGaps) * 100)}%` }}
+            title={`${input.shortBreak}: ${fmtInt(shortBreak)} (${pct(shortBreak)})`}
+          />
+          <div
+            className="pause-distribution-seg bg-[var(--vault-signal-sync)]"
+            style={{ width: `${Math.max(longBreak > 0 ? 3 : 0, (longBreak / totalGaps) * 100)}%` }}
+            title={`${input.longBreak}: ${fmtInt(longBreak)} (${pct(longBreak)})`}
+          />
+          <div
+            className="pause-distribution-seg bg-[var(--vault-signal-warning)]"
+            style={{ width: `${Math.max(timeOff > 0 ? 3 : 0, (timeOff / totalGaps) * 100)}%` }}
+            title={`${input.timeOff}: ${fmtInt(timeOff)} (${pct(timeOff)})`}
+          />
+        </div>
+      ) : null}
       <div className="grid grid-cols-2 gap-2">
-        <MiniStat label={input.microPause} value={fmtInt(totals.micro_pauses)} tooltip={input.pauseMicroRange} />
+        <MiniStat label={input.microPause} value={`${fmtInt(micro)} (${pct(micro)})`} tooltip={input.pauseMicroRange} />
         {hasSplit ? (
           <>
-            <MiniStat label={input.pause} value={fmtInt(pause)} tooltip={input.pauseRange} />
-            <MiniStat label={input.healthyPause} value={fmtInt(healthy)} tooltip={input.healthyPauseRange} />
-            <MiniStat label={input.timeOff} value={fmtInt(timeOff)} tooltip={input.timeOffRange} />
+            <MiniStat label={input.shortBreak} value={`${fmtInt(shortBreak)} (${pct(shortBreak)})`} tooltip={input.pauseRange} />
+            <MiniStat label={input.longBreak} value={`${fmtInt(longBreak)} (${pct(longBreak)})`} tooltip={input.healthyPauseRange} />
+            <MiniStat label={input.timeOff} value={`${fmtInt(timeOff)} (${pct(timeOff)})`} tooltip={input.timeOffRange} />
             {uncategorized > 0 ? (
-              <MiniStat label={input.legacyRestBlocks} value={fmtInt(restBlocks)} tooltip={input.legacyPauseNote} />
+              <MiniStat label={input.legacyRestBlocks} value={`${fmtInt(uncategorized)} (${pct(uncategorized)})`} tooltip={input.legacyPauseNote} />
             ) : null}
           </>
         ) : (
-          <MiniStat label={input.legacyRestBlocks} value={fmtInt(restBlocks)} tooltip={input.legacyPauseNote} />
+          <MiniStat label={input.legacyRestBlocks} value={`${fmtInt(restBlocks)} (${pct(restBlocks)})`} tooltip={input.legacyPauseNote} />
         )}
       </div>
       {hasSplit && uncategorized > 0 ? (
@@ -485,7 +592,12 @@ export function PersonalStatsPage({ setLoading }: { setLoading?: (loading: boole
         <MetricCard label={input.correction} value={fmtPct(derived.correction_ratio)} tooltip={input.tooltips.correction} sub={`${fmtInt(totals.backspaces)} ${input.backspaces.toLowerCase()}`} />
         <MetricCard label={input.clickTravel} value={fmt1(derived.click_to_travel_ratio)} tooltip={input.tooltips.clickTravel} sub={`${fmtInt(totals.clicks)} ${input.clicks.toLowerCase()} / ${fmt1(totals.mouse_distance_m)}m`} />
         <MetricCard label={input.shortcuts} value={fmtInt(totals.shortcut_count)} tooltip={input.tooltips.shortcuts} sub={`${fmtInt(totals.saves)} ${input.saves} / ${fmtInt(totals.undo_redo)} ${input.undoRedo.toLowerCase()}`} />
-        <MetricCard label={input.pauses} value={fmtInt(totals.micro_pauses)} tooltip={input.tooltips.pauses} sub={`${fmtInt(totals.rest_blocks)} ${input.restBlocks.toLowerCase()}`} />
+        <MetricCard
+          label={input.totalPauses}
+          value={fmtInt((totals.micro_pauses || 0) + (totals.rest_blocks || 0))}
+          tooltip={input.tooltips.pauses}
+          sub={`${fmtInt(totals.micro_pauses)} ${input.microPausesUnit} · ${fmtInt(totals.rest_blocks)} ${input.breaksUnit}`}
+        />
         <MetricCard label={input.contextSwitches} value={fmtInt(contextSwitches)} tooltip={input.tooltips.contextSwitches} sub={`${fmtMinutesValue(totals.active_seconds)} ${input.contextSwitchActiveSub}`} />
         <MetricCard className="col-span-4 max-lg:col-span-6 max-md:col-span-12" label={input.flowStability} value={fmt1(flowStability)} tooltip={input.tooltips.flowStability} sub={input.flowMinutes} />
         <PauseBreakdown totals={totals} input={input} />
@@ -523,14 +635,7 @@ export function PersonalStatsPage({ setLoading }: { setLoading?: (loading: boole
             valueHeader={input.focusValueHeader}
           />
         </Card>
-        <Card className="col-span-4 max-lg:col-span-12">
-          <WidgetTitle icon={<IconBarChart width={13} height={13} />} title={input.hotspots} tooltip={input.tooltips.hotspots} />
-          <div className="mb-3 rounded-lg border border-[var(--border)] bg-[color-mix(in_srgb,var(--card)_74%,black)] px-3 py-2 text-[11px] leading-4 text-[var(--muted)]">
-            <strong className="block text-[var(--fg)]">{input.hotspotLegendTitle}</strong>
-            {input.hotspotLegend}
-          </div>
-          <HotspotMonitor rows={data?.click_hotspots} total={data?.click_hotspot_total} input={input} />
-        </Card>
+        <HotspotCard rows={data?.click_hotspots} total={data?.click_hotspot_total} input={input} />
         <Card className="col-span-6 max-md:col-span-12">
           <WidgetTitle icon={<IconPieChart width={13} height={13} />} title={input.focusWindows} tooltip={input.tooltips.focusWindows} />
           <BarRows
