@@ -214,6 +214,43 @@ export interface ServicesResponse {
   items: MonitoredService[];
 }
 
+export interface HostDiskUsage {
+  target: string;
+  total_bytes: number;
+  used_bytes: number;
+  available_bytes: number;
+  used_percent: number;
+}
+
+export interface HostResourceSample {
+  timestamp: string;
+  cpu?: { cores?: number; load_1?: number; load_percent?: number };
+  memory?: { total_bytes?: number; free_bytes?: number };
+  disks?: HostDiskUsage[];
+  bandwidth?: { interface?: string | null; month_rx_bytes?: number | null; month_tx_bytes?: number | null };
+  journal_bytes?: number | null;
+  docker?: Array<{ type: string; size_bytes?: number | null; reclaimable_bytes?: number | null }>;
+  media_stack_bytes?: number | null;
+  failed_systemd_units?: number | null;
+}
+
+export interface ResourceHost {
+  id: "vps-ovhcloud" | "greencloud-vps" | string;
+  label: string;
+  generated_at?: string;
+  status: "ok" | "missing" | string;
+  latest: HostResourceSample | null;
+  minute_history: HostResourceSample[];
+  daily_history: HostResourceSample[];
+}
+
+export interface ResourcesResponse {
+  source: "health-ledger";
+  generated_at: string;
+  refresh_seconds: number;
+  hosts: ResourceHost[];
+}
+
 export interface ServiceFilters {
   product: ServiceProduct | "all";
   type: ServiceType | "all";

@@ -1,4 +1,4 @@
-import type { ChangeEvent, InputTrackerData, SearchResponse, ServicesResponse } from "./types";
+import type { ChangeEvent, InputTrackerData, ResourcesResponse, SearchResponse, ServicesResponse } from "./types";
 import type {
   AiProjectRow,
   AiSessionsData,
@@ -106,6 +106,10 @@ export function searchEvents(params: URLSearchParams, signal?: AbortSignal): Pro
 
 export function getServices(signal?: AbortSignal) {
   return getJson<ServicesResponse>("/monitor/services", signal);
+}
+
+export function getResources(signal?: AbortSignal) {
+  return getJson<ResourcesResponse>("/monitor/resources", signal);
 }
 
 // ── Deploy status (cross-project) ─────────────────────────────────────────
