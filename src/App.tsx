@@ -4,6 +4,7 @@ import { ViewTransition } from "./components/ViewTransition";
 import { getServices } from "./api";
 import { LangProvider, useLangState } from "./i18n";
 import { IconActivity, IconBarChart, IconDatabase, IconPieChart, IconSearch, IconServer, IconTerminal, IconZap } from "./icons";
+import { ResourcesPage } from "./pages/ResourcesPage";
 import { AiStatsPage } from "./pages/AiStatsPage";
 import { LedgerPage } from "./pages/LedgerPage";
 import { ModelRunsPage } from "./pages/ModelRunsPage";
@@ -15,8 +16,8 @@ import { WorkImpactPage } from "./pages/WorkImpactPage";
 import { IdentitiesPage } from "./pages/IdentitiesPage";
 
 const copy = {
-  en: { workImpact: "Work Impact", personalStats: "Personal Stats", aiStats: "AI Stats", modelRuns: "Model Runs", identities: "Identities", ledger: "The Ledger", search: "Search", services: "Services", uptime: "Uptime Kuma", status: "System status", online: "API online", degraded: "API degraded", language: "Language" },
-  qc: { workImpact: "Impact du travail", personalStats: "Stats personnelles", aiStats: "Stats IA", modelRuns: "Exécutions", identities: "Identités", ledger: "Le Registre", search: "Recherche", services: "Services", uptime: "Disponibilité", status: "Etat du systeme", online: "API en ligne", degraded: "API degradee", language: "Langue" },
+  en: { workImpact: "Work Impact", personalStats: "Personal Stats", aiStats: "AI Stats", modelRuns: "Model Runs", identities: "Identities", ledger: "The Ledger", search: "Search", services: "Services", resources: "Resources", uptime: "Uptime Kuma", status: "System status", online: "API online", degraded: "API degraded", language: "Language" },
+  qc: { workImpact: "Impact du travail", personalStats: "Stats personnelles", aiStats: "Stats IA", modelRuns: "Exécutions", identities: "Identités", ledger: "Le Registre", search: "Recherche", services: "Services", resources: "Ressources", uptime: "Disponibilité", status: "Etat du systeme", online: "API en ligne", degraded: "API degradee", language: "Langue" },
 };
 const nav: Array<{ to: string; label: keyof typeof copy.en; icon: ReactNode }> = [
   { to: "/work-impact", label: "workImpact", icon: <IconBarChart /> },
@@ -28,6 +29,7 @@ const nav: Array<{ to: string; label: keyof typeof copy.en; icon: ReactNode }> =
   { to: "/ledger", label: "ledger", icon: <IconDatabase /> },
   { to: "/search", label: "search", icon: <IconSearch /> },
   { to: "/services", label: "services", icon: <IconServer /> },
+  { to: "/resources", label: "resources", icon: <IconActivity /> },
 ];
 
 function Logo() {
@@ -88,6 +90,7 @@ function Shell() {
         <Route path="/ledger" element={<LedgerPage setLoading={setPageLoading} />} />
         <Route path="/search" element={<SearchPage setLoading={setPageLoading} />} />
         <Route path="/services" element={<ServicesPage setLoading={setPageLoading} />} />
+        <Route path="/resources" element={<ResourcesPage setLoading={setPageLoading} />} />
         <Route path="/" element={<Navigate replace to="/work-impact" />} />
         <Route path="/health" element={<Navigate replace to="/services" />} />
         <Route path="/agents" element={<Navigate replace to="/ledger" />} />
