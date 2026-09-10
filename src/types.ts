@@ -235,7 +235,7 @@ export interface HostResourceSample {
 }
 
 export interface ResourceHost {
-  id: "vps-ovhcloud" | "greencloud-vps" | string;
+  id: "vps-ovhcloud" | "greencloud-vps" | "clopeux-desktop" | string;
   label: string;
   generated_at?: string;
   status: "ok" | "missing" | string;
