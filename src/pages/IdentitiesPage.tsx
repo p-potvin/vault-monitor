@@ -23,6 +23,10 @@ import {
   GalleryModelsGrid,
   ModelCropDrawer,
   TaskTelemetryTable,
+  getGallerySummary,
+  getFilteredModels,
+  getFiltered3DPoints,
+  getFilteredTasks,
   type IdentityTab
 } from "../features/identities";
 
@@ -34,10 +38,10 @@ export function IdentitiesPage({ setLoading }: IdentitiesPageProps) {
   const galleries: GallerySourceInfo[] = useMemo(() => getAvailableGalleries(), []);
   const [selectedGalleryId, setSelectedGalleryId] = useState<string>("all");
   const [activeTab, setActiveTab] = useState<IdentityTab>("overview");
-  const [summary, setSummary] = useState<IdentitySummaryStats | null>(null);
-  const [identities, setIdentities] = useState<(IdentityModel & { crops?: IdentityCrop[] })[]>([]);
-  const [points3d, setPoints3d] = useState<Embedding3DPoint[]>([]);
-  const [tasks, setTasks] = useState<IdentityTaskLog[]>([]);
+  const [summary, setSummary] = useState<IdentitySummaryStats>(() => getGallerySummary("all"));
+  const [identities, setIdentities] = useState<(IdentityModel & { crops?: IdentityCrop[] })[]>(() => getFilteredModels("all"));
+  const [points3d, setPoints3d] = useState<Embedding3DPoint[]>(() => getFiltered3DPoints("all"));
+  const [tasks, setTasks] = useState<IdentityTaskLog[]>(() => getFilteredTasks("all"));
   const [selectedModel, setSelectedModel] = useState<(IdentityModel & { crops?: IdentityCrop[] }) | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -76,6 +80,7 @@ export function IdentitiesPage({ setLoading }: IdentitiesPageProps) {
   };
 
   useEffect(() => {
+    setLoading?.(false);
     const controller = new AbortController();
     loadData(controller.signal);
     return () => controller.abort();
