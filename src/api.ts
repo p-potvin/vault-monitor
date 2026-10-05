@@ -565,38 +565,107 @@ import type {
   IdentitySummaryStats,
   Embedding3DPoint,
   IdentityTaskLog,
-  IdentityCrop
+  IdentityCrop,
+  GallerySourceInfo
 } from "./types";
+import {
+  getAvailableGalleries,
+  getGallerySummary,
+  getFilteredModels,
+  getFiltered3DPoints,
+  getFilteredTasks,
+  ALL_GALLERIES_SOURCE
+} from "./features/identities/lib/identitiesService";
 
-export async function getIdentitiesSummary(signal?: AbortSignal): Promise<IdentitySummaryStats> {
-  return getJson<IdentitySummaryStats>("/api/identities/stats/summary", signal);
+export { getAvailableGalleries, getGallerySummary, ALL_GALLERIES_SOURCE };
+
+export async function getIdentitiesSummary(galleryId = "all", signal?: AbortSignal): Promise<IdentitySummaryStats> {
+  const fallback = getGallerySummary(galleryId);
+  try {
+    const live = await getJson<IdentitySummaryStats>("/api/identities/stats/summary", signal);
+    // If the live API returns the stale mock DB (< 20 models), prioritize real local PC gallery telemetry
+    if (live && live.total_models > 20) {
+      return live;
+    }
+    return fallback;
+  } catch {
+    return fallback;
+  }
 }
 
 export async function getIdentitiesList(
   status?: string,
   search?: string,
+  galleryId = "all",
   signal?: AbortSignal
-): Promise<{ identities: IdentityModel[]; count: number }> {
-  const params = new URLSearchParams();
-  if (status && status !== "all") params.set("status", status);
-  if (search) params.set("search", search);
-  const q = params.toString();
-  return getJson<{ identities: IdentityModel[]; count: number }>(`/api/identities${q ? `?${q}` : ""}`, signal);
+): Promise<{ identities: (IdentityModel & { crops?: IdentityCrop[] })[]; count: number }> {
+  const fallbackModels = getFilteredModels(galleryId, status, search);
+  try {
+    const params = new URLSearchParams();
+    if (status && status !== "all") params.set("status", status);
+    if (search) params.set("search", search);
+    const q = params.toString();
+    const live = await getJson<{ identities: IdentityModel[]; count: number }>(`/api/identities${q ? `?${q}` : ""}`, signal);
+    if (live && live.count > 20) {
+      return live;
+    }
+    return { identities: fallbackModels, count: fallbackModels.length };
+  } catch {
+    return { identities: fallbackModels, count: fallbackModels.length };
+  }
 }
 
 export async function getIdentityDetails(
   name: string,
   signal?: AbortSignal
 ): Promise<IdentityModel & { crops: IdentityCrop[] }> {
-  return getJson<IdentityModel & { crops: IdentityCrop[] }>(`/api/identities/${encodeURIComponent(name)}`, signal);
+  try {
+    return await getJson<IdentityModel & { crops: IdentityCrop[] }>(`/api/identities/${encodeURIComponent(name)}`, signal);
+  } catch {
+    const allModels = getFilteredModels("all", "all", name);
+    const match = allModels.find((m) => m.name.toLowerCase() === name.toLowerCase()) || allModels[0];
+    if (match) {
+      return {
+        ...match,
+        crops: match.crops || []
+      };
+    }
+    throw new Error(`Identity '${name}' not found in local gallery snapshot`);
+  }
 }
 
-export async function get3dEmbeddings(signal?: AbortSignal): Promise<{ points: Embedding3DPoint[]; count: number }> {
-  return getJson<{ points: Embedding3DPoint[]; count: number }>("/api/identities/telemetry/embeddings-3d", signal);
+export async function get3dEmbeddings(
+  galleryId = "all",
+  selectedModel: string | null = null,
+  signal?: AbortSignal
+): Promise<{ points: Embedding3DPoint[]; count: number }> {
+  const fallbackPoints = getFiltered3DPoints(galleryId, selectedModel);
+  try {
+    const live = await getJson<{ points: Embedding3DPoint[]; count: number }>("/api/identities/telemetry/embeddings-3d", signal);
+    if (live && live.count > 20) {
+      return live;
+    }
+    return { points: fallbackPoints, count: fallbackPoints.length };
+  } catch {
+    return { points: fallbackPoints, count: fallbackPoints.length };
+  }
 }
 
-export async function getIdentityTasks(limit = 50, signal?: AbortSignal): Promise<{ tasks: IdentityTaskLog[]; count: number }> {
-  return getJson<{ tasks: IdentityTaskLog[]; count: number }>(`/api/identities/telemetry/tasks?limit=${limit}`, signal);
+export async function getIdentityTasks(
+  galleryId = "all",
+  limit = 50,
+  signal?: AbortSignal
+): Promise<{ tasks: IdentityTaskLog[]; count: number }> {
+  const fallbackTasks = getFilteredTasks(galleryId).slice(0, limit);
+  try {
+    const live = await getJson<{ tasks: IdentityTaskLog[]; count: number }>(`/api/identities/telemetry/tasks?limit=${limit}`, signal);
+    if (live && live.count > 1) {
+      return live;
+    }
+    return { tasks: fallbackTasks, count: fallbackTasks.length };
+  } catch {
+    return { tasks: fallbackTasks, count: fallbackTasks.length };
+  }
 }
 
 export async function updateIdentityStatus(
@@ -613,3 +682,4 @@ export async function updateIdentityStatus(
   if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
   return res.json();
 }
+

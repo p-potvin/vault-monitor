@@ -342,8 +342,19 @@ export interface ExemplarPreview {
   feature_norm: number;
 }
 
+export interface GallerySourceInfo {
+  id: string;
+  name: string;
+  short_name: string;
+  drive: string;
+  path: string;
+  description: string;
+  summary: IdentitySummaryStats;
+}
+
 export interface IdentityModel {
-  id: number;
+  id: number | string;
+  raw_id?: number;
   name: string;
   status: "locked" | "soft" | "invalid";
   threshold: number;
@@ -353,13 +364,15 @@ export interface IdentityModel {
   created_at: string;
   validated_at?: string | null;
   notes?: string | null;
+  gallery_id?: string;
+  gallery_name?: string;
   exemplars_preview?: ExemplarPreview[];
 }
 
 export interface IdentityCrop {
-  id: number;
+  id: number | string;
   model_name: string;
-  image_path: string;
+  image_path?: string;
   rel_path: string;
   bbox?: string | null;
   landmarks_5pts?: string | null;
@@ -385,20 +398,24 @@ export interface IdentitySummaryStats {
 }
 
 export interface Embedding3DPoint {
-  id: number;
+  id: number | string;
   model_name: string;
-  model_status: "locked" | "soft" | "invalid";
+  model_status: "locked" | "soft" | "invalid" | string;
   rel_path: string;
   feature_norm: number;
   quality_score: number;
   is_exemplar: boolean;
+  gallery_id?: string;
+  gallery_name?: string;
   x: number;
   y: number;
   z: number;
 }
 
 export interface IdentityTaskLog {
-  id: number;
+  id: number | string;
+  gallery_id?: string;
+  gallery_name?: string;
   task_type: string;
   target_model?: string | null;
   status: string;
@@ -411,3 +428,14 @@ export interface IdentityTaskLog {
   details?: Record<string, unknown> | null;
   created_at: string;
 }
+
+export interface GallerySourceInfo {
+  id: string;
+  name: string;
+  short_name: string;
+  drive: string;
+  path: string;
+  description: string;
+  summary: IdentitySummaryStats;
+}
+
