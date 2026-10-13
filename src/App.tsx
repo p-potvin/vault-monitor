@@ -3,7 +3,7 @@ import { NavLink, Navigate, Route, Routes, useLocation } from "react-router-dom"
 import { ViewTransition } from "./components/ViewTransition";
 import { getServices } from "./api";
 import { LangProvider, useLangState } from "./i18n";
-import { IconActivity, IconBarChart, IconDatabase, IconPieChart, IconSearch, IconServer, IconTerminal, IconZap } from "./icons";
+import { IconActivity, IconBarChart, IconClock, IconDatabase, IconPieChart, IconSearch, IconServer, IconTerminal, IconZap } from "./icons";
 import { ResourcesPage } from "./pages/ResourcesPage";
 import { AiStatsPage } from "./pages/AiStatsPage";
 import { LedgerPage } from "./pages/LedgerPage";
@@ -14,12 +14,14 @@ import { ServicesPage } from "./pages/ServicesPage";
 import { UptimePage } from "./pages/UptimePage";
 import { WorkImpactPage } from "./pages/WorkImpactPage";
 import { IdentitiesPage } from "./pages/IdentitiesPage";
+import { TimelineEvolutionPage } from "./pages/TimelineEvolutionPage";
 
 const copy = {
-  en: { workImpact: "Work Impact", personalStats: "Personal Stats", aiStats: "AI Stats", modelRuns: "Model Runs", identities: "Identities", ledger: "The Ledger", search: "Search", services: "Services", resources: "Resources", uptime: "Uptime Kuma", status: "System status", online: "API online", degraded: "API degraded", language: "Language" },
-  qc: { workImpact: "Impact du travail", personalStats: "Stats personnelles", aiStats: "Stats IA", modelRuns: "Exécutions", identities: "Identités", ledger: "Le Registre", search: "Recherche", services: "Services", resources: "Ressources", uptime: "Disponibilité", status: "Etat du systeme", online: "API en ligne", degraded: "API degradee", language: "Langue" },
+  en: { timeline: "Evolution Timeline", workImpact: "Work Impact", personalStats: "Personal Stats", aiStats: "AI Stats", modelRuns: "Model Runs", identities: "Identities", ledger: "The Ledger", search: "Search", services: "Services", resources: "Resources", uptime: "Uptime Kuma", status: "System status", online: "API online", degraded: "API degraded", language: "Language" },
+  qc: { timeline: "Ligne temporelle", workImpact: "Impact du travail", personalStats: "Stats personnelles", aiStats: "Stats IA", modelRuns: "Exécutions", identities: "Identités", ledger: "Le Registre", search: "Recherche", services: "Services", resources: "Ressources", uptime: "Disponibilité", status: "Etat du systeme", online: "API en ligne", degraded: "API degradee", language: "Langue" },
 };
 const nav: Array<{ to: string; label: keyof typeof copy.en; icon: ReactNode }> = [
+  { to: "/timeline", label: "timeline", icon: <IconClock /> },
   { to: "/work-impact", label: "workImpact", icon: <IconBarChart /> },
   { to: "/personal-stats", label: "personalStats", icon: <IconActivity /> },
   { to: "/ai-stats", label: "aiStats", icon: <IconTerminal /> },
@@ -81,6 +83,7 @@ function Shell() {
     <section className="monitor-stage">
       <ViewTransition token={location.pathname} label={navLabel} loading={pageLoading} />
       <Routes>
+        <Route path="/timeline" element={<TimelineEvolutionPage setLoading={setPageLoading} />} />
         <Route path="/work-impact" element={<WorkImpactPage setLoading={setPageLoading} />} />
         <Route path="/personal-stats" element={<PersonalStatsPage setLoading={setPageLoading} />} />
         <Route path="/ai-stats" element={<AiStatsPage setLoading={setPageLoading} />} />

@@ -96,6 +96,10 @@ async function getJson<T>(path: string, signal?: AbortSignal): Promise<T> {
   if (!response.ok) {
     throw new Error(`${response.status} ${response.statusText}`);
   }
+  const contentType = response.headers?.get ? response.headers.get("content-type") : null;
+  if (contentType && !contentType.includes("application/json")) {
+    throw new Error(`Expected JSON response from ${path} but received ${contentType}`);
+  }
   return response.json() as Promise<T>;
 }
 

@@ -1,0 +1,1352 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VaultWares Chronos — 7-Month Evolution Time Machine</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap">
+  <style>
+    :root {
+      --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: "JetBrains Mono", Consolas, monospace;
+      --bg: #0e0c18;
+      --surface: #161320;
+      --surface2: #1c1826;
+      --surface3: #231e30;
+      --border: rgba(255, 255, 255, 0.08);
+      --fg: #d8d0f0;
+      --muted: rgba(216, 208, 240, 0.48);
+      --dim: rgba(216, 208, 240, 0.24);
+      --accent: #b8882e;
+      --gold: #b8882e;
+      --gold-glow: rgba(184, 136, 46, 0.35);
+      --gold-dim: rgba(184, 136, 46, 0.14);
+      --violet: #8a62c0;
+      --violet-glow: rgba(138, 98, 192, 0.35);
+      --green: #4e9954;
+      --amber: #c49840;
+      --orange: #a86840;
+      --red: #a84e5a;
+      --chip: rgba(184, 136, 46, 0.12);
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    main {
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: 24px 16px 80px;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand-badge {
+      background: var(--gold-dim);
+      border: 1px solid var(--gold-glow);
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--gold);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      font-family: var(--font-mono);
+    }
+    h1 { margin: 0; font-size: 24px; font-weight: 800; letter-spacing: -.02em; }
+    h1 span { color: var(--gold); }
+    .subhead { color: var(--muted); font-size: 12px; margin-top: 4px; }
+    .header-actions { display: flex; align-items: center; gap: 10px; }
+
+    /* Lang toggle */
+    .toggle {
+      display: inline-flex;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+      background: var(--surface2);
+    }
+    .toggle button {
+      appearance: none;
+      border: 0;
+      padding: 5px 12px;
+      cursor: pointer;
+      background: transparent;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      transition: all .15s;
+    }
+    .toggle button.active {
+      background: var(--gold);
+      color: #000;
+    }
+
+    /* Transport Deck */
+    .control-deck {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 16px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      margin-bottom: 16px;
+    }
+    .date-indicator {
+      display: flex;
+      flex-direction: column;
+    }
+    .date-badge {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--gold);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .date-badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 6px var(--gold);
+    }
+    .date-val {
+      font-size: 24px;
+      font-weight: 800;
+      font-family: var(--font-mono);
+      color: #fff;
+      line-height: 1.1;
+    }
+    .date-progress {
+      font-size: 11px;
+      color: var(--muted);
+      font-family: var(--font-mono);
+    }
+
+    /* Buttons */
+    .btn-group { display: flex; align-items: center; gap: 6px; }
+    .btn {
+      appearance: none;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 12px;
+      background: var(--surface);
+      color: var(--fg);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+    }
+    .btn:hover { border-color: var(--gold); color: var(--gold); }
+    .btn-play {
+      background: var(--gold-dim);
+      border-color: var(--gold-glow);
+      color: var(--gold);
+      font-weight: 800;
+      padding: 8px 18px;
+    }
+    .btn-play.playing {
+      background: var(--gold);
+      color: #000;
+      box-shadow: 0 0 16px var(--gold-glow);
+    }
+
+    /* Speed buttons */
+    .speed-group {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      background: var(--surface);
+      padding: 3px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+    .speed-btn {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      font-size: 11px;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .speed-btn.active {
+      background: var(--gold);
+      color: #000;
+    }
+
+    /* Scrubber */
+    .scrubber-wrap {
+      padding: 16px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      margin-bottom: 16px;
+    }
+    .scrubber-track {
+      position: relative;
+      height: 64px;
+      border-radius: 8px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      margin: 10px 0;
+      cursor: ew-resize;
+    }
+    .spark-bars {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: flex-end;
+      gap: 1px;
+      padding: 0 2px;
+      pointer-events: none;
+    }
+    .spark-bar {
+      flex: 1;
+      border-radius: 1px 1px 0 0;
+      transition: background .1s;
+    }
+    .playhead {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--gold);
+      box-shadow: 0 0 10px var(--gold);
+      pointer-events: none;
+    }
+    .playhead-thumb {
+      position: absolute;
+      top: -3px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--gold);
+    }
+
+    /* Milestone pin buttons */
+    .milestone-pin {
+      position: absolute;
+      top: 4px;
+      transform: translateX(-50%);
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--surface3);
+      border: 1.5px solid var(--gold);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gold);
+      font-size: 8px;
+      font-weight: 800;
+      z-index: 5;
+      transition: transform .15s;
+    }
+    .milestone-pin:hover, .milestone-pin.active {
+      transform: translateX(-50%) scale(1.3);
+      background: var(--gold);
+      color: #000;
+    }
+
+    /* Keyframe banner */
+    .keyframe-banner {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 16px;
+      border-radius: 12px;
+      border: 1px solid var(--gold-glow);
+      background: color-mix(in srgb, var(--surface2) 85%, var(--gold));
+      margin-bottom: 16px;
+    }
+    .keyframe-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: var(--gold-dim);
+      border: 1px solid var(--gold-glow);
+      color: var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 800;
+      shrink: 0;
+    }
+
+    /* Grid */
+    .grid { display: grid; gap: 12px; }
+    .grid-6 { grid-template-columns: repeat(6, 1fr); }
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-12 { grid-template-columns: repeat(12, 1fr); }
+    @media(max-width: 1024px) {
+      .grid-6 { grid-template-columns: repeat(3, 1fr); }
+      .grid-12 { grid-template-columns: 1fr; }
+    }
+    @media(max-width: 640px) {
+      .grid-6 { grid-template-columns: repeat(2, 1fr); }
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+
+    /* Cards */
+    .card {
+      padding: 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+    }
+    .card-title {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .card-val {
+      font-size: 26px;
+      font-weight: 800;
+      font-family: var(--font-mono);
+      line-height: 1.1;
+      color: var(--fg);
+    }
+    .card-sub { font-size: 11px; color: var(--muted); margin-top: 4px; font-family: var(--font-mono); }
+
+    /* Project Race Bar */
+    .race-row { margin-bottom: 8px; }
+    .race-meta { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 2px; }
+    .race-bar-bg { height: 8px; border-radius: 999px; background: var(--surface); overflow: hidden; }
+    .race-bar-fill { height: 100%; border-radius: 999px; background: var(--gold); transition: width .25s ease; }
+
+    /* Spool Inspector */
+    .spool-box {
+      padding: 18px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      margin-bottom: 16px;
+    }
+    .spool-metric {
+      padding: 10px;
+      border-radius: 8px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+    }
+
+    /* Benchmark table */
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    th, td { padding: 10px; text-align: left; border-bottom: 1px solid var(--border); }
+    th { color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: .06em; font-weight: 700; }
+
+    /* Natural path canvas */
+    canvas { display: block; border-radius: 8px; }
+
+    /* Range slider custom */
+    input[type=range] {
+      accent-color: var(--gold);
+    }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="brand">
+      <div class="brand-badge">VaultWares</div>
+      <div>
+        <h1>Chronos <span>Time Machine</span></h1>
+        <div class="subhead" id="headerSubtitle">Visualizing 216 days of autonomous & collaborative engineering (March 11 – October 12, 2026)</div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <div class="toggle" role="group">
+        <button id="btnLangEn" class="active" onclick="setLang('en')">EN</button>
+        <button id="btnLangQc" onclick="setLang('qc')">QC</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 1. Transport Deck -->
+  <div class="control-deck">
+    <div class="date-indicator">
+      <div class="date-badge">
+        <div class="date-badge-dot"></div>
+        <span id="lblRecordedDate">RECORDED DATE</span>
+      </div>
+      <div class="date-val" id="curDate">2026-10-12</div>
+      <div class="date-progress" id="curDayMeta">Day 216 of 216 (100%)</div>
+    </div>
+
+    <!-- Transport buttons -->
+    <div class="btn-group">
+      <button class="btn" onclick="jumpTo(0)" title="Start (Home)">|◀</button>
+      <button class="btn" onclick="step(-1)" title="Step Back (Left Arrow)">◀</button>
+      <button class="btn btn-play" id="btnPlay" onclick="togglePlay()">
+        <span id="playIcon">▶</span> <span id="playLabel">PLAY</span>
+      </button>
+      <button class="btn" onclick="step(1)" title="Step Forward (Right Arrow)">▶</button>
+      <button class="btn" onclick="jumpTo(DATA.days.length - 1)" title="Today (End)">▶|</button>
+    </div>
+
+    <!-- Speed Presets -->
+    <div class="speed-group">
+      <button class="speed-btn" onclick="setSpeed(0.5)">0.5x</button>
+      <button class="speed-btn" onclick="setSpeed(1)">1x</button>
+      <button class="speed-btn active" id="spd5" onclick="setSpeed(5)">5x</button>
+      <button class="speed-btn" onclick="setSpeed(20)">20x</button>
+      <button class="speed-btn" onclick="setSpeed(60)">60x</button>
+    </div>
+  </div>
+
+  <!-- 2. Timeline Scrubber Track -->
+  <div class="scrubber-wrap">
+    <div style="display:flex; justify-content:space-between; font-size:11px; font-family:var(--font-mono); color:var(--muted); margin-bottom:8px;">
+      <span style="color:var(--gold); font-weight:700;">2026-03-11</span>
+      <span id="lblScrubHint" style="font-size:10px; text-transform:uppercase; font-weight:700;">Drag playhead to scrub continuous history</span>
+      <span style="color:#fff; font-weight:700;">2026-10-12</span>
+    </div>
+
+    <!-- 7-Month Horizon Quick Jump Bar -->
+    <div id="monthBar" style="display:flex; gap:6px; overflow-x:auto; padding-bottom:8px; margin-bottom:8px; border-bottom:1px solid var(--border);"></div>
+
+    <div class="scrubber-track" id="scrubTrack" onmousedown="startScrub(event)">
+      <div class="spark-bars" id="sparkBars"></div>
+      <div id="keyframePins"></div>
+      <div class="playhead" id="playhead">
+        <div class="playhead-thumb"></div>
+      </div>
+    </div>
+
+    <!-- Quick Milestone Jump Bar -->
+    <div id="milestoneBar" style="display:flex; gap:6px; overflow-x:auto; padding-top:4px;"></div>
+  </div>
+
+  <!-- 3. Keyframe Banner -->
+  <div id="kfBanner" class="keyframe-banner" style="display:none;">
+    <div class="keyframe-icon">★</div>
+    <div style="flex:1;">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+        <span id="kfDate" style="font-size:10px; font-family:var(--font-mono); font-weight:800; background:var(--gold); color:#000; padding:1px 6px; border-radius:4px;"></span>
+        <span id="kfCat" style="font-size:10px; font-weight:800; text-transform:uppercase; color:var(--gold);"></span>
+      </div>
+      <div id="kfTitle" style="font-size:15px; font-weight:800; color:#fff;"></div>
+      <div id="kfSummary" style="font-size:12px; color:var(--fg); opacity:.9; margin-top:2px;"></div>
+    </div>
+  </div>
+
+  <!-- 4. Dynamic KPI Metric Row -->
+  <div class="grid grid-6" style="margin-bottom:16px;">
+    <div class="card">
+      <div class="card-title" style="color:var(--gold);"><span id="lblKpiEvents">CUMULATIVE EVENTS</span> ●</div>
+      <div class="card-val" id="valCumEvents" style="color:var(--gold);">0</div>
+      <div class="card-sub" id="subEvents">+0 today</div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="color:var(--violet);"><span id="lblKpiProjects">PROJECTS TOUCHED</span> ●</div>
+      <div class="card-val" id="valCumProjects" style="color:var(--violet);">0</div>
+      <div class="card-sub" id="subProjects">0 active today</div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="color:var(--green);"><span id="lblKpiDays">ACTIVE DAYS</span> ●</div>
+      <div class="card-val" id="valActiveDays" style="color:var(--green);">0</div>
+      <div class="card-sub" id="subDays">100% streak</div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="color:var(--amber);"><span id="lblKpiKeys">OPERATOR KEYS</span> ●</div>
+      <div class="card-val" id="valCumKeys">0</div>
+      <div class="card-sub" id="subKeys">+0 spooled</div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="color:var(--orange);"><span id="lblKpiMouse">MOUSE TRAVEL</span> ●</div>
+      <div class="card-val" id="valCumMouse">0<span style="font-size:13px; font-weight:400; color:var(--muted); margin-left:2px;">m</span></div>
+      <div class="card-sub" id="subMouse">+0m today</div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="color:var(--red);"><span id="lblKpiSpools">MINUTE SPOOLS</span> ●</div>
+      <div class="card-val" id="valSpoolMinutes" style="color:var(--red);">0</div>
+      <div class="card-sub" id="subSpools">0 min spooled</div>
+    </div>
+  </div>
+
+  <!-- 5. Evolution Race & Work Types -->
+  <div class="grid grid-12" style="margin-bottom:16px;">
+    <!-- Project Leaderboard -->
+    <div class="card" style="grid-column: span 7;">
+      <div class="card-title" style="margin-bottom:12px;">
+        <span id="lblProjRace">PROJECT EVOLUTION (CUMULATIVE LEADERS)</span>
+        <span style="font-family:var(--font-mono); color:var(--gold);" id="lblProjAsOf"></span>
+      </div>
+      <div id="projectRaceContent"></div>
+    </div>
+
+    <!-- Work Types & AI Models -->
+    <div class="card" style="grid-column: span 5; display:flex; flex-direction:column; justify-content:space-between; gap:12px;">
+      <div>
+        <div class="card-title" style="margin-bottom:8px;" id="lblWorkTypes">WORK TYPES RECORDED TODAY</div>
+        <div id="workTypesContent" style="display:flex; flex-wrap:wrap; gap:6px;"></div>
+      </div>
+      <div>
+        <div class="card-title" style="margin-bottom:8px;" id="lblAiModels">AI MODELS ACTIVE TODAY</div>
+        <div id="aiModelsContent" style="display:flex; flex-direction:column; gap:6px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. Exact Minute Spool Inspector -->
+  <div class="spool-box">
+    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:10px; margin-bottom:12px; flex-wrap:wrap; gap:10px;">
+      <div>
+        <div style="font-size:13px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; display:flex; align-items:center; gap:8px;">
+          <span style="width:8px; height:8px; border-radius:50%; background:var(--red);"></span>
+          <span id="lblSpoolTitle">EXACT MINUTE SPOOL INSPECTOR</span>
+          <span style="font-size:10px; font-family:var(--font-mono); background:var(--chip); color:var(--gold); padding:2px 8px; border-radius:4px;">1 spool == 1 minute</span>
+        </div>
+        <div style="font-size:11px; color:var(--muted); margin-top:2px;" id="lblSpoolSub">Hardware-level telemetry: keystrokes, active window context, and mouse trajectory</div>
+      </div>
+      <div id="spoolCountBadge" style="font-size:11px; font-family:var(--font-mono); color:var(--muted);"></div>
+    </div>
+
+    <div id="spoolContent"></div>
+  </div>
+
+  <!-- 7. Recorded Changes Today -->
+  <div class="card" style="margin-bottom:16px;">
+    <div class="card-title" style="border-bottom:1px solid var(--border); padding-bottom:8px; margin-bottom:10px;">
+      <span id="lblEventsHeader">EVENTS RECORDED ON THIS DATE</span>
+      <span id="eventsCountBadge" style="color:var(--gold); font-family:var(--font-mono);"></span>
+    </div>
+    <div id="eventsList" style="display:flex; flex-direction:column; gap:8px;"></div>
+  </div>
+
+  <!-- 8. Human-Agent Work Contract Paradigm & Benchmark -->
+  <div class="card" style="border:1px solid var(--gold-glow); padding:20px;">
+    <div style="border-bottom:1px solid var(--border); padding-bottom:12px; margin-bottom:16px;">
+      <div style="font-size:14px; font-weight:800; text-transform:uppercase; letter-spacing:.06em; color:#fff;" id="lblParadigmTitle">
+        HUMAN-AGENT WORK CONTRACT MATRIX & SOLO DEV BENCHMARK
+      </div>
+      <div style="font-size:12px; color:var(--muted); margin-top:4px;" id="lblParadigmSub">
+        How formal work contracts transformed a single human into an enterprise-scale architecture team.
+      </div>
+    </div>
+
+    <!-- 4 Directives -->
+    <div style="margin-bottom:16px;">
+      <div class="card-title" style="color:var(--gold); margin-bottom:8px;" id="lblDirectivesTitle">4 FOUNDATION WORK CONTRACT DIRECTIVES</div>
+      <div class="grid grid-2" id="directivesGrid" style="gap:10px;"></div>
+    </div>
+
+    <!-- Benchmark Table -->
+    <div style="margin-bottom:18px;">
+      <div class="card-title" style="color:#fff; margin-bottom:8px;" id="lblBenchmarkTitle">SOLO DEVELOPER VS. VAULTWARES AGENTIC COLLABORATION</div>
+      <div style="overflow-x:auto;">
+        <table id="benchmarkTable">
+          <thead>
+            <tr>
+              <th id="thDimension">DIMENSION</th>
+              <th id="thSoloDev">TYPICAL SOLO DEVELOPER</th>
+              <th id="thVaultWares" style="color:var(--gold);">VAULTWARES AGENTIC ENGINE</th>
+              <th id="thMultiple" style="text-align:right;">MULTIPLE</th>
+            </tr>
+          </thead>
+          <tbody id="benchmarkBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Financial ROI Simulator -->
+    <div style="background:var(--surface); padding:16px; border-radius:10px; border:1px solid var(--border);">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+        <div style="font-size:12px; font-weight:800; text-transform:uppercase; color:var(--gold);" id="lblRoiTitle">
+          RESOURCE ECONOMICS & ESTIMATED ROI (INTERACTIVE SIMULATOR)
+        </div>
+        <div id="roiMultiplierBadge" style="font-size:16px; font-family:var(--font-mono); font-weight:800; color:var(--green);"></div>
+      </div>
+
+      <div class="grid" style="grid-template-columns: repeat(4, 1fr); gap:12px; margin-bottom:14px;">
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:2px;">
+            <span style="color:var(--muted);">AI Subscriptions & API ($ CAD)</span>
+            <span id="lblModelSpend" style="font-family:var(--font-mono); font-weight:700; color:var(--gold);">$2,847</span>
+          </div>
+          <input type="range" id="rngModelSpend" min="200" max="10000" step="50" value="2847" oninput="updateRoi()" style="width:100%;">
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:2px;">
+            <span style="color:var(--muted);">Infra, VPS & Compute ($ CAD)</span>
+            <span id="lblInfraSpend" style="font-family:var(--font-mono); font-weight:700; color:var(--gold);">$335</span>
+          </div>
+          <input type="range" id="rngInfraSpend" min="50" max="5000" step="25" value="335" oninput="updateRoi()" style="width:100%;">
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:2px;">
+            <span style="color:var(--muted);">Tools & Utilities ($ CAD)</span>
+            <span id="lblSubSpend" style="font-family:var(--font-mono); font-weight:700; color:var(--gold);">$1,040</span>
+          </div>
+          <input type="range" id="rngSubSpend" min="0" max="3000" step="25" value="1040" oninput="updateRoi()" style="width:100%;">
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:2px;">
+            <span style="color:var(--muted);">Market Senior Dev ($ CAD/hr)</span>
+            <span id="lblRate" style="font-family:var(--font-mono); font-weight:700; color:var(--gold);">$95/h</span>
+          </div>
+          <input type="range" id="rngRate" min="40" max="250" step="5" value="95" oninput="updateRoi()" style="width:100%;">
+        </div>
+      </div>
+
+      <div class="grid grid-6" id="roiCardsGrid" style="gap:10px;"></div>
+    </div>
+  </div>
+</main>
+
+<script>
+// Global State
+let DATA = null;
+let curIndex = 0;
+let curSpoolIdx = 0;
+let prevDayDate = null;
+let isPlaying = false;
+let playbackSpeed = 5;
+let playTimer = null;
+let currentLang = 'en';
+
+const I18N = {
+  en: {
+    recordedDate: "RECORDED DATE",
+    progress: "Day {day} of {total} ({pct}%)",
+    events: "CUMULATIVE EVENTS",
+    projects: "PROJECTS TOUCHED",
+    days: "ACTIVE DAYS",
+    keys: "OPERATOR KEYS",
+    mouse: "MOUSE TRAVEL",
+    spools: "MINUTE SPOOLS",
+    play: "PLAY",
+    pause: "PAUSE",
+    today: "today",
+    activeToday: "active today",
+    spooled: "spooled",
+    minSpooled: "min spooled",
+    noSpool: "No input tracker minute spool archived for this date.",
+    spoolSub: "Hardware-level telemetry: keystrokes, active window context, and mouse trajectory",
+    jumpOct12: "Jump to Oct 12 (187 spools)",
+  },
+  qc: {
+    recordedDate: "JOUR RECORDÉ",
+    progress: "Jour {day} sur {total} ({pct}%)",
+    events: "ÉVÉNEMENTS CUMULÉS",
+    projects: "PROJETS TOUCHÉS",
+    days: "JOURS ACTIFS",
+    keys: "FRAPPES CLAVIER",
+    mouse: "PARCOURS SOURIS",
+    spools: "MINUTES SPOOLÉES",
+    play: "LIRE",
+    pause: "PAUSE",
+    today: "ce jour",
+    activeToday: "actifs ce jour",
+    spooled: "spoolées",
+    minSpooled: "min spoolées",
+    noSpool: "Aucun fichier spool de télémétrie locale archivé pour ce jour.",
+    spoolSub: "Télémétrie brute : frappes, fenêtres actives et trajectoires de la souris",
+    jumpOct12: "Sauter au 12 Octobre (187 spools)",
+  }
+};
+
+function fmt(n) {
+  return new Intl.NumberFormat().format(Math.round(n || 0));
+}
+
+// Fetch dataset
+async function init() {
+  try {
+    let res;
+    try {
+      res = await fetch('./timeline-data.json');
+      if (!res.ok) throw new Error('Relative fetch not ok');
+    } catch {
+      res = await fetch('/timeline-data.json');
+    }
+    if (!res || !res.ok) throw new Error('Data endpoint unavailable');
+    DATA = await res.json();
+    onDataLoaded();
+  } catch (err) {
+    console.warn("Auto-fetch of timeline-data.json failed:", err);
+    showFileFallback();
+  }
+}
+
+function onDataLoaded() {
+  curIndex = DATA.days.length - 1;
+  renderMonthButtons();
+  renderSparkbars();
+  renderMilestoneButtons();
+  renderDirectiveGrid();
+  renderBenchmarkTable();
+  updateRoi();
+  renderDay();
+}
+
+function showFileFallback() {
+  let modal = document.getElementById('fileFallbackModal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'fileFallbackModal';
+    modal.style.cssText = 'position:fixed; inset:0; background:rgba(10,8,20,0.92); z-index:9999; display:flex; align-items:center; justify-content:center; padding:20px;';
+    modal.innerHTML = `
+      <div style="max-width:540px; width:100%; background:var(--surface2); border:1px solid var(--gold-glow); border-radius:14px; padding:28px; text-align:center; box-shadow:0 20px 50px rgba(0,0,0,0.5);">
+        <div style="font-size:20px; font-weight:800; color:#fff; margin-bottom:6px;">VaultWares <span style="color:var(--gold);">Chronos</span> Time Machine</div>
+        <div style="font-size:12px; color:var(--muted); margin-bottom:20px; line-height:1.5;">
+          Automatic fetch was restricted (e.g. running offline via <code>file://</code>). Please select <code>public/timeline-data.json</code> or drop it here to launch:
+        </div>
+        <input type="file" id="localFallbackInput" accept=".json" style="display:none;" onchange="handleFallbackFile(this.files[0])">
+        <button class="btn btn-play" onclick="document.getElementById('localFallbackInput').click()" style="padding:10px 24px; font-size:13px;">
+          Choose timeline-data.json
+        </button>
+      </div>
+    `;
+    document.body.appendChild(modal);
+
+    window.addEventListener('dragover', (e) => e.preventDefault());
+    window.addEventListener('drop', (e) => {
+      e.preventDefault();
+      if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) {
+        handleFallbackFile(e.dataTransfer.files[0]);
+      }
+    });
+  } else {
+    modal.style.display = 'flex';
+  }
+}
+
+function handleFallbackFile(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      DATA = JSON.parse(e.target.result);
+      const modal = document.getElementById('fileFallbackModal');
+      if (modal) modal.style.display = 'none';
+      onDataLoaded();
+    } catch (err) {
+      alert("Invalid JSON file: " + err.message);
+    }
+  };
+  reader.readAsText(file);
+}
+
+function setLang(l) {
+  currentLang = l;
+  document.getElementById('btnLangEn').className = l === 'en' ? 'active' : '';
+  document.getElementById('btnLangQc').className = l === 'qc' ? 'active' : '';
+  renderDay();
+  renderDirectiveGrid();
+  renderBenchmarkTable();
+  updateRoi();
+}
+
+function setSpeed(spd) {
+  playbackSpeed = spd;
+  document.querySelectorAll('.speed-btn').forEach(b => {
+    b.className = b.textContent === (spd + 'x') ? 'speed-btn active' : 'speed-btn';
+  });
+  if (isPlaying) {
+    clearInterval(playTimer);
+    startTimer();
+  }
+}
+
+function togglePlay() {
+  isPlaying = !isPlaying;
+  const btn = document.getElementById('btnPlay');
+  const icon = document.getElementById('playIcon');
+  const lbl = document.getElementById('playLabel');
+  if (isPlaying) {
+    if (curIndex >= DATA.days.length - 1) curIndex = 0;
+    btn.className = 'btn btn-play playing';
+    icon.textContent = '⏸';
+    lbl.textContent = I18N[currentLang].pause;
+    startTimer();
+  } else {
+    btn.className = 'btn btn-play';
+    icon.textContent = '▶';
+    lbl.textContent = I18N[currentLang].play;
+    clearInterval(playTimer);
+  }
+}
+
+function startTimer() {
+  const interval = Math.max(16, Math.round(1000 / playbackSpeed));
+  playTimer = setInterval(() => {
+    if (curIndex >= DATA.days.length - 1) {
+      togglePlay();
+      return;
+    }
+    curIndex++;
+    renderDay();
+  }, interval);
+}
+
+function step(dir) {
+  if (isPlaying) togglePlay();
+  curIndex = Math.max(0, Math.min(DATA.days.length - 1, curIndex + dir));
+  renderDay();
+}
+
+function jumpTo(idx) {
+  if (isPlaying) togglePlay();
+  curIndex = Math.max(0, Math.min(DATA.days.length - 1, idx));
+  renderDay();
+}
+
+function startScrub(e) {
+  const rect = document.getElementById('scrubTrack').getBoundingClientRect();
+  function onMove(evt) {
+    const x = Math.max(0, Math.min(rect.width, evt.clientX - rect.left));
+    const pct = x / rect.width;
+    curIndex = Math.round(pct * (DATA.days.length - 1));
+    renderDay();
+  }
+  function onUp() {
+    window.removeEventListener('mousemove', onMove);
+    window.removeEventListener('mouseup', onUp);
+  }
+  window.addEventListener('mousemove', onMove);
+  window.addEventListener('mouseup', onUp);
+  onMove(e);
+}
+
+function renderSparkbars() {
+  const container = document.getElementById('sparkBars');
+  container.innerHTML = '';
+  const maxEvents = Math.max(1, ...DATA.days.map(d => d.events));
+  DATA.days.forEach((d, i) => {
+    const bar = document.createElement('div');
+    bar.className = 'spark-bar';
+    const height = Math.max(3, Math.round((d.events / maxEvents) * 100));
+    bar.style.height = height + '%';
+    bar.id = 'bar-' + i;
+    container.appendChild(bar);
+  });
+
+  // Milestone pins
+  const pinContainer = document.getElementById('keyframePins');
+  pinContainer.innerHTML = '';
+  DATA.keyframes.forEach(kf => {
+    const idx = DATA.days.findIndex(d => d.date === kf.date);
+    if (idx !== -1) {
+      const pin = document.createElement('button');
+      pin.className = 'milestone-pin';
+      pin.style.left = ((idx / (DATA.days.length - 1)) * 100) + '%';
+      pin.title = kf.date + ': ' + kf.title;
+      pin.textContent = '★';
+      pin.onclick = (e) => {
+        e.stopPropagation();
+        jumpTo(idx);
+      };
+      pinContainer.appendChild(pin);
+    }
+  });
+}
+
+function renderMonthButtons() {
+  const bar = document.getElementById('monthBar');
+  if (!bar || !DATA) return;
+  bar.innerHTML = '';
+  const months = [
+    { label: "Mar '26", prefix: "2026-03" },
+    { label: "Apr '26", prefix: "2026-04" },
+    { label: "May '26", prefix: "2026-05" },
+    { label: "Jun '26", prefix: "2026-06" },
+    { label: "Jul '26", prefix: "2026-07" },
+    { label: "Aug '26", prefix: "2026-08" },
+    { label: "Sep '26", prefix: "2026-09" },
+    { label: "Oct '26", prefix: "2026-10" },
+  ];
+  months.forEach(m => {
+    const idx = DATA.days.findIndex(d => d.date.startsWith(m.prefix));
+    if (idx !== -1) {
+      const btn = document.createElement('button');
+      btn.className = 'btn';
+      btn.style.padding = '3px 8px';
+      btn.style.fontSize = '10px';
+      btn.textContent = m.label;
+      btn.id = 'month-btn-' + m.prefix;
+      btn.onclick = () => jumpTo(idx);
+      bar.appendChild(btn);
+    }
+  });
+}
+
+function renderMilestoneButtons() {
+  const bar = document.getElementById('milestoneBar');
+  bar.innerHTML = '';
+  DATA.keyframes.forEach(kf => {
+    const btn = document.createElement('button');
+    btn.className = 'btn';
+    btn.style.padding = '3px 8px';
+    btn.style.fontSize = '10px';
+    btn.textContent = kf.date.slice(5) + ' · ' + kf.title;
+    btn.onclick = () => {
+      const idx = DATA.days.findIndex(d => d.date === kf.date);
+      if (idx !== -1) jumpTo(idx);
+    };
+    bar.appendChild(btn);
+  });
+}
+
+function renderDay() {
+  if (!DATA) return;
+  const d = DATA.days[curIndex];
+  const t = I18N[currentLang];
+
+  // Reset minute spool index when switching days
+  if (prevDayDate !== d.date) {
+    prevDayDate = d.date;
+    curSpoolIdx = 0;
+  }
+
+  // Highlight month button
+  const curPrefix = d.date.slice(0, 7);
+  document.querySelectorAll('#monthBar .btn').forEach(b => {
+    const isAct = b.id === ('month-btn-' + curPrefix);
+    b.style.borderColor = isAct ? 'var(--gold)' : 'var(--border)';
+    b.style.color = isAct ? 'var(--gold)' : 'var(--muted)';
+    b.style.background = isAct ? 'var(--surface3)' : 'var(--surface)';
+  });
+
+  // Date indicator
+  document.getElementById('curDate').textContent = d.date;
+  const pct = Math.round(((curIndex + 1) / DATA.days.length) * 100);
+  document.getElementById('curDayMeta').textContent = t.progress.replace('{day}', curIndex + 1).replace('{total}', DATA.days.length).replace('{pct}', pct);
+
+  // Playhead position
+  const playheadPct = (curIndex / (DATA.days.length - 1)) * 100;
+  document.getElementById('playhead').style.left = playheadPct + '%';
+
+  // Highlight spark bars
+  DATA.days.forEach((dayItem, i) => {
+    const bar = document.getElementById('bar-' + i);
+    if (bar) {
+      if (i <= curIndex) {
+        bar.style.backgroundColor = dayItem.spoolMinutes > 0 ? 'var(--violet)' : 'var(--gold)';
+      } else {
+        bar.style.backgroundColor = 'rgba(216, 208, 240, 0.12)';
+      }
+    }
+  });
+
+  // Keyframe banner
+  const banner = document.getElementById('kfBanner');
+  if (d.keyframe) {
+    banner.style.display = 'flex';
+    document.getElementById('kfDate').textContent = d.keyframe.date;
+    document.getElementById('kfCat').textContent = d.keyframe.category;
+    document.getElementById('kfTitle').textContent = d.keyframe.title;
+    document.getElementById('kfSummary').textContent = d.keyframe.summary;
+  } else {
+    banner.style.display = 'none';
+  }
+
+  // KPIs
+  document.getElementById('valCumEvents').textContent = fmt(d.cumEvents);
+  document.getElementById('subEvents').textContent = '+' + d.events + ' ' + t.today;
+
+  document.getElementById('valCumProjects').textContent = d.cumProjects;
+  document.getElementById('subProjects').textContent = d.projectCount + ' ' + t.activeToday;
+
+  document.getElementById('valActiveDays').textContent = d.activeDays;
+  document.getElementById('subDays').textContent = Math.round((d.activeDays / (curIndex + 1)) * 100) + '% consistency';
+
+  document.getElementById('valCumKeys').textContent = fmt(d.cumKeystrokes);
+  document.getElementById('subKeys').textContent = '+' + fmt(d.keystrokes) + ' ' + t.spooled;
+
+  document.getElementById('valCumMouse').innerHTML = fmt(d.cumMouseDistanceM) + '<span style="font-size:13px; font-weight:400; color:var(--muted); margin-left:2px;">m</span>';
+  document.getElementById('subMouse').textContent = '+' + d.mouseDistanceM + 'm ' + t.today;
+
+  document.getElementById('valSpoolMinutes').textContent = d.spoolMinutes;
+  document.getElementById('subSpools').textContent = d.spoolMinutes + ' ' + t.minSpooled;
+
+  // Project race
+  renderProjectRace(d);
+
+  // Kinds & Models
+  renderKindsAndModels(d);
+
+  // Spool Inspector
+  renderSpoolInspector(d);
+
+  // Events today
+  renderEventsToday(d);
+}
+
+function renderProjectRace(d) {
+  const container = document.getElementById('projectRaceContent');
+  document.getElementById('lblProjAsOf').textContent = d.date;
+  const top = d.topCumProjects || [];
+  if (top.length === 0) {
+    container.innerHTML = '<div style="font-size:12px; color:var(--muted); padding:10px 0; text-align:center;">No project entries yet</div>';
+    return;
+  }
+  const maxVal = Math.max(1, ...top.map(p => p.count));
+  let html = '';
+  top.forEach((p, idx) => {
+    const w = Math.max(5, Math.round((p.count / maxVal) * 100));
+    const isAct = d.projects.includes(p.name);
+    html += `
+      <div class="race-row">
+        <div class="race-meta font-mono">
+          <span>
+            <span style="color:var(--muted); font-size:10px;">#${idx + 1}</span>
+            <strong style="color:${isAct ? 'var(--gold)' : '#fff'}; margin-left:4px;">${p.name}</strong>
+            ${isAct ? '<span style="font-size:9px; background:var(--gold-dim); color:var(--gold); padding:1px 4px; border-radius:3px; margin-left:6px;">active</span>' : ''}
+          </span>
+          <span style="color:var(--muted);">${p.count} ev</span>
+        </div>
+        <div class="race-bar-bg">
+          <div class="race-bar-fill" style="width:${w}%; background:${idx === 0 ? 'var(--gold)' : idx === 1 ? 'var(--violet)' : 'var(--accent)'};"></div>
+        </div>
+      </div>
+    `;
+  });
+  container.innerHTML = html;
+}
+
+function renderKindsAndModels(d) {
+  const kindsBox = document.getElementById('workTypesContent');
+  const kinds = Object.entries(d.kinds || {}).sort(([,a], [,b]) => b - a);
+  if (kinds.length === 0) {
+    kindsBox.innerHTML = '<div style="font-size:11px; color:var(--muted); font-style:italic;">None logged</div>';
+  } else {
+    kindsBox.innerHTML = kinds.map(([k, c]) => `
+      <div style="padding:4px 8px; border-radius:6px; background:var(--surface); border:1px solid var(--border); font-size:11px; font-family:var(--font-mono); display:flex; align-items:center; gap:6px;">
+        <span>${k}</span>
+        <span style="background:var(--chip); color:var(--gold); padding:1px 4px; border-radius:3px; font-weight:800; font-size:10px;">${c}</span>
+      </div>
+    `).join('');
+  }
+
+  const modelsBox = document.getElementById('aiModelsContent');
+  const models = Object.entries(d.models || {}).sort(([,a], [,b]) => b - a);
+  if (models.length === 0) {
+    modelsBox.innerHTML = '<div style="font-size:11px; color:var(--muted); font-style:italic;">No explicit model tag today</div>';
+  } else {
+    modelsBox.innerHTML = models.map(([m, c]) => `
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:5px 8px; border-radius:6px; background:var(--surface); border:1px solid var(--border); font-size:11px; font-family:var(--font-mono);">
+        <div style="display:flex; align-items:center; gap:6px;">
+          <span style="width:5px; height:5px; border-radius:50%; background:var(--violet);"></span>
+          <span>${m}</span>
+        </div>
+        <span style="color:var(--violet); font-weight:800;">${c} ev</span>
+      </div>
+    `).join('');
+  }
+}
+
+function stepSpool(dir) {
+  const d = DATA.days[curIndex];
+  const spools = (DATA.spoolDetailsByDate && DATA.spoolDetailsByDate[d.date]) || [];
+  if (spools.length === 0) return;
+  curSpoolIdx = Math.max(0, Math.min(spools.length - 1, curSpoolIdx + dir));
+  renderSpoolInspector(d);
+}
+
+function setSpoolIdx(idx) {
+  const d = DATA.days[curIndex];
+  const spools = (DATA.spoolDetailsByDate && DATA.spoolDetailsByDate[d.date]) || [];
+  if (spools.length === 0) return;
+  curSpoolIdx = Math.max(0, Math.min(spools.length - 1, idx));
+  renderSpoolInspector(d);
+}
+
+function renderSpoolInspector(d) {
+  const box = document.getElementById('spoolContent');
+  const spools = (DATA.spoolDetailsByDate && DATA.spoolDetailsByDate[d.date]) || [];
+  document.getElementById('spoolCountBadge').textContent = spools.length + ' spools recorded';
+
+  if (spools.length === 0) {
+    box.innerHTML = `
+      <div style="text-align:center; padding:24px; background:var(--surface2); border-radius:8px; border:1px solid var(--border);">
+        <div style="font-size:13px; font-weight:600; color:var(--muted);">${I18N[currentLang].noSpool}</div>
+        <div style="margin-top:12px;">
+          <button class="btn btn-play" onclick="jumpToDate('2026-10-12')">${I18N[currentLang].jumpOct12}</button>
+          <button class="btn" style="margin-left:6px;" onclick="jumpToDate('2026-07-29')">2026-07-29 (2.7 MB spool)</button>
+          <button class="btn" style="margin-left:6px;" onclick="jumpToDate('2026-07-11')">2026-07-11 (2.8 MB spool)</button>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  // Active spool slice
+  curSpoolIdx = Math.max(0, Math.min(spools.length - 1, curSpoolIdx));
+  const s = spools[curSpoolIdx];
+
+  let html = `
+    <!-- Minute Scrubber Control Deck -->
+    <div style="background:var(--surface2); padding:10px 14px; border-radius:10px; border:1px solid var(--border); margin-bottom:12px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; font-family:var(--font-mono); margin-bottom:8px; flex-wrap:wrap; gap:8px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <button class="btn" style="padding:3px 8px; font-size:11px;" onclick="stepSpool(-1)" title="Previous Minute (Shift+Left)">◀ -1m</button>
+          <span style="color:var(--gold); font-weight:800; font-size:13px;">${s.time} UTC · Minute #${curSpoolIdx + 1} / ${spools.length}</span>
+          <button class="btn" style="padding:3px 8px; font-size:11px;" onclick="stepSpool(1)" title="Next Minute (Shift+Right)">+1m ▶</button>
+        </div>
+        <span style="color:var(--muted); font-size:11px;">Active span: ${spools[0].time} UTC → ${spools[spools.length - 1].time} UTC</span>
+      </div>
+      <input type="range" min="0" max="${spools.length - 1}" value="${curSpoolIdx}" oninput="setSpoolIdx(Number(this.value))" style="width:100%; accent-color:var(--gold); cursor:pointer;">
+    </div>
+
+    <!-- Telemetry Cards for Selected Minute -->
+    <div class="grid" style="grid-template-columns: repeat(5, 1fr); gap:10px; margin-bottom:12px;">
+      <div class="spool-metric" style="grid-column: span 2;">
+        <div style="font-size:10px; font-weight:800; color:var(--muted); text-transform:uppercase;">ACTIVE WINDOW & CONTEXT</div>
+        <div style="font-size:13px; font-weight:800; color:#fff; font-family:var(--font-mono); margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${s.window}">${s.window}</div>
+        <div style="font-size:10px; color:var(--gold); font-family:var(--font-mono); display:flex; align-items:center; gap:6px; margin-top:2px;">
+          <span style="background:var(--chip); padding:1px 6px; border-radius:3px;">${s.focus}</span>
+          <span>${s.activeSec}s active / 60s</span>
+        </div>
+      </div>
+      <div class="spool-metric">
+        <div style="font-size:10px; font-weight:800; color:var(--muted); text-transform:uppercase;">KEYSTROKES / MIN</div>
+        <div style="font-size:18px; font-weight:800; color:var(--gold); font-family:var(--font-mono); margin-top:2px;">${fmt(s.keys)}</div>
+        <div style="font-size:10px; color:var(--muted); font-family:var(--font-mono);">${fmt(s.chars)} chars typed</div>
+      </div>
+      <div class="spool-metric">
+        <div style="font-size:10px; font-weight:800; color:var(--muted); text-transform:uppercase;">CLICKS & SCROLLS</div>
+        <div style="font-size:18px; font-weight:800; color:var(--violet); font-family:var(--font-mono); margin-top:2px;">${s.clicks} clk</div>
+        <div style="font-size:10px; color:var(--muted); font-family:var(--font-mono);">${s.scrolls} scrolls</div>
+      </div>
+      <div class="spool-metric">
+        <div style="font-size:10px; font-weight:800; color:var(--muted); text-transform:uppercase;">MOUSE & SWITCHES</div>
+        <div style="font-size:18px; font-weight:800; color:var(--orange); font-family:var(--font-mono); margin-top:2px;">${s.mouseM}m</div>
+        <div style="font-size:10px; color:var(--muted); font-family:var(--font-mono);">${s.switches} context switches</div>
+      </div>
+    </div>
+
+    <!-- Secondary telemetry: saves, copy/paste, spool ID -->
+    <div style="display:flex; justify-content:space-between; align-items:center; font-size:10px; font-family:var(--font-mono); color:var(--muted); padding:4px 2px; margin-bottom:8px;">
+      <span>Edits: <strong style="color:var(--fg);">${s.saves} saves</strong> · <strong style="color:var(--fg);">${s.copies} copies / ${s.pastes} pastes</strong></span>
+      <span>Spool Event: <strong style="color:var(--gold);">${s.id || 'auto-rollup'}</strong> · ${s.timestamp}</span>
+    </div>
+
+    <!-- Horizontal Quick-Scroller of Minute Rollups -->
+    <div style="display:flex; gap:6px; overflow-x:auto; padding:6px 2px; border-top:1px solid var(--border); margin-top:8px;" id="minutePillStrip">
+      ${spools.map((sp, idx) => {
+        const isSel = idx === curSpoolIdx;
+        return `
+          <button
+            onclick="setSpoolIdx(${idx})"
+            id="spool-pill-${idx}"
+            style="flex-shrink:0; text-align:left; padding:5px 8px; border-radius:6px; border:1px solid ${isSel ? 'var(--gold)' : 'var(--border)'}; background:${isSel ? 'var(--gold)' : 'var(--surface2)'}; color:${isSel ? '#000' : 'var(--fg)'}; cursor:pointer; font-family:var(--font-mono); transition:all .1s;"
+          >
+            <div style="font-size:11px; font-weight:800;">${sp.time}</div>
+            <div style="font-size:9px; opacity:.85; max-width:70px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${sp.window}</div>
+            <div style="font-size:9px; opacity:.75;">${sp.keys}k · ${sp.mouseM}m</div>
+          </button>
+        `;
+      }).join('')}
+    </div>
+  `;
+
+  // Draw natural path if present
+  if (d.naturalPathSample && d.naturalPathSample.length > 0) {
+    html += `
+      <div style="margin-top:10px; background:var(--surface2); padding:10px; border-radius:8px; border:1px solid var(--border);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+          <span style="font-size:10px; font-weight:800; text-transform:uppercase; color:var(--gold);">2D NATURAL MOUSE PATH VECTOR REPLAY</span>
+          <span style="font-size:10px; font-family:var(--font-mono); color:var(--muted);">${d.naturalPathSample.length} points</span>
+        </div>
+        <canvas id="spoolCanvas" width="400" height="140" style="width:100%; height:140px; background:#100d1c; border-radius:6px;"></canvas>
+      </div>
+    `;
+  }
+
+  box.innerHTML = html;
+
+  if (d.naturalPathSample && d.naturalPathSample.length > 0) {
+    drawMousePath(d.naturalPathSample);
+  }
+
+  const activePill = document.getElementById('spool-pill-' + curSpoolIdx);
+  if (activePill) {
+    activePill.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+  }
+}
+
+function drawMousePath(points) {
+  const canvas = document.getElementById('spoolCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width, h = canvas.height;
+  ctx.clearRect(0, 0, w, h);
+
+  let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+  points.forEach(p => {
+    if (p.x < minX) minX = p.x;
+    if (p.x > maxX) maxX = p.x;
+    if (p.y < minY) minY = p.y;
+    if (p.y > maxY) maxY = p.y;
+  });
+  const rx = Math.max(100, maxX - minX);
+  const ry = Math.max(100, maxY - minY);
+  const pad = 15;
+  const sx = (w - pad * 2) / rx;
+  const sy = (h - pad * 2) / ry;
+
+  ctx.strokeStyle = '#b8882e';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  points.forEach((p, i) => {
+    const px = pad + (p.x - minX) * sx;
+    const py = pad + (p.y - minY) * sy;
+    if (i === 0) ctx.moveTo(px, py);
+    else ctx.lineTo(px, py);
+  });
+  ctx.stroke();
+
+  // Click endpoint
+  const last = points[points.length - 1];
+  ctx.fillStyle = '#8a62c0';
+  ctx.beginPath();
+  ctx.arc(pad + (last.x - minX) * sx, pad + (last.y - minY) * sy, 5, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+function jumpToDate(dateStr) {
+  const idx = DATA.days.findIndex(d => d.date === dateStr);
+  if (idx !== -1) jumpTo(idx);
+}
+
+function renderEventsToday(d) {
+  const list = document.getElementById('eventsList');
+  document.getElementById('eventsCountBadge').textContent = d.totalEventsOnDay + ' entries';
+  const evs = d.eventsSample || [];
+  if (evs.length === 0) {
+    list.innerHTML = '<div style="font-size:12px; color:var(--muted); font-style:italic; padding:8px 0;">No individual change blocks in CHANGES.md for this date (commits captured via historical backfill).</div>';
+    return;
+  }
+  list.innerHTML = evs.map(e => `
+    <div style="padding:10px 12px; border-radius:8px; background:var(--surface); border:1px solid var(--border);">
+      <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; font-family:var(--font-mono); margin-bottom:4px;">
+        <div>
+          <span style="color:var(--gold); font-weight:800;">${e.time}</span>
+          <strong style="color:#fff; margin-left:6px;">${e.project}</strong>
+          <span style="background:var(--surface2); color:var(--muted); padding:1px 5px; border-radius:3px; margin-left:4px;">${e.kind}</span>
+        </div>
+        <div style="color:var(--violet);">${e.model} · ${e.actor}</div>
+      </div>
+      <div style="font-size:12px; color:var(--fg); opacity:.9;">${e.summary}</div>
+    </div>
+  `).join('');
+}
+
+function renderDirectiveGrid() {
+  const grid = document.getElementById('directivesGrid');
+  if (!DATA) return;
+  const list = DATA.agentCollaboration.principles || [];
+  grid.innerHTML = list.map((p, idx) => `
+    <div style="padding:12px; border-radius:8px; background:var(--surface); border:1px solid var(--border);">
+      <div style="font-size:11px; font-weight:800; color:var(--gold); margin-bottom:4px;">#${idx + 1} · ${p.title}</div>
+      <div style="font-size:11px; color:var(--muted); line-height:1.4;">${p.summary}</div>
+    </div>
+  `).join('');
+}
+
+function renderBenchmarkTable() {
+  const body = document.getElementById('benchmarkBody');
+  if (!DATA) return;
+  const rows = DATA.agentCollaboration.soloComparison.metric || [];
+  body.innerHTML = rows.map(r => `
+    <tr>
+      <td style="font-weight:700; color:#fff;">${r.name}</td>
+      <td style="color:var(--muted);">${r.soloDev}</td>
+      <td style="color:var(--gold); font-family:var(--font-mono); font-weight:600;">${r.vaultwares}</td>
+      <td style="text-align:right; color:var(--green); font-family:var(--font-mono); font-weight:800;">${r.factor}</td>
+    </tr>
+  `).join('');
+}
+
+function updateRoi() {
+  if (!DATA) return;
+  const mSpend = Number(document.getElementById('rngModelSpend').value);
+  const iSpend = Number(document.getElementById('rngInfraSpend').value);
+  const sSpend = Number(document.getElementById('rngSubSpend').value);
+  const rate = Number(document.getElementById('rngRate').value);
+
+  document.getElementById('lblModelSpend').textContent = '$' + fmt(mSpend);
+  document.getElementById('lblInfraSpend').textContent = '$' + fmt(iSpend);
+  document.getElementById('lblSubSpend').textContent = '$' + fmt(sSpend);
+  document.getElementById('lblRate').textContent = '$' + rate + '/h';
+
+  const totalCost = mSpend + iSpend + sSpend;
+  const hoursSaved = DATA.agentCollaboration.soloComparison.estimatedHoursSaved || 2840;
+  const marketVal = hoursSaved * rate;
+  const mult = Math.round(marketVal / Math.max(1, totalCost));
+
+  document.getElementById('roiMultiplierBadge').textContent = mult + 'x Value Multiplier';
+
+  const grid = document.getElementById('roiCardsGrid');
+  grid.innerHTML = `
+    <div class="card"><div class="card-title">TOTAL DIRECT SPEND</div><div class="card-val">$${fmt(totalCost)} CAD</div><div class="card-sub">AI Subs + Infra + Utilities</div></div>
+    <div class="card"><div class="card-title">HOURS SAVED</div><div class="card-val" style="color:var(--violet);">~${fmt(hoursSaved)}h</div><div class="card-sub">Autonomous execution</div></div>
+    <div class="card"><div class="card-title">MARKET VALUE</div><div class="card-val" style="color:var(--green);">$${fmt(marketVal)} CAD</div><div class="card-sub">At $${rate}/hr CAD rate</div></div>
+    <div class="card"><div class="card-title">NET VALUE CREATED</div><div class="card-val" style="color:var(--gold);">$${fmt(marketVal - totalCost)} CAD</div><div class="card-sub">Direct labor delta</div></div>
+  `;
+}
+
+// Keyboard shortcuts
+window.addEventListener('keydown', (e) => {
+  if (['INPUT', 'TEXTAREA'].includes(e.target?.tagName)) return;
+  if (e.code === 'Space') { e.preventDefault(); togglePlay(); }
+  else if (e.code === 'ArrowLeft') {
+    e.preventDefault();
+    if (e.shiftKey) stepSpool(-1);
+    else step(-1);
+  }
+  else if (e.code === 'ArrowRight') {
+    e.preventDefault();
+    if (e.shiftKey) stepSpool(1);
+    else step(1);
+  }
+  else if (e.code === 'Home') { e.preventDefault(); jumpTo(0); }
+  else if (e.code === 'End') { e.preventDefault(); jumpTo(DATA.days.length - 1); }
+});
+
+window.onload = init;
+</script>
+</body>
+</html>
