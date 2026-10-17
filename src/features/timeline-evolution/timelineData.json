@@ -4026,7 +4026,7 @@
           "kind": "verification",
           "actor": "codex",
           "model": "gpt-5.2",
-          "summary": "After DNS propagation to 173.249.194.15 for prom-king.xyz/www and fullxxx.video/www, issued Lets Encrypt certs on the new VPS using certbot nginx plugin and verified both sites return 200 over HTTPS.",
+          "summary": "After DNS propagation to 173.249.194.15 for prom-king.xyz/www and media-portal-alpha.internal/www, issued Lets Encrypt certs on the new VPS using certbot nginx plugin and verified both sites return 200 over HTTPS.",
           "filesCount": 7,
           "head": null
         },
@@ -4086,7 +4086,7 @@
           "kind": "commands",
           "actor": "codex",
           "model": "gpt-5.2",
-          "summary": "Brought up new GreenCloud VPS 173.249.194.15 (Debian 12). Installed nginx/php8.2-fpm/MariaDB/certbot/ufw/fail2ban/rsync, joined Tailscale tailnet (VPS tailnet IP 100.120.212.57), migrated both WordPress tube sites (prom-king.xyz + fullxxx.video) by copying web roots and importing DB dumps, and de...",
+          "summary": "Brought up new GreenCloud VPS 173.249.194.15 (Debian 12). Installed nginx/php8.2-fpm/MariaDB/certbot/ufw/fail2ban/rsync, joined Tailscale tailnet (VPS tailnet IP 100.120.212.57), migrated both WordPress tube sites (prom-king.xyz + media-portal-alpha.internal) by copying web roots and importing DB dumps, and de...",
           "filesCount": 10,
           "head": null
         },
@@ -4490,7 +4490,7 @@
           "kind": "verification",
           "actor": "Claude Sonnet 4.6",
           "model": "claude-sonnet-4-6",
-          "summary": "Read network-map.mdx and ran full connectivity/TLS audit across all listed services. Public: vaultwares.ca, noddit.org, prom-king.xyz, fullxxx.video all return 200. TLS: all TLS 1.3 + AES-256 + Let's Encrypt, ~88-89 days remaining, SANs valid for all domains. Tailnet: vaultwares-1 and ci-egress-v...",
+          "summary": "Read network-map.mdx and ran full connectivity/TLS audit across all listed services. Public: vaultwares.ca, noddit.org, prom-king.xyz, media-portal-alpha.internal all return 200. TLS: all TLS 1.3 + AES-256 + Let's Encrypt, ~88-89 days remaining, SANs valid for all domains. Tailnet: vaultwares-1 and ci-egress-v...",
           "filesCount": 6,
           "head": null
         },
@@ -4626,7 +4626,7 @@
           "kind": "plan",
           "actor": "Antigravity",
           "model": "Gemini 3.1 Pro (High)",
-          "summary": "Planned a complete VaultWares-compliant PQC login and signup flow for promking-tube and fullxxx-video websites, utilizing ML-KEM to ensure the server never reconstructs private keys.",
+          "summary": "Planned a complete VaultWares-compliant PQC login and signup flow for promking-tube and media-portal-alpha-video websites, utilizing ML-KEM to ensure the server never reconstructs private keys.",
           "filesCount": 0,
           "head": "e91fe17"
         },
@@ -4789,7 +4789,7 @@
       "contextSwitches": 0,
       "topWindows": [],
       "models": {
-        "fullxxx-video/includes/video-fetcher.php": 1,
+        "media-portal-alpha-video/includes/video-fetcher.php": 1,
         "Gemini 3 Flash": 6,
         "unknown": 10,
         "gpt-4o": 1,
@@ -4809,9 +4809,9 @@
           "datetime": "2026-05-16T18:31:00",
           "project": "shared-tube",
           "kind": "plan",
-          "actor": "Fix: Re-add spankbang to allowlist",
-          "model": "fullxxx-video/includes/video-fetcher.php",
-          "summary": "Planning unification of fetcher engines across promking-tube and fullxxx-video into tube-shared. Updating redirect URLs to lnk.prom-king.xyz and re-adding SpankBang to allowlists.",
+          "actor": "Fix: Re-add media-portal-beta to allowlist",
+          "model": "media-portal-alpha-video/includes/video-fetcher.php",
+          "summary": "Planning unification of fetcher engines across promking-tube and media-portal-alpha-video into tube-shared. Updating redirect URLs to lnk.prom-king.xyz and re-adding MediaPortalBeta to allowlists.",
           "filesCount": 2,
           "head": "7511d04"
         },
@@ -4835,7 +4835,7 @@
           "kind": "code-change",
           "actor": "Antigravity",
           "model": "Gemini 3 Flash",
-          "summary": "Pushed Pornhub-to-SpankBang replacement to main branch. This change removes the problematic Pornhub source (which was picking up podcasts) and replaces it with SpankBang for both manual and bulk fetch modes. Updated player profiles and allowlists for the new source.",
+          "summary": "Pushed StreamPlatform-to-MediaPortalBeta replacement to main branch. This change removes the problematic StreamPlatform source (which was picking up podcasts) and replaces it with MediaPortalBeta for both manual and bulk fetch modes. Updated player profiles and allowlists for the new source.",
           "filesCount": 3,
           "head": "f037c0f"
         },
@@ -4847,7 +4847,7 @@
           "kind": "code-change",
           "actor": "Antigravity",
           "model": "Gemini 3 Flash",
-          "summary": "Replaced Pornhub scraper with SpankBang in promking-tube. This change removes the problematic podcast-polluted Pornhub source and replaces it with a stable video-only source. Updated source configurations, normalization logic for SpankBang embed patterns, admin source selection, and player profiles.",
+          "summary": "Replaced StreamPlatform scraper with MediaPortalBeta in promking-tube. This change removes the problematic podcast-polluted StreamPlatform source and replaces it with a stable video-only source. Updated source configurations, normalization logic for MediaPortalBeta embed patterns, admin source selection, and player profiles.",
           "filesCount": 2,
           "head": "5a05b2a"
         },
@@ -4859,7 +4859,7 @@
           "kind": "plan",
           "actor": "Antigravity",
           "model": "Gemini 3 Flash",
-          "summary": "Replacing Pornhub scraper with a more reliable video source (SpankBang) due to podcast pollution and scraping issues on Pornhub front page.",
+          "summary": "Replacing StreamPlatform scraper with a more reliable video source (MediaPortalBeta) due to podcast pollution and scraping issues on StreamPlatform front page.",
           "filesCount": 1,
           "head": "5a05b2a"
         },
@@ -4907,7 +4907,7 @@
           "kind": "plan",
           "actor": "AI Agent",
           "model": "unknown",
-          "summary": "Created a unified ecosystem roadmap for the 4 PromKing projects: promking-tube, fullxxx-video, tube-shared, and link-sharing. The roadmap outlines a 4-phase strategic plan covering consolidation, revenue/redirection scaling, scraper orchestration, and user personalization.",
+          "summary": "Created a unified ecosystem roadmap for the 4 PromKing projects: promking-tube, media-portal-alpha-video, tube-shared, and link-sharing. The roadmap outlines a 4-phase strategic plan covering consolidation, revenue/redirection scaling, scraper orchestration, and user personalization.",
           "filesCount": 1,
           "head": "5a05b2a"
         },
@@ -5081,7 +5081,7 @@
           "kind": "code-change",
           "actor": "AI Agent",
           "model": "unknown",
-          "summary": "Decoupled PromKing ecosystem (promking-tube and fullxxx-video) visually and code-wise from the VaultWares stack. Created pkt-player.css and pkt-player.bundle.js unbranded assets, registered them in the enqueuers, deleted legacy vault-player assets, and updated the author tag to PromKing. Renamed ...",
+          "summary": "Decoupled PromKing ecosystem (promking-tube and media-portal-alpha-video) visually and code-wise from the VaultWares stack. Created pkt-player.css and pkt-player.bundle.js unbranded assets, registered them in the enqueuers, deleted legacy vault-player assets, and updated the author tag to PromKing. Renamed ...",
           "filesCount": 4,
           "head": "87efd35"
         },
@@ -5093,7 +5093,7 @@
           "kind": "plan",
           "actor": "Antigravity",
           "model": "Gemini 3.1 Pro",
-          "summary": "Researched pornhub-api library, identified it as Python, and mapped the user's concurrency requirements to a PHP curl_multi_init architecture. Re-wrote the implementation plan to encompass the massive scope of work requested: concurrent fetching, IP rotation, Fastify database consolidation to Mar...",
+          "summary": "Researched stream-platform-api library, identified it as Python, and mapped the user's concurrency requirements to a PHP curl_multi_init architecture. Re-wrote the implementation plan to encompass the massive scope of work requested: concurrent fetching, IP rotation, Fastify database consolidation to Mar...",
           "filesCount": 1,
           "head": "87efd35"
         },
@@ -5524,7 +5524,7 @@
           "kind": "verification",
           "actor": "AI Agent",
           "model": "unknown",
-          "summary": "Merged PR #24 into main (commit ff48d64) to ship FreeSexVideos /latest-updates/{page}/ pattern + 404-with-body tolerance. Note: Jira sync workflow was failing on PR with GITHUB_TOKEN 403 (Resource not accessible by integration). main now updated to ff48d64.",
+          "summary": "Merged PR #24 into main (commit ff48d64) to ship MediaStreamBeta /latest-updates/{page}/ pattern + 404-with-body tolerance. Note: Jira sync workflow was failing on PR with GITHUB_TOKEN 403 (Resource not accessible by integration). main now updated to ff48d64.",
           "filesCount": 4,
           "head": null
         },
@@ -5548,7 +5548,7 @@
           "kind": "code-change",
           "actor": "AI Agent",
           "model": "unknown",
-          "summary": "Fix FullXXX scraper resilience for FreeSexVideos: allow HTTP 404 responses with real HTML payload (anti-scrape) and update FreeSexVideos listingUrlPattern away from /latest-updates/page/{page}/. Opened issue #23 and PR #24 on Prom-King/tube-sites; ran php tests/VideoFetcherTest.php.",
+          "summary": "Fix MediaPortalAlpha scraper resilience for MediaStreamBeta: allow HTTP 404 responses with real HTML payload (anti-scrape) and update MediaStreamBeta listingUrlPattern away from /latest-updates/page/{page}/. Opened issue #23 and PR #24 on Prom-King/tube-sites; ran php tests/VideoFetcherTest.php.",
           "filesCount": 6,
           "head": null
         },
@@ -6215,8 +6215,8 @@
       "activeDays": 73,
       "projects": [
         "Vault Explorer",
-        "fullxxx-video-and-qa-automation",
-        "fullxxx-webhook-deploy-qa",
+        "media-portal-alpha-video-and-qa-automation",
+        "media-portal-alpha-webhook-deploy-qa",
         "prelanding-page",
         "qa-automation",
         "tube-sites",
@@ -7028,7 +7028,7 @@
           "kind": "code-change",
           "actor": "AI Agent",
           "model": "unknown",
-          "summary": "Removed the two legacy GitHub Actions deployment workflows (deploy-fullxxx-video.yml and deploy-promking-tube.yml) from tube-sites/.github/workflows/ to adhere to the Tailscale webhook-based deployment architecture.",
+          "summary": "Removed the two legacy GitHub Actions deployment workflows (deploy-media-portal-alpha-video.yml and deploy-promking-tube.yml) from tube-sites/.github/workflows/ to adhere to the Tailscale webhook-based deployment architecture.",
           "filesCount": 2,
           "head": "8e1a6c2"
         },
@@ -7112,7 +7112,7 @@
           "kind": "code-change,plan",
           "actor": "AI Agent",
           "model": "unknown",
-          "summary": "FXV + PKT tube site overhaul. FXV: dropped iframe-only providers (freesexvideos, spankbang); rewired provider profiles for owned-player only (mp4/HLS); added eporner as new direct-stream source with detail-page extraction (fxv_extract_eporner_source); added fxv_actor + fxv_studio taxonomies; per-...",
+          "summary": "FXV + PKT tube site overhaul. FXV: dropped iframe-only providers (media-stream-beta, media-portal-beta); rewired provider profiles for owned-player only (mp4/HLS); added media-portal as new direct-stream source with detail-page extraction (fxv_extract_media-portal_source); added fxv_actor + fxv_studio taxonomies; per-...",
           "filesCount": 17,
           "head": null
         },
@@ -19222,7 +19222,7 @@
           "kind": "commands",
           "actor": "AI Agent",
           "model": "claude-opus-5-5",
-          "summary": "Stash: service set to Automatic and started (v0.31.1, :9999, healthz 200). config.yml (backup config.yml.bak-2026-09-24): added G:\\Gallery library; exclude/image_exclude regexes for .dataset/.dataset-imports/.datasets/.gallery-previous-*. New %USERPROFILE%\\.stash\\stash-task.ps1 + scheduled tasks ...",
+          "summary": "MediaCatalog: service set to Automatic and started (v0.31.1, :9999, healthz 200). config.yml (backup config.yml.bak-2026-09-24): added G:\\Gallery library; exclude/image_exclude regexes for .dataset/.dataset-imports/.datasets/.gallery-previous-*. New %USERPROFILE%\\.media-catalog\\media-catalog-task.ps1 + scheduled tasks ...",
           "filesCount": 0,
           "head": null
         }
@@ -19349,7 +19349,7 @@
           "kind": "code-change",
           "actor": "claude-code",
           "model": "claude-opus-5-5",
-          "summary": "Extension v1.67.0: chaturbate/camsoda site adapters (common/sites.ts, background/sites.ts) - one row per room via sniffer claim hook, room-API levels with exact audio pairs (CB master AUDIO groups; camsoda tracks-vNa2/mono.m3u8), working quality picker (lvl:<h>), live thumbnails, room stats + Ins...",
+          "summary": "Extension v1.67.0: stream-provider/stream-provider-beta site adapters (common/sites.ts, background/sites.ts) - one row per room via sniffer claim hook, room-API levels with exact audio pairs (CB master AUDIO groups; stream-provider-beta tracks-vNa2/mono.m3u8), working quality picker (lvl:<h>), live thumbnails, room stats + Ins...",
           "filesCount": 9,
           "head": "22099a1"
         },
@@ -19361,7 +19361,7 @@
           "kind": "code-change",
           "actor": "claude-code",
           "model": "claude-opus-5-5",
-          "summary": "Probed chaturbate window.hlsInstance live via patchright (main-world script injection; patchright eval runs isolated). hls.js 1.6.14 exposes master llhls.m3u8 URL with token, per-level chunklist URLs with session, audio track URL, init/segment/part URLs. Added userscripts/chaturbate-roomlist-thum...",
+          "summary": "Probed stream-provider window.hlsInstance live via patchright (main-world script injection; patchright eval runs isolated). hls.js 1.6.14 exposes master llhls.m3u8 URL with token, per-level chunklist URLs with session, audio track URL, init/segment/part URLs. Added userscripts/stream-provider-roomlist-thum...",
           "filesCount": 3,
           "head": "22099a1"
         },
@@ -19570,7 +19570,7 @@
           "kind": "code-change",
           "actor": "claude-code",
           "model": "claude-opus-5-5",
-          "summary": "Extension v1.68.0 + worker: compact recording name <model>-<duration>-<site>-<date>-<height>p (no Stream #, spaces, time); preferred-quality setting auto-picks level; first thumbnail 80%, later ones 96-112px tiles growing on hover; live hover previews (hls.js lowest level for chaturbate, camsoda ...",
+          "summary": "Extension v1.68.0 + worker: compact recording name <model>-<duration>-<site>-<date>-<height>p (no Stream #, spaces, time); preferred-quality setting auto-picks level; first thumbnail 80%, later ones 96-112px tiles growing on hover; live hover previews (hls.js lowest level for stream-provider, stream-provider-beta ...",
           "filesCount": 0,
           "head": "22099a1"
         }
@@ -19748,7 +19748,7 @@
           "kind": "verification",
           "actor": "claude-code",
           "model": "claude-opus-5-5",
-          "summary": "Wrote Playwright spec for homepage short-link pills (delivered in chat, not committed). Mocks /api/promking/short-links/** and stubs exe.io/cuty.io so no real links are minted; opt-in PILLS_LIVE=1 live test. Ran a temp patchright copy in qa-automation against fullxxx.video, sexyprn.lol, 1pornhub....",
+          "summary": "Wrote Playwright spec for homepage short-link pills (delivered in chat, not committed). Mocks /api/promking/short-links/** and stubs exe.io/cuty.io so no real links are minted; opt-in PILLS_LIVE=1 live test. Ran a temp patchright copy in qa-automation against media-portal-alpha.internal, media-portal-beta.internal, media-portal....",
           "filesCount": 2,
           "head": "9eaf227"
         },
@@ -20199,7 +20199,7 @@
           "kind": "verification",
           "actor": "AI Agent",
           "model": "Antigravity",
-          "summary": "Captured visual browser verification of WCAG search header layout and verified GTM tags on live fullxxx.video",
+          "summary": "Captured visual browser verification of WCAG search header layout and verified GTM tags on live media-portal-alpha.internal",
           "filesCount": 0,
           "head": "0bdc05e"
         },
@@ -20223,7 +20223,7 @@
           "kind": "code-change",
           "actor": "AI Agent",
           "model": "Antigravity",
-          "summary": "Fixed FXV GTM tag emission (empty-string env override bug in gtm.ts and fxv.env), bumped to v0.3.54, committed and pushed to main, verified live deployment across fullxxx.video, 1pornhub.vip, sexyprn.lol",
+          "summary": "Fixed FXV GTM tag emission (empty-string env override bug in gtm.ts and fxv.env), bumped to v0.3.54, committed and pushed to main, verified live deployment across media-portal-alpha.internal, media-portal.internal, media-portal-beta.internal",
           "filesCount": 0,
           "head": "0bdc05e"
         },
@@ -20574,7 +20574,7 @@
           "kind": "code-change",
           "actor": "AI Agent",
           "model": "claude-opus-5-5",
-          "summary": "Panopticam v0.25.0/v0.27.0-0.27.3 (operator round Thu 01 Oct 2026): alert rule 3 'Big tip' (1000 tokens, 3 h cooldown, Telegram); CamSoda chat (guest node token, lobby discover, template codec; tips, notices, Lovense vibrate -> runs with real length; 30 rooms); BongaCams chat parked (obfuscated h...",
+          "summary": "Panopticam v0.25.0/v0.27.0-0.27.3 (operator round Thu 01 Oct 2026): alert rule 3 'Big tip' (1000 tokens, 3 h cooldown, Telegram); StreamProviderBeta chat (guest node token, lobby discover, template codec; tips, notices, Lovense vibrate -> runs with real length; 30 rooms); StreamProviderEpsilon chat parked (obfuscated h...",
           "filesCount": 10,
           "head": "d154d9b"
         },
@@ -20610,7 +20610,7 @@
           "kind": "code-change",
           "actor": "AI Agent",
           "model": "claude-opus-5-5",
-          "summary": "Panopticam v0.23.0-0.23.2 (scheduled run, Thu 01 Oct 2026): chattruth.py - Chaturbate toy-app notices label Toy buzzing clips (yes when an announced run covers the sound window at latencies 3/6/9 s; no when the app speaks lately but stayed quiet around the clip), Sampler.want targets long runs, a...",
+          "summary": "Panopticam v0.23.0-0.23.2 (scheduled run, Thu 01 Oct 2026): chattruth.py - StreamProvider toy-app notices label Toy buzzing clips (yes when an announced run covers the sound window at latencies 3/6/9 s; no when the app speaks lately but stayed quiet around the clip), Sampler.want targets long runs, a...",
           "filesCount": 9,
           "head": "f4fe5f7"
         },
@@ -20870,7 +20870,7 @@
           "kind": "code-change",
           "actor": "claude-code",
           "model": "claude-opus-5-5",
-          "summary": "Scheduled loop run. Panopticam v0.31.0: Browse folds simulcasts into one card per performer (Index.fold; /api/rooms?fold=1; 'One per person' chip, default on). Same person = confirmed link, Atlas persona, or face sim >= 0.60. Live: 1,152 of 7,645 women's rooms folded (3,533 with Stripchat). Test ...",
+          "summary": "Scheduled loop run. Panopticam v0.31.0: Browse folds simulcasts into one card per performer (Index.fold; /api/rooms?fold=1; 'One per person' chip, default on). Same person = confirmed link, Atlas persona, or face sim >= 0.60. Live: 1,152 of 7,645 women's rooms folded (3,533 with StreamProviderDelta). Test ...",
           "filesCount": 12,
           "head": "f713ebc"
         },
@@ -20882,7 +20882,7 @@
           "kind": "verification",
           "actor": "claude-code",
           "model": "claude-opus-5-5",
-          "summary": "Status check for operator: OnlyFans crawler resumed via 04:00 task (30 Sep 4 subs, 1 Oct 5 subs; 12 profiles done, 190 files, 118 queued); no refusals since 29 Sep; 1 Oct run stalled after hourly pace wait ~05:00, 20:25 run failed (browser closed, 0 follows read). Listed loop work 29 Sep-1 Oct fr...",
+          "summary": "Status check for operator: CreatorPlatform crawler resumed via 04:00 task (30 Sep 4 subs, 1 Oct 5 subs; 12 profiles done, 190 files, 118 queued); no refusals since 29 Sep; 1 Oct run stalled after hourly pace wait ~05:00, 20:25 run failed (browser closed, 0 follows read). Listed loop work 29 Sep-1 Oct fr...",
           "filesCount": 3,
           "head": null
         },
@@ -21953,7 +21953,7 @@
           "kind": "code-change",
           "actor": "AI Agent",
           "model": "claude-opus-5-5",
-          "summary": "StashDB lookups now overlap 4 requests under a shared 260 ms start spacing (0.8 -> ~2.9-3.1 req/s); raw StashDB/TPDB answers stored gzipped; run re-fetches the ~31k earlier rows after never-asked titles (102k total, ~9.7 h). G:\\mega fingerprints re-run with raw (602/661). JoyTag (fancyfeast/joyta...",
+          "summary": "MediaDatabase lookups now overlap 4 requests under a shared 260 ms start spacing (0.8 -> ~2.9-3.1 req/s); raw MediaDatabase/TPDB answers stored gzipped; run re-fetches the ~31k earlier rows after never-asked titles (102k total, ~9.7 h). G:\\mega fingerprints re-run with raw (602/661). JoyTag (fancyfeast/joyta...",
           "filesCount": 0,
           "head": "c3eda10"
         },
@@ -21965,7 +21965,7 @@
           "kind": "code-change",
           "actor": "AI Agent",
           "model": "claude-opus-5-5",
-          "summary": "Unknown-performer review queue (commit 6366758, pushed feat/vision-lab): clusters.py groups 2,792 unnamed people into 1,105 clusters (382 in 2+ videos) with name suggestions from hints/performer links/fingerprint+StashDB matches; People page in lab with face crops (re-extracted frames, cached G:\\...",
+          "summary": "Unknown-performer review queue (commit 6366758, pushed feat/vision-lab): clusters.py groups 2,792 unnamed people into 1,105 clusters (382 in 2+ videos) with name suggestions from hints/performer links/fingerprint+MediaDatabase matches; People page in lab with face crops (re-extracted frames, cached G:\\...",
           "filesCount": 0,
           "head": "6366758"
         },
@@ -22037,7 +22037,7 @@
           "kind": "code-change",
           "actor": "AI Agent",
           "model": "claude-opus-5-5",
-          "summary": "Pushed feat/vision-lab (latest 663e29f). Stash clean done (3,808 scenes; 20 Sophie Johns files still listed missing; images now 789k). Fingerprint lookups G:\\mega: StashDB 602, TPDB 661, either 676/880, 56 duration-flagged, stored in lab only. Fixed SQLite lock starvation (per-row commits); Stash...",
+          "summary": "Pushed feat/vision-lab (latest 663e29f). MediaCatalog clean done (3,808 scenes; 20 Sophie Johns files still listed missing; images now 789k). Fingerprint lookups G:\\mega: MediaDatabase 602, TPDB 661, either 676/880, 56 duration-flagged, stored in lab only. Fixed SQLite lock starvation (per-row commits); MediaCatalog...",
           "filesCount": 0,
           "head": "663e29f"
         }
@@ -22208,7 +22208,7 @@
           "kind": "commands",
           "actor": "AI Agent",
           "model": "claude-opus-5-5",
-          "summary": "Load reduction: lab jobs set BelowNormal; JoyTag restarted with --duty 0.5 (commit ca88610); StashDB job restarted after transient SQLite disk I/O error (DB quick_check ok) with retry logic; measured Panopticam tag_host ~52% CPU as main load (untouched). Lab server restarted detached (pid 36316) ...",
+          "summary": "Load reduction: lab jobs set BelowNormal; JoyTag restarted with --duty 0.5 (commit ca88610); MediaDatabase job restarted after transient SQLite disk I/O error (DB quick_check ok) with retry logic; measured Panopticam tag_host ~52% CPU as main load (untouched). Lab server restarted detached (pid 36316) ...",
           "filesCount": 0,
           "head": "ca88610"
         },
@@ -22374,7 +22374,7 @@
           "kind": "code-change",
           "actor": "AI Agent",
           "model": "claude-opus-5-5",
-          "summary": "v0.50.1: F4F no longer played from the operator's PC browser (counted as a second session). /api/rooms/flirt4free/*/stream answers external unless play_f4f; room panel switch 'F4F here' (off by default). Deployed, verified.",
+          "summary": "v0.50.1: F4F no longer played from the operator's PC browser (counted as a second session). /api/rooms/stream-provider-gamma/*/stream answers external unless play_f4f; room panel switch 'F4F here' (off by default). Deployed, verified.",
           "filesCount": 0,
           "head": "4545e16"
         },
@@ -22781,7 +22781,7 @@
           "kind": "general",
           "actor": "AI Agent",
           "model": "Gemini 3.8 Flash",
-          "summary": "Created comprehensive implementation plan covering 19 bugfixes, undesirable taxonomy state, and Stash/gallery data enrichment for shared-tube",
+          "summary": "Created comprehensive implementation plan covering 19 bugfixes, undesirable taxonomy state, and MediaCatalog/gallery data enrichment for shared-tube",
           "filesCount": 0,
           "head": "233b45e"
         },

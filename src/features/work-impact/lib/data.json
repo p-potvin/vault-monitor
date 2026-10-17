@@ -366,7 +366,7 @@
             "live_crawl_launched": 1,
             "request_rate_limiting_needed": 1,
             "runner_blocked": 1,
-            "fullxxx_brand_icon": 1,
+            "media-portal-alpha_brand_icon": 1,
             "issue": 2,
             "shared_tube_runner_online": 1,
             "consent_mode_v2": 1,
@@ -392,8 +392,8 @@
             "code-change": 49
           },
           "recent": [
-            "Updated implementation plan to integrate 1pornhub.vip (oneporn) and sexyprn.lol (sexyprn) on OVH Cloud, incorporating user's design system tokens, Nginx, systemd, DB schema, and...",
-            "Monitored background catalog ingestion for oneporn (1pornhub.vip) and sexyprn (sexyprn.lol) on OVH VPS. Verified both completed with 0 errors and populated the DB (oneporn: 49 v...",
+            "Updated implementation plan to integrate media-portal.internal (media-portal) and media-portal-beta.internal (media-portal-beta) on OVH Cloud, incorporating user's design system tokens, Nginx, systemd, DB schema, and...",
+            "Monitored background catalog ingestion for media-portal (media-portal.internal) and media-portal-beta (media-portal-beta.internal) on OVH VPS. Verified both completed with 0 errors and populated the DB (media-portal: 49 v...",
             "Configured restricted fetcher source routing (pornxp exclusive to FXV, 1porn exclusive to PKT) at both FastAPI router and TypeScript CLI layers, updated admin consoles dropdowns..."
           ],
           "lineClean": {
@@ -891,7 +891,7 @@
           "recent": [
             "Executed get_all_account_links.py scratch script to fetch all active links across user's Keep2Share, FileBoom, and KatFile accounts using their REST APIs (traversing 11 FileBoom...",
             "Wrote and executed import_extracted_links.py scratch script to bulk parse 180 extracted links from extracted_account_links.txt and register them as live redirect links in Link S...",
-            "Refactored redirect.ts in link-sharing to implement tracked premium redirect prelanders (/zip/:slug, /video/:slug, /file/:slug, /d/:slug) with custom themes (fullxxx and promkin..."
+            "Refactored redirect.ts in link-sharing to implement tracked premium redirect prelanders (/zip/:slug, /video/:slug, /file/:slug, /d/:slug) with custom themes (media-portal-alpha and promkin..."
           ],
           "lineClean": {
             "insertions": 0,
